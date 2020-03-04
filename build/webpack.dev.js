@@ -6,6 +6,10 @@
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // 通过 npm 安装
+const {
+  ROOT,
+  getLessVariables
+} = require('./utils');
 
 // TODO: 热更新，浏览器同步组件
 module.exports = {
@@ -34,21 +38,8 @@ module.exports = {
           presets: [ '@babel/preset-env', '@babel/preset-react' ],
         },
       },
-    }, {
-      test: /\.scss$/,
-      use: [
-        'style-loader',
-        {
-          loader: 'css-loader',
-          options: {
-            modules: true,
-            localIdentName: 'AELF-[path][name]_[local]-[hash:base64:5]',
-          },
-        },
-        'sass-loader',
-        'postcss-loader',
-      ],
-    }, {
+    },
+      {
       test: /\.(png|svg|jpg|gif|ico)$/,
       use: [
         {
@@ -58,7 +49,24 @@ module.exports = {
           },
         },
       ],
-    }],
+    },
+    {
+      test: /\.less$/,
+      use: [{
+        loader: 'style-loader',
+      }, {
+        loader: 'css-loader', // translates CSS into CommonJS
+      }, {
+        loader: 'less-loader', // compiles Less to CSS
+        options: {
+          modifyVars: getLessVariables(
+            path.resolve(ROOT, 'app/web/assets/less/_variables.less')
+          ),
+          javascriptEnabled: true,
+        },
+      }
+      ]
+    },],
   },
   node: {
     fs: 'empty',

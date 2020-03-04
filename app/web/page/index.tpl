@@ -10,15 +10,15 @@
 </head>
 
 <body>
-    <div id="welcome-page">
-        <div class="welcome-page-message">
-            <div class="aelf-logo-container">
-                <div class="aelf-logo"></div>
-            </div>
-            <p class="aelf-wallet-description">aelf community</p>
-        </div>
-        <div class="welcome-page-bg"></div>
-    </div>
+<!--    <div id="welcome-page">-->
+<!--        <div class="welcome-page-message">-->
+<!--            <div class="aelf-logo-container">-->
+<!--                <div class="aelf-logo"></div>-->
+<!--            </div>-->
+<!--            <p class="aelf-wallet-description">Welcome to aelf community.</p>-->
+<!--        </div>-->
+<!--        <div class="welcome-page-bg"></div>-->
+<!--    </div>-->
 
     <div id="root"></div>
 </body>

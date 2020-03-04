@@ -10,16 +10,16 @@
 </head>
 
 <body>
-    <div id="welcome-page">
-        <div class="welcome-page-message">
-            <div class="aelf-logo-container">
-                <div class="aelf-logo"></div>
-            </div>
-            <p class="aelf-wallet-description">aelf community</p>
-        </div>
-        <div class="welcome-page-bg"></div>
-    </div>
+<!--    <div id="welcome-page">-->
+<!--        <div class="welcome-page-message">-->
+<!--            <div class="aelf-logo-container">-->
+<!--                <div class="aelf-logo"></div>-->
+<!--            </div>-->
+<!--            <p class="aelf-wallet-description">Welcome to aelf community.</p>-->
+<!--        </div>-->
+<!--        <div class="welcome-page-bg"></div>-->
+<!--    </div>-->
 
     <div id="root"></div>
-<script type="text/javascript" src="../public/js/activity.981b5.js"></script></body>
+<script type="text/javascript" src="../public/js/activity.e38ae.js"></script></body>
 </html>

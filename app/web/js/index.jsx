@@ -3,22 +3,43 @@
  *  @author huangzongzhe
  */
 
-
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, Route, hashHistory} from 'react-router';
+import {Router, Route, hashHistory, IndexRoute} from 'react-router';
 
-import Swap from './Swap/Swap';
+import Swap from './page/Swap/Swap';
+import Lottery from './page/Lottery/Lottery';
 
-// <Route path="/" component={HomePage}>
-//   <Route path="/assets" component={Assets}></Route>
-//   {/*<Route path="/qrcode" component={QRCode}></Route>*/}
-//   <Route path="/personalcenter/home" component={personalCenterHome}></Route>
-//   <Route path="/personalcenter/walletlist" component={WalletList}></Route>
-// </Route>
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
+
+import "antd/dist/antd.less";
+import './index.less';
+
+class HomePage extends React.Component {
+  constructor(props) {
+    super();
+  }
+  render() {
+    return (
+      <div>
+        <Header/>
+        <div className='body-container'>
+          {this.props.children}
+        </div>
+        <Footer/>
+      </div>
+    );
+  }
+}
+
 ReactDOM.render(
       <Router history={hashHistory}>
-        <Route path="/" component={Swap}></Route>
+        <Route path="/" component={HomePage}>
+          <IndexRoute component={Swap}/>
+          <Route path="/swap" component={Swap}/>
+          <Route path="/lottery" component={Lottery}/>
+        </Route>
       </Router>,
   document.getElementById('root')
 );
