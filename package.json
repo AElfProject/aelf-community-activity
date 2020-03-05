@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "antd": "^4.0.0",
+    "axios": "^0.19.2",
     "egg": "^2.15.1",
     "egg-scripts": "^2.11.0",
     "egg-view-nunjucks": "^2.2.0",

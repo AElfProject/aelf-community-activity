@@ -21,7 +21,6 @@ export default class BrowserHeader extends Component {
   }
 
   handleClick(e) {
-    console.log('click ', e);
     this.setState({
       current: e.key,
     });
