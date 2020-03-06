@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 
-import { Form, Input, Button } from 'antd';
-import moment from 'moment';
-
 import renderSwapPairInfo from './components/SwapPairInfo';
 import renderCurrentSwapInfo from './components/CurrentSwapInfo';
 import renderSwapElf from './components/SwapElf';

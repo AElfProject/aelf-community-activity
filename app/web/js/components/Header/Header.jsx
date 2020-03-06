@@ -11,11 +11,16 @@ import { Menu } from 'antd';
 import Svg from '../Svg/Svg';
 import './header.styles.less';
 
+function getCurrentTab() {
+  return window.location.hash.replace('#/', '') || 'swap';
+}
+
 export default class BrowserHeader extends Component {
   constructor() {
     super();
+
     this.state = {
-      current: 'swap',
+      current: getCurrentTab(),
     };
     this.handleClick = this.handleClick.bind(this);
   }
