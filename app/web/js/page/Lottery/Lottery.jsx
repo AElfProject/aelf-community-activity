@@ -4,6 +4,8 @@ const { TabPane } = Tabs;
 
 import renderLotteryAward from './pages/LotteryAward';
 import renderAwardHistory from './pages/AwardHistory';
+import renderLotteryDraw from './pages/LotteryDraw';
+import renderPersonalDraw from './pages/PersonalDraw';
 import './Lottery.less';
 
 function callback(key) {
@@ -13,6 +15,8 @@ function callback(key) {
 export default function Lottery() {
   // 声明一个叫 "count" 的 state 变量
   // const [count, setCount] = useState(0);
+  const lotteryDrawHTML = renderLotteryDraw();
+  const personalDrawHTML = renderPersonalDraw();
   const lotteryAwardHTML = renderLotteryAward();
   const awardHistoryHTML = renderAwardHistory();
 
@@ -22,7 +26,9 @@ export default function Lottery() {
       <div className='basic-container lottery-container'>
         <Tabs defaultActiveKey="1" onChange={callback}>
           <TabPane tab="Lottery Draw" key="1">
-            Lottery Draw
+            {lotteryDrawHTML}
+            <div className='basic-blank'/>
+            {personalDrawHTML}
           </TabPane>
           <TabPane tab="Lottery Award" key="2">
             {lotteryAwardHTML}

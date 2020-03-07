@@ -9,7 +9,8 @@ export default function renderAwardHistory() {
       title: 'Random Hash',
       dataIndex: 'random_hash',
       key: 'random_hash',
-      render: text => <a>{text}</a>,
+      // render: text => <a>{text}</a>,
+      // render: text => <a>{text}</a>,
     },
     {
       title: 'Owner',
@@ -37,16 +38,19 @@ export default function renderAwardHistory() {
     },
   ];
 
+  const format = 'YYYY-MM-DD';
+  const timeFormatted = moment(new Date()).format(format);
+
   return (
     <section className='section-basic basic-container'>
       <div className='section-title'>
         History
       </div>
       <div className='section-content swap-flex-wrap'>
-        <b>Period 1</b>
+        <div className='history-period'>{timeFormatted}</div>
         <Table dataSource={dataSource} columns={columns} pagination={false} />
 
-        <b>Period 2</b>
+        <div className='history-period'>{timeFormatted}</div>
         <Table dataSource={dataSource} columns={columns} pagination={false} />
       </div>
     </section>
