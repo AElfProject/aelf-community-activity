@@ -7,6 +7,7 @@
     "declarations": true
   },
   "dependencies": {
+    "aelf-sdk": "^3.2.29",
     "antd": "^4.0.0",
     "axios": "^0.19.2",
     "egg": "^2.15.1",
