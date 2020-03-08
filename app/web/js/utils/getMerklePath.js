@@ -18,7 +18,7 @@ export function getMerklePathFromOtherChain(merklePathBytes, merklePathBool) {
         hash: {
           value: Buffer.from(valueTemp, 'hex').toString('base64')
         },
-        isLeftChildNode: merklePathBoolArray[index]
+        isLeftChildNode: merklePathBoolArray[index] === 'true'
       };
     }
   });

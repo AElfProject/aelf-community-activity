@@ -1,7 +1,11 @@
 /* From start */
 import React from 'react';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
+import { Link } from 'react-router';
 import {getMerklePathFromOtherChain} from '../../../utils/getMerklePath';
+
+import {NightElfCheck} from '../../../utils/NightElf/NightElf';
+import { LOGIN_INFO, SWAP_CONTRACT_ADDRESS } from '../../../constant/constant';
 
 const layout = {
   labelCol: { span: 6 },
@@ -13,7 +17,7 @@ const tailLayout = {
 /* From end */
 export default function renderSwapElf(swapInfo) {
 
-  const onFinish = values => {
+  const onFinish = async values => {
     const {pairId, originAmount, merklePathBytes, merklePathBool, receiverAddress, uniqueId} = values;
     const merklePath = getMerklePathFromOtherChain(merklePathBytes, merklePathBool);
     const swapTokenInput = {
@@ -23,6 +27,46 @@ export default function renderSwapElf(swapInfo) {
       receiverAddress,
       uniqueId,
     };
+
+    try {
+      await NightElfCheck.getInstance().check;
+      const aelf = NightElfCheck.initAelfInstanceByExtension();
+      const accountInfo = await aelf.login(LOGIN_INFO);
+
+      if (accountInfo.error) {
+        message.warning(accountInfo.errorMessage.message || accountInfo.errorMessage);
+        return;
+      }
+
+      const chainStatus = await aelf.chain.getChainStatus();
+      const wallet = {
+        address: JSON.parse(accountInfo.detail).address
+      };
+      // It is different from the wallet created by Aelf.wallet.getWalletByPrivateKey();
+      // There is only one value named address;
+      const swapContract = await aelf.chain.contractAt(
+        SWAP_CONTRACT_ADDRESS,
+        wallet
+      );
+      const swapResult = await swapContract.SwapToken(swapTokenInput);
+      if (swapResult.error) {
+        message.warning(swapResult.errorMessage.message || swapResult.errorMessage);
+        return;
+      }
+      const {TransactionId} = swapResult.result;
+      const explorerHref = `https://explorer-test.aelf.io/tx/${TransactionId}`;
+      const txIdHTML = <div>
+        <span>Transaction ID: {TransactionId}</span>
+        <br/>
+        <a target='_blank' href={explorerHref}>Turn to aelf explorer to get the information of this transaction</a>
+      </div>;
+      message.success(txIdHTML, 16);
+
+    } catch(e) {
+      message.error(e.message || (e.errorMessage && e.errorMessage.message) || 'Swap failed');
+      console.log('error', e);
+    }
+
     console.log('swapTokenInput', swapTokenInput)
     // TODO: use browser extension call the contract method
     // swapContract.SwapToken(dataUse, {sync: true});
