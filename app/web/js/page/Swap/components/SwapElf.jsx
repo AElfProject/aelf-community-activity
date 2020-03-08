@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import {getMerklePathFromOtherChain} from '../../../utils/getMerklePath';
 
 import {NightElfCheck} from '../../../utils/NightElf/NightElf';
-import { LOGIN_INFO, SWAP_CONTRACT_ADDRESS } from '../../../constant/constant';
+import { LOGIN_INFO, SWAP_CONTRACT_ADDRESS, EXPLORER_URL } from '../../../constant/constant';
 
 const layout = {
   labelCol: { span: 6 },
@@ -54,7 +54,7 @@ export default function renderSwapElf(swapInfo) {
         return;
       }
       const {TransactionId} = swapResult.result;
-      const explorerHref = `https://explorer-test.aelf.io/tx/${TransactionId}`;
+      const explorerHref = `${EXPLORER_URL}/tx/${TransactionId}`;
       const txIdHTML = <div>
         <span>Transaction ID: {TransactionId}</span>
         <br/>

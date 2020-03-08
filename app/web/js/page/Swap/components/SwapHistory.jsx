@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import {EXPLORER_URL} from '../../../constant/constant';
 
 export default function renderSwapHistory() {
 
@@ -77,7 +78,10 @@ export default function renderSwapHistory() {
     return (
       <div key={tx.tx_id} className='swap-tx-container'>
         <div className='swap-tx-title'>
-          <div><b>Tx ID:</b> {tx.tx_id} &nbsp;&nbsp;&nbsp; <b>Origin Amount:</b> {tx.origin_amount}</div>
+          <div><b>Tx ID: </b>
+            <a href={`${EXPLORER_URL}/tx/${tx.tx_id}`} target='_blank'>{tx.tx_id}</a>
+            &nbsp;&nbsp;&nbsp; <b>Origin Amount:</b> {tx.origin_amount}
+          </div>
           <div> <b>Time:</b> {timeFormatted}</div>
         </div>
         <div className='swap-tx-content'>

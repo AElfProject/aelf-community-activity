@@ -12,6 +12,7 @@ const SWAP_CONTRACT_ADDRESS = 'uSXxaGWKDBPV6Z8EG8Et9sjaXhH1uMWEpVvmo2KzKEaueWzSe
 const SWAP_PAIR = '1d5461213d84bbc5076f3599fc90fd12d51d0bfaa13dc021981a69ffa48caf78';
 const HTTP_PROVIDER = 'http://192.168.197.51:8000';
 const CHAIN_ID = 'AELF';
+const EXPLORER_URL = 'https://explorer-test.aelf.io';
 const ADDRESS_INFO = {
   prefix: 'ELF',
   suffix: 'AELF',
@@ -40,5 +41,6 @@ export {
   SWAP_PAIR,
   HTTP_PROVIDER,
   ADDRESS_INFO,
-  LOGIN_INFO
+  LOGIN_INFO,
+  EXPLORER_URL
 };
