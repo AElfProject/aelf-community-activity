@@ -9,7 +9,7 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import DownloadPlugins from './components/DownloadPlugins/DownloadPlugins';
 
-import NightElfCheck from './utils/NightElfCheck';
+import NightElfCheck from './utils/NightElf/NightElfCheck';
 
 export default class HomePage extends React.Component {
   constructor(props) {

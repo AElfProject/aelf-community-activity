@@ -11,17 +11,34 @@ const COMMON_PRIVATE= 'f6e512a3c259e5f9af981d7f99d245aa5bc52fe448495e0b0dd56e840
 const SWAP_CONTRACT_ADDRESS = 'uSXxaGWKDBPV6Z8EG8Et9sjaXhH1uMWEpVvmo2KzKEaueWzSe';
 const SWAP_PAIR = '1d5461213d84bbc5076f3599fc90fd12d51d0bfaa13dc021981a69ffa48caf78';
 const HTTP_PROVIDER = 'http://192.168.197.51:8000';
+const CHAIN_ID = 'AELF';
 const ADDRESS_INFO = {
   prefix: 'ELF',
   suffix: 'AELF',
 };
 
+const LOGIN_INFO = {
+  chainId: CHAIN_ID,
+  payload: {
+    method: 'LOGIN',
+    contracts: [{
+      chainId: CHAIN_ID,
+      contractAddress: SWAP_CONTRACT_ADDRESS,
+      contractName: 'Token swap contract',
+      description: 'Swap token from the other chain. Base on protocol [-]',
+      github: 'https://github.com/AElfProject/AElf/blob/token-swap-contract/protobuf/token_swap_contract.proto'
+    }]
+  }
+};
+
 export {
+  CHAIN_ID,
   DEFAUTRPCSERVER,
   APPNAME,
   COMMON_PRIVATE,
   SWAP_CONTRACT_ADDRESS,
   SWAP_PAIR,
   HTTP_PROVIDER,
-  ADDRESS_INFO
+  ADDRESS_INFO,
+  LOGIN_INFO
 };

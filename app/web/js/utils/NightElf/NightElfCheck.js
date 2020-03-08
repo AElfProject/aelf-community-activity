@@ -3,9 +3,9 @@
  * @author hzz780
  */
 import {
-    DEFAUTRPCSERVER,
+    HTTP_PROVIDER,
     APPNAME,
-} from '../constant/constant';
+} from '../../constant/constant';
 
 let nightElfInstance = null;
 let aelfInstanceByExtension = null;
@@ -48,7 +48,7 @@ export default class NightElfCheck {
     static initAelfInstanceByExtension() {
         aelfInstanceByExtension = new window.NightElf.AElf({
             httpProvider: [
-                DEFAUTRPCSERVER
+                HTTP_PROVIDER
             ],
             APPNAME
         });

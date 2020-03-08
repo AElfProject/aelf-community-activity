@@ -8,6 +8,8 @@ import { Link } from 'react-router';
 
 import { Menu } from 'antd';
 
+import Account from '../Account/Account';
+
 import Svg from '../Svg/Svg';
 import './header.styles.less';
 
@@ -57,9 +59,10 @@ export default class BrowserHeader extends Component {
               className='aelf-logo-container'
             />
           </Link>
-
-          {menuHTML}
-
+          <div className='header-right'>
+            {menuHTML}
+            <Account/>
+          </div>
         </div>
       </div>);
   }
