@@ -49,11 +49,13 @@ export default class Swap extends Component {
   }
 
   render() {
+
+    console.log('re render');
     const {swapInfo} = this.state;
 
     const swapPairsInfoHTML = renderSwapPairInfo(swapInfo);
     const currentSwapInfoHTML = renderCurrentSwapInfo(swapInfo.currentRound);
-    const swapElfHTML = renderSwapElf();
+    const swapElfHTML = swapInfo.pairId === '-' ? null : renderSwapElf(swapInfo);
     const swapHistoryHTML = renderSwapHistory();
 
     return (

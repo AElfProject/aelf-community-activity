@@ -1,6 +1,7 @@
 /* From start */
 import React from 'react';
 import { Button, Form, Input } from 'antd';
+import {getMerklePathFromOtherChain} from '../../../utils/getMerklePath';
 
 const layout = {
   labelCol: { span: 6 },
@@ -10,19 +11,28 @@ const tailLayout = {
   wrapperCol: { offset: 6, span: 18 },
 };
 /* From end */
-export default function renderSwapElf() {
+export default function renderSwapElf(swapInfo) {
 
   const onFinish = values => {
-    // TODO: call contract
-    console.log('Success:', values);
-    Object.keys(values).forEach(key => {
-      console.log('Key value:', key, values[key]);
-    });
+    const {pairId, originAmount, merklePathBytes, merklePathBool, receiverAddress, uniqueId} = values;
+    const merklePath = getMerklePathFromOtherChain(merklePathBytes, merklePathBool);
+    const swapTokenInput = {
+      pairId,
+      originAmount,
+      merklePath,
+      receiverAddress,
+      uniqueId,
+    };
+    console.log('swapTokenInput', swapTokenInput)
+    // TODO: use browser extension call the contract method
+    // swapContract.SwapToken(dataUse, {sync: true});
   };
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
   };
+
+  console.log('swapInfo.pairId: ', swapInfo.pairId);
 
   return (
     <section className='section-basic basic-container'>
@@ -33,29 +43,37 @@ export default function renderSwapElf() {
         <Form
           {...layout}
           name="basic"
-          initialValues={{ remember: true }}
+          initialValues={{ pairId: swapInfo.pairId }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
         >
           <Form.Item
             label="Pair ID"
-            name="pair_id"
+            name="pairId"
             rules={[{ required: true, message: 'Please input the pair ID!' }]}
           >
-            <Input />
+            <Input disabled defaultValue={swapInfo.pairId} value={swapInfo.pairId}/>
           </Form.Item>
 
           <Form.Item
             label="Origin Amount"
-            name="origin_amount"
+            name="originAmount"
             rules={[{ required: true, message: 'Please input the origin amount!' }]}
           >
             <Input />
           </Form.Item>
 
           <Form.Item
-            label="Merkle Path"
-            name="merkle_path"
+            label="Merkle Path (bytes)"
+            name="merklePathBytes"
+            rules={[{ required: true, message: 'Please input the Merkle Path!' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Merkle Path (bool)"
+            name="merklePathBool"
             rules={[{ required: true, message: 'Please input the Merkle Path!' }]}
           >
             <Input />
@@ -63,7 +81,7 @@ export default function renderSwapElf() {
 
           <Form.Item
             label="Receiver Address"
-            name="receiver_address"
+            name="receiverAddress"
             rules={[{ required: true, message: 'Please input the receiver address!' }]}
           >
             <Input />
@@ -71,7 +89,7 @@ export default function renderSwapElf() {
 
           <Form.Item
             label="Unique ID"
-            name="unique_id"
+            name="uniqueId"
             rules={[{ required: true, message: 'Please input the unique ID!' }]}
           >
             <Input />
