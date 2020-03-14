@@ -58,13 +58,13 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-aelf-community-activity",
+    "start": "egg-scripts start --daemon --title=egg-server-aelf-community-activity --port=7100",
     "stop": "egg-scripts stop --title=egg-server-aelf-community-activity",
     "watch:dev": "npm run clean && webpack --progress --colors --display-chunks --config ./build/webpack.dev.js -w",
     "build:dev": "npm run clean && webpack --progress --colors --display-chunks --config ./build/webpack.dev.js",
     "build": "npm run clean && webpack --progress --colors --display-chunks --config ./build/webpack.prod.js",
     "clean": "rimraf app/public/*",
-    "dev": "egg-bin dev",
+    "dev": "egg-bin dev --port=7100",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
