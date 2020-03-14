@@ -6,11 +6,16 @@
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // 通过 npm 安装
+const {
+  ROOT,
+  getLessVariables
+} = require('./utils');
 
 // TODO: 热更新，浏览器同步组件
 module.exports = {
   // When mode is production or not defined, minimize is enabled. This option automatically adds Uglify plugin.
   // production will remove the 'dead code'. Look at Tree Shaking
+  // mode: 'production',
   mode: 'production',
   entry: {
     activity: './app/web/js/index.jsx',
@@ -33,31 +38,35 @@ module.exports = {
           presets: [ '@babel/preset-env', '@babel/preset-react' ],
         },
       },
-    }, {
-      test: /\.scss$/,
-      use: [
-        'style-loader',
-        {
-          loader: 'css-loader',
-          options: {
-            modules: true,
-            localIdentName: 'AELF-[path][name]_[local]-[hash:base64:5]',
+    },
+      {
+        test: /\.(png|svg|jpg|gif|ico)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: './public/assets/output',
+            },
           },
-        },
-        'sass-loader',
-        'postcss-loader',
-      ],
-    }, {
-      test: /\.(png|svg|jpg|gif|ico)$/,
-      use: [
-        {
-          loader: 'file-loader',
+        ],
+      },
+      {
+        test: /\.less$/,
+        use: [{
+          loader: 'style-loader',
+        }, {
+          loader: 'css-loader', // translates CSS into CommonJS
+        }, {
+          loader: 'less-loader', // compiles Less to CSS
           options: {
-            outputPath: './public/assets/output',
+            modifyVars: getLessVariables(
+              path.resolve(ROOT, 'app/web/assets/less/_variables.less')
+            ),
+            javascriptEnabled: true,
           },
-        },
-      ],
-    }],
+        }
+        ]
+      },],
   },
   node: {
     fs: 'empty',
@@ -69,5 +78,19 @@ module.exports = {
       template: './app/web/page/index.tpl',
       filename: './view/index.tpl',
     }),
+    // new CleanWebpackPlugin(pathsToClean, cleanOptions),
+    // ,
+    // new BundleAnalyzerPlugin({
+    // 	analyzerMode: 'server',
+    // 	analyzerHost: '127.0.0.1',
+    // 	analyzerPort: 8889,
+    // 	reportFilename: 'report.html',
+    // 	defaultSizes: 'parsed',
+    // 	openAnalyzer: true,
+    // 	generateStatsFile: false,
+    // 	statsFilename: 'stats.json',
+    // 	statsOptions: null,
+    // 	logLevel: 'info'
+    // })
   ],
 };
