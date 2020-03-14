@@ -16,7 +16,26 @@ import {HTTP_PROVIDER} from '../../constant/constant';
 
 import './Swap.less';
 
-export default class Swap extends Component {
+
+import { connect } from 'react-redux';
+import { bindActionCreators} from 'redux';
+import * as ActionsCounter from '../../actions/counter';
+import * as ActionsAccount from '../../actions/account';
+
+function mapStateToProps(state) {
+  return {
+    counter: state.counter.toJS(),
+    account: state.account.toJS()
+  }
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    ...bindActionCreators(ActionsCounter, dispatch),
+    ...bindActionCreators(ActionsAccount, dispatch)
+  }
+}
+
+class Swap extends Component {
   constructor() {
     super();
     this.state = {
@@ -57,6 +76,14 @@ export default class Swap extends Component {
     });
 
     await this.getSwapHistory();
+  }
+
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+    const addressChanged = prevProps.account && prevProps.account.accountInfo
+    && prevProps.account.accountInfo.address !== this.props.account.accountInfo.address;
+    if (addressChanged) {
+      await this.getSwapHistory();
+    }
   }
 
   async getSwapHistory() {
@@ -103,9 +130,19 @@ export default class Swap extends Component {
       }
     }
 
+    const { account } = this.props;
+    const { accountInfo } = account;
+    const { address } = accountInfo;
+
+    if (!address) {
+      this.setState({
+        swapHistory: []
+      });
+      return;
+    }
+
     try {
-      const result = await axios.get('/api/swap/history?method=swapToken&limit=30&address_from=2RCLmZQ2291xDwSbDEJR6nLhFJcMkyfrVTq1i1YxWC4SdY49a6');
-      console.log('result: ', result);
+      const result = await axios.get(`/api/swap/history?method=swapToken&limit=30&address_from=${address}`);
 
       getSwapTxDetail(result.data.txs);
 
@@ -119,14 +156,15 @@ export default class Swap extends Component {
 
   render() {
 
-    console.log('re render');
     const {swapInfo, swapHistory} = this.state;
+    const { account } = this.props;
 
     const swapPairsInfoHTML = renderSwapPairInfo(swapInfo);
     const currentSwapInfoHTML = renderCurrentSwapInfo(swapInfo.currentRound);
     const swapElfHTML = swapInfo.pairId === '-' ? null : renderSwapElf(swapInfo);
     const swapHistoryHTML = renderSwapHistory(swapHistory);
 
+    console.log('re render', account);
     return (
       <div>
         <div className='basic-blank'/>
@@ -149,3 +187,5 @@ export default class Swap extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Swap);

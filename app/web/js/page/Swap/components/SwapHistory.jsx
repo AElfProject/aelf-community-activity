@@ -15,7 +15,7 @@ export default function renderSwapHistory(historyList) {
   //     unique_id: '3432e422aa802ff577722535097473f368868af6e84277496b80931f81a08cb5',
   //   },
   // ];
-  console.log('historyList,', historyList);
+  // console.log('historyList,', historyList);
 
   const keys = ['merkle_path', 'receiver_address', 'unique_id'];
 

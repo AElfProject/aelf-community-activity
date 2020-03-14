@@ -7,7 +7,8 @@ export default function renderSwapPairInfo(swapPair) {
     if (key === 'currentRound') {
       return;
     }
-    if (key === 'swapRatio') {
+
+    if (key === 'swapRatio' && typeof swapPair[key] === 'object') {
       const swapRatio = swapPair[key];
       const {originShare, targetShare} = swapRatio;
       const ratio = parseInt(originShare, 10) / parseInt(targetShare, 10)

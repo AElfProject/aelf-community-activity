@@ -16,10 +16,16 @@
     "egg-scripts": "^2.11.0",
     "egg-validate": "^2.0.2",
     "egg-view-nunjucks": "^2.2.0",
+    "immutable": "^4.0.0-rc.12",
     "moment": "^2.24.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
-    "react-router": "^3.2.1"
+    "react-redux": "^7.2.0",
+    "react-router": "^3.2.1",
+    "redux": "^4.0.5",
+    "redux-immutablejs": "^0.0.8",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",

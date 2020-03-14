@@ -7,6 +7,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route, hashHistory, IndexRoute} from 'react-router';
 
+import { Provider } from 'react-redux';
+import configStore from './store';
+
 import App from './App';
 import Swap from './page/Swap/Swap';
 import Lottery from './page/Lottery/Lottery';
@@ -14,13 +17,17 @@ import Lottery from './page/Lottery/Lottery';
 import "antd/dist/antd.less";
 import './index.less';
 
+const store = configStore();
+
 ReactDOM.render(
-      <Router history={hashHistory}>
-        <Route path="/" component={App}>
-          <IndexRoute component={Swap}/>
-          <Route path="/swap" component={Swap}/>
-          <Route path="/lottery" component={Lottery}/>
-        </Route>
-      </Router>,
+  <Provider store={store}>
+    <Router history={hashHistory}>
+      <Route path="/" component={App}>
+        <IndexRoute component={Swap}/>
+        <Route path="/swap" component={Swap}/>
+        <Route path="/lottery" component={Lottery}/>
+      </Route>
+    </Router>
+  </Provider>,
   document.getElementById('root')
 );
