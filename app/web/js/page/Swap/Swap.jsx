@@ -9,6 +9,8 @@ import renderSwapHistory from './components/SwapHistory';
 
 import getSwapInfo from '../../utils/getSwapInfo';
 
+import axios from '../../service/axios';
+
 import './Swap.less';
 
 export default class Swap extends Component {
@@ -32,7 +34,8 @@ export default class Swap extends Component {
           swappedTimes: '-',
         },
         depositAmount: '-'
-      }
+      },
+      swapHistory: []
     };
   }
 
@@ -46,17 +49,27 @@ export default class Swap extends Component {
       message.error(error.message);
       console.log('swapInfo error: ', error);
     });
+
+    await this.getSwapHistory();
+  }
+
+  async getSwapHistory() {
+    const result = await axios.get('/api/swap/history?method=swapToken&limit=30&address_from=2RCLmZQ2291xDwSbDEJR6nLhFJcMkyfrVTq1i1YxWC4SdY49a6');
+    console.log('result: ', result);
+    this.setState({
+      swapHistory: result.data.txs
+    });
   }
 
   render() {
 
     console.log('re render');
-    const {swapInfo} = this.state;
+    const {swapInfo, swapHistory} = this.state;
 
     const swapPairsInfoHTML = renderSwapPairInfo(swapInfo);
     const currentSwapInfoHTML = renderCurrentSwapInfo(swapInfo.currentRound);
     const swapElfHTML = swapInfo.pairId === '-' ? null : renderSwapElf(swapInfo);
-    const swapHistoryHTML = renderSwapHistory();
+    const swapHistoryHTML = renderSwapHistory(swapHistory);
 
     return (
       <div>

@@ -1,10 +1,6 @@
 import {Buffer} from 'buffer';
 
-export function getMerklePathFromOtherChain(merklePathBytes, merklePathBool) {
-
-  const merklePathBytesArray = merklePathBytes.split(',');
-  const merklePathBoolArray = merklePathBool.split(',');
-
+function constructMerkelPath(merklePathBytesArray, merklePathBoolArray) {
   const merklePath = {
     merklePathNodes: []
   };
@@ -22,6 +18,18 @@ export function getMerklePathFromOtherChain(merklePathBytes, merklePathBool) {
       };
     }
   });
-
   return merklePath;
+}
+
+export function getMerklePathFromOtherChain(merklePathBytes, merklePathBool) {
+
+  const merklePathBytesArray = merklePathBytes.split(',');
+  const merklePathBoolArray = merklePathBool.split(',');
+
+  try {
+    const merklePath = constructMerkelPath(merklePathBytesArray, merklePathBoolArray);
+    return merklePath;
+  } catch (e) {
+    throw new Error('constructMerkelPath Failed: ' + e.name + ': ' + e.message);
+  }
 }

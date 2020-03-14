@@ -25,6 +25,20 @@ module.exports = appInfo => {
     },
   };
 
+  config.mysql = {
+    clients: {
+      aelf0: {
+        host: '',
+        port: '',
+        user: '',
+        password: '',
+        database: '',
+      }
+    },
+    // default config for the all database
+    default: {}
+  };
+
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',

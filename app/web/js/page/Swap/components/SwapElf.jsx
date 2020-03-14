@@ -18,17 +18,18 @@ const tailLayout = {
 export default function renderSwapElf(swapInfo) {
 
   const onFinish = async values => {
-    const {pairId, originAmount, merklePathBytes, merklePathBool, receiverAddress, uniqueId} = values;
-    const merklePath = getMerklePathFromOtherChain(merklePathBytes, merklePathBool);
-    const swapTokenInput = {
-      pairId,
-      originAmount,
-      merklePath,
-      receiverAddress,
-      uniqueId,
-    };
 
     try {
+      const {pairId, originAmount, merklePathBytes, merklePathBool, receiverAddress, uniqueId} = values;
+      const merklePath = getMerklePathFromOtherChain(merklePathBytes, merklePathBool);
+      const swapTokenInput = {
+        pairId,
+        originAmount,
+        merklePath,
+        receiverAddress,
+        uniqueId,
+      };
+
       await NightElfCheck.getInstance().check;
       const aelf = NightElfCheck.initAelfInstanceByExtension();
       const accountInfo = await aelf.login(LOGIN_INFO);
@@ -61,15 +62,11 @@ export default function renderSwapElf(swapInfo) {
         <a target='_blank' href={explorerHref}>Turn to aelf explorer to get the information of this transaction</a>
       </div>;
       message.success(txIdHTML, 16);
-
+      console.log('swapTokenInput', swapTokenInput);
     } catch(e) {
-      message.error(e.message || (e.errorMessage && e.errorMessage.message) || 'Swap failed');
+      message.error(e.message || (e.errorMessage && e.errorMessage.message) || 'Swap failed', 3);
       console.log('error', e);
     }
-
-    console.log('swapTokenInput', swapTokenInput)
-    // TODO: use browser extension call the contract method
-    // swapContract.SwapToken(dataUse, {sync: true});
   };
 
   const onFinishFailed = errorInfo => {
