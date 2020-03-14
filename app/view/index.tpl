@@ -21,5 +21,5 @@
 <!--    </div>-->
 
     <div id="root"></div>
-<script type="text/javascript" src="../public/js/activity.78170.js"></script></body>
+<script type="text/javascript" src="../public/js/activity.fd580.js"></script></body>
 </html>
