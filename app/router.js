@@ -7,4 +7,7 @@ module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.home.index);
   router.get('/api/swap/history', controller.txs.getSwapHistory);
+
+  router.get('/api/daily/count-down-time', controller.daily.getCountdownTime);
+  router.get('/api/swap/award-id', controller.daily.getAward);
 };

@@ -80,7 +80,7 @@ export default function renderSwapHistory(historyList) {
   return (
     <section className='section-basic basic-container'>
       <div className='section-title'>
-        History of this Address (last 30 txs) <Button size='small'>Click to refresh</Button>
+        History of this Address (last 30 txs)
       </div>
       <div className='section-content swap-flex-wrap'>
         {swapListHTML}

@@ -33,22 +33,41 @@ export default class BrowserHeader extends Component {
     });
   };
 
-  renderMenu() {
+  renderMenu(menuList) {
+
+    const listHTML = menuList.map(item => {
+      return <Menu.Item key={item.key}>
+        <Link to={item.url} key={item.key}>{item.title}</Link>
+      </Menu.Item>
+    });
+
     return (
       <Menu onClick={this.handleClick} selectedKeys={[ this.state.current ]} mode="horizontal">
-        <Menu.Item key="swap">
-          <Link to='/swap' key='swap'>Tokne Swap</Link>
-        </Menu.Item>
-        <Menu.Item key="lottery">
-          <Link to='/lottery' key='lottery'>Lottery</Link>
-        </Menu.Item>
+        {listHTML}
       </Menu>
     );
   }
 
   render() {
 
-    const menuHTML = this.renderMenu();
+    const menuList = [
+      {
+        url: '/daily',
+        key: 'daily',
+        title: 'Daily Award'
+      },
+      {
+        url: '/swap',
+        key: 'swap',
+        title: 'Tokne Swap'
+      },
+      {
+        url: '/lottery',
+        key: 'lottery',
+        title: 'Lottery'
+      },
+    ];
+    const menuHTML = this.renderMenu(menuList);
 
     return (
       <div className='header-fixed-container'>

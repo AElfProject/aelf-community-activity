@@ -13,6 +13,7 @@ import configStore from './store';
 import App from './App';
 import Swap from './page/Swap/Swap';
 import Lottery from './page/Lottery/Lottery';
+import Daily from './page/Daily/Daily';
 
 import "antd/dist/antd.less";
 import './index.less';
@@ -26,6 +27,7 @@ ReactDOM.render(
         <IndexRoute component={Swap}/>
         <Route path="/swap" component={Swap}/>
         <Route path="/lottery" component={Lottery}/>
+        <Route path="/daily" component={Daily}/>
       </Route>
     </Router>
   </Provider>,
