@@ -14,11 +14,11 @@ module.exports = class tokenContract {
       const aelf = new AElf(new AElf.providers.HttpProvider(HTTP_PROVIDER_INNER));
       tokenContractInstance = await aelf.chain.contractAt(TOKEN_CONTRACT_ADDRESS, wallet);
     }
-    return tokenContract;
+    return tokenContractInstance;
   }
 
   static async getBalance(tokenType = 'ELF') {
-    return await tokenContract.GetBalance.call({
+    return await tokenContractInstance.GetBalance.call({
       symbol: tokenType,
       owner: wallet.address
     });

@@ -1,6 +1,3 @@
-import { HTTP_PROVIDER } from '../web/js/constant/constant';
-import { add } from '../web/js/actions/counter';
-
 /**
  * @file service/txs.js
  * @author hzz780
@@ -11,35 +8,53 @@ const {
 } = require('egg');
 const AElf = require('aelf-sdk');
 const moment = require('moment');
-const {HTTP_PROVIDER_INNER,} = require('../../config/config');
+const {HTTP_PROVIDER_INNER,} = require('../../config/config.json');
 
 const tokenContract = require('../utils/tokenContract');
 const aelf = new AElf(new AElf.providers.HttpProvider(HTTP_PROVIDER_INNER));
 
+const whiteListType = ['token', 'resource'];
+
 module.exports = class TxsService extends Service {
 
   async getAward(options) {
+    const {ctx} = this;
     const aelf0 = this.ctx.app.mysql.get('aelf0');
     const {
       address, tx_id, type
     } = options;
 
-    const tokenContractInstance = tokenContract.getTokenContractInstance();
-    const balanceResult = tokenContract.getBalance();
-    if (balanceResult && balanceResult.balance <= 101 * 10 ** 8 ) {
+    if (!whiteListType.includes(type)) {
+      throw Error('Invalid type');
+    }
+
+    const tokenContractInstance = await tokenContract.getTokenContractInstance();
+    const balanceResult = await tokenContract.getBalance();
+    // avoid 50 person get award at the same time.
+    if (balanceResult && balanceResult.balance <= 50 * 101 * 10 ** 8 ) {
       throw Error('Insufficient ELF, please report in telegram.');
     }
 
     const endTime = moment().endOf('day').unix();
-    // TODO: check record
-    const sqlValue = [endTime, address, type];
-    const getHistorySql = `select * from award_history where end_time=? and address=? and type=?`;
-    const history = await aelf0.query(getHistorySql, sqlValue);
-    if (history.length) {
-      throw Error('Already award, type: ' + type);
+
+    const history = await ctx.model.AwardHistories.findOne({
+      where: {
+        end_time: endTime,
+        address,
+        type
+      }
+    });
+
+    if (history && history.dataValues) {
+      throw Error('Already award, type: ' + type + ' tx_id: ' + history.dataValues.tx_id);
     }
 
     const resultTemp = await aelf.chain.getTxResult(tx_id);
+
+    if (resultTemp.Status && resultTemp.Status.toLowerCase() !== 'mined') {
+      throw Error('Transaction has not been mined.');
+    }
+
     const blockTemp = await aelf.chain.getBlock(resultTemp.BlockHash, false);
     const txTime = moment(blockTemp.Header.Time).unix();
     if (endTime - txTime < 0) {
@@ -53,9 +68,12 @@ module.exports = class TxsService extends Service {
       to: address
     });
 
-    const insertSqlValue = [endTime, address, type, tx_id];
-    const insertHistorySql = `insert into award_history (end_time, address, type, tx_id) VALUES (?,?,?,?)`;
-    await aelf0.query(insertHistorySql, insertSqlValue);
+    await ctx.model.AwardHistories.create({
+      end_time: endTime,
+      address,
+      type,
+      tx_id
+    });
 
     return transferTxId;
   }
