@@ -66,4 +66,27 @@ module.exports = class DailyController extends Controller {
       formatOutput(ctx, 'error', error, 422);
     }
   }
+
+  async getAwardHistory() {
+    const { ctx } = this;
+    const { address, limit, offset, order } = ctx.request.query;
+    try {
+
+      const keysRule = {
+        address: 'string',
+      };
+      const options = {
+        address,
+        limit: limit || 20,
+        offset: offset || 0,
+        order: order || 'DESC'
+      };
+      ctx.validate(keysRule, options);
+
+      const result = await ctx.service.daily.getAwardHistory(options);
+      formatOutput(ctx, 'get', result);
+    } catch (error) {
+      formatOutput(ctx, 'error', error, 422);
+    }
+  }
 };

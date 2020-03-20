@@ -41,14 +41,9 @@ class DailyMissions extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { account } = this.props;
-    const {accountInfo} = account;
-    const {address} = accountInfo;
-    const { account: preAccount } = prevProps;
-    const {accountInfo: preAccountInfo} = preAccount;
-    const {address: preAddress} = preAccountInfo;
-
-    if (!preAddress && address ) {
+    const addressChanged = prevProps.account && prevProps.account.accountInfo
+      && prevProps.account.accountInfo.address !== this.props.account.accountInfo.address;
+    if (addressChanged) {
       this.getEffectiveTxs();
     }
   }

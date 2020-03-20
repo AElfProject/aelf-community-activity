@@ -110,4 +110,23 @@ module.exports = class TxsService extends Service {
 
     return transferTxId;
   }
+
+  async getAwardHistory(options) {
+    const {ctx} = this;
+    const {
+      address,
+      limit,
+      offset,
+      order
+    } = options;
+
+    return await ctx.model.AwardHistories.findAll({
+      where: {
+        address
+      },
+      order: [['id', order]],
+      limit,
+      offset
+    });
+  }
 };

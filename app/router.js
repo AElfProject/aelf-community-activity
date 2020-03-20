@@ -11,4 +11,5 @@ module.exports = app => {
   router.get('/api/daily/count-down-time', controller.daily.getCountdownTime);
   router.get('/api/daily/award-id', controller.daily.getAward);
   router.get('/api/daily/effective-tx', controller.daily.getEffectiveTx);
+  router.get('/api/daily/award-history', controller.daily.getAwardHistory);
 };

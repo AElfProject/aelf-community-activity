@@ -4,7 +4,7 @@ import { Tabs } from 'antd';
 const { TabPane } = Tabs;
 
 import axios from '../../service/axios';
-import { GET_COUNTDOWN } from '../../constant/apis';
+import { GET_AWARD_HISTORY } from '../../constant/apis';
 
 import DailyMissions  from './components/DailyMissions';
 import DailyHistory  from './components/DailyHistory';
@@ -30,16 +30,42 @@ class Daily extends Component {
   constructor() {
     super();
     this.state = {
+      dailyAwardHistory: []
     };
+    this.getDailyAwardHistory = this.getDailyAwardHistory.bind(this);
   }
 
   async componentDidMount() {
+    this.getDailyAwardHistory();
+  }
+
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+    const addressChanged = prevProps.account && prevProps.account.accountInfo
+      && prevProps.account.accountInfo.address !== this.props.account.accountInfo.address;
+    if (addressChanged) {
+      await this.getDailyAwardHistory();
+    }
+  }
+
+  async getDailyAwardHistory() {
+    const { account } = this.props;
+    const {accountInfo} = account;
+    const {address} = accountInfo;
+
+    if (!address) {
+      return;
+    }
+    const result = await axios.get(`${GET_AWARD_HISTORY}?address=${address}`);
+
+    this.setState({
+      dailyAwardHistory: result.data
+    });
   }
 
   render() {
 
     const { account } = this.props;
-    // const { countdown } = this.state;
+    const { dailyAwardHistory } = this.state;
 
     const {accountInfo} = account;
     const {address} = accountInfo;
@@ -52,7 +78,7 @@ class Daily extends Component {
             <DailyMissions/>
           </TabPane>
           <TabPane tab="Award History" key="2">
-            <DailyHistory address={address}/>
+            <DailyHistory address={address} dailyAwardHistory={dailyAwardHistory}/>
           </TabPane>
         </Tabs>
       </div>
