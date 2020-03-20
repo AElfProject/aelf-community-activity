@@ -15,11 +15,40 @@ const aelf = new AElf(new AElf.providers.HttpProvider(HTTP_PROVIDER_INNER));
 
 const whiteListType = ['token', 'resource'];
 
+function checkTimeIsEffective(time) {
+  const startTime = moment().startOf('day');
+  const timeNow =  moment();
+  return moment(time).isBetween(startTime, timeNow);
+}
+
 module.exports = class TxsService extends Service {
+
+  async getEffectiveTx(options) {
+    const aelf0 = this.ctx.app.mysql.get('aelf0');
+    const {
+      address,
+      type
+    } = options;
+
+    const sqlValue = [ address, 'Mined' ];
+    const getTokenTxSql = 'select * from transactions_0 where address_from=? and tx_status=? order by id DESC limit 1';
+    const getResourceTxSql = 'select * from resource_0 where address=? and tx_status=? order by id DESC limit 1';
+
+    const getSql = type === 'resource' ? getResourceTxSql : getTokenTxSql;
+
+    const txResult = await aelf0.query(getSql, sqlValue);
+
+    if (!txResult.length) {
+      return [];
+    }
+
+    const isEffective = checkTimeIsEffective(txResult[0].time);
+
+    return  isEffective ? txResult : [];
+  }
 
   async getAward(options) {
     const {ctx} = this;
-    const aelf0 = this.ctx.app.mysql.get('aelf0');
     const {
       address, tx_id, type
     } = options;
@@ -53,6 +82,10 @@ module.exports = class TxsService extends Service {
 
     if (resultTemp.Status && resultTemp.Status.toLowerCase() !== 'mined') {
       throw Error('Transaction has not been mined.');
+    }
+
+    if (resultTemp.Transaction.From !== address) {
+      throw Error(`Transaction ${tx_id} is not belongs to ${address}. It belongs to ${resultTemp.Transaction.From}`);
     }
 
     const blockTemp = await aelf.chain.getBlock(resultTemp.BlockHash, false);

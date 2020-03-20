@@ -10,6 +10,7 @@ import renderSwapHistory from './components/SwapHistory';
 import getSwapInfo from '../../utils/getSwapInfo';
 
 import axios from '../../service/axios';
+import { GET_SWAP_HISTORY } from '../../constant/apis';
 
 import AElf from 'aelf-sdk';
 import {HTTP_PROVIDER} from '../../constant/constant';
@@ -66,10 +67,15 @@ class Swap extends Component {
 
   async componentDidMount() {
     getSwapInfo().then(result => {
-      // console.log('swapInfo: ', result);
-      this.setState({
+      if (result) {
+        console.log('swapInfo: ', result);
+        this.setState({
           swapInfo: result,
-      });
+        });
+      } else {
+        message.warning('Can not get the swap information.');
+      }
+
     }).catch(error => {
       message.error(error.message);
       // console.log('swapInfo error: ', error);
@@ -142,7 +148,7 @@ class Swap extends Component {
     }
 
     try {
-      const result = await axios.get(`/api/swap/history?method=swapToken&limit=30&address_from=${address}`);
+      const result = await axios.get(`${GET_SWAP_HISTORY}?method=swapToken&limit=30&address_from=${address}`);
 
       getSwapTxDetail(result.data.txs);
 
