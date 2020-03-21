@@ -11,6 +11,8 @@ import { bindActionCreators} from 'redux';
 import * as ActionsAccount from '../../../actions/account';
 import { Button, message } from 'antd';
 import { EXPLORER_URL } from '../../../constant/constant';
+import addressFormat from '../../../utils/addressFormat';
+import { add } from '../../../actions/counter';
 
 function mapStateToProps(state) {
   return {
@@ -167,7 +169,7 @@ class DailyMissions extends Component {
     const {accountInfo} = account;
     const {address} = accountInfo;
 
-    console.log('dailyAwardHistory: ', dailyAwardHistory);
+    // console.log('dailyAwardHistory: ', dailyAwardHistory);
     return (
       <div>
         <section className='section-basic basic-container'>
@@ -175,7 +177,7 @@ class DailyMissions extends Component {
             Countdown of this round of activities：<CountDown countdown={countdown} />
           </div>
           <div className='section-title'>
-            Current Address: {address || 'Please login'}
+            Current Address: {address ? addressFormat(address) : 'Please login'}
           </div>
         </section>
         <div className='basic-blank'/>
