@@ -1,12 +1,14 @@
 import React, { Component} from 'react';
+import moment from 'moment';
 
 import axios from '../../../service/axios';
-import { GET_COUNTDOWN, GET_EFFECTIVE_TX } from '../../../constant/apis';
+import { GET_AWARD_HISTORY, GET_COUNTDOWN, GET_EFFECTIVE_TX } from '../../../constant/apis';
+
+import CountDown from '../../../components/Countdown/Countdown';
 
 import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux';
 import * as ActionsAccount from '../../../actions/account';
-import { add } from '../../../actions/counter';
 
 function mapStateToProps(state) {
   return {
@@ -23,7 +25,7 @@ class DailyMissions extends Component {
   constructor() {
     super();
     this.state = {
-      countdown: '-',
+      countdown: 0,
       effectiveTokenTx: [],
       effectiveResourceTx: []
     };
@@ -36,10 +38,6 @@ class DailyMissions extends Component {
     this.getEffectiveTxs();
   }
 
-  componentWillUnmount() {
-    this.getCountDown = () => {};
-  }
-
   componentDidUpdate(prevProps, prevState, snapshot) {
     const addressChanged = prevProps.account && prevProps.account.accountInfo
       && prevProps.account.accountInfo.address !== this.props.account.accountInfo.address;
@@ -48,24 +46,22 @@ class DailyMissions extends Component {
     }
   }
 
+  // hasAward() {
+  //   function checkTimeIsEffective(time) {
+  //     const startTime = moment().startOf('day');
+  //     const timeNow =  moment();
+  //     return moment(time).isBetween(startTime, timeNow);
+  //   }
+  // }
+
   async getCountDown(countdown) {
-    if (countdown && countdown >= 0) {
-      countdown--;
-    } else {
-      const result = await axios.get(GET_COUNTDOWN);
-      countdown = result.data;
-    }
 
-    const countDownArray = getHoursMinutesSeconds(countdown);
-
-    const countdownString = countDownArray.join(' : ');
+    const result = await axios.get(GET_COUNTDOWN);
+    countdown = result.data;
 
     this.setState({
-      countdown: countdownString
+      countdown
     });
-    setTimeout(() => {
-      this.getCountDown(countdown)
-    }, 1000);
   }
 
   async getEffectiveTxs() {
@@ -96,18 +92,18 @@ class DailyMissions extends Component {
 
   render() {
 
-    const { account } = this.props;
-    const { countdown, effectiveTokenTx, effectiveResourceTx } = this.state;
+    const { account, dailyAwardHistory } = this.props;
+    const { effectiveTokenTx, effectiveResourceTx, countdown } = this.state;
 
     const {accountInfo} = account;
     const {address} = accountInfo;
 
-    console.log();
+    console.log('dailyAwardHistory: ', dailyAwardHistory);
     return (
       <div>
         <section className='section-basic basic-container'>
           <div className='section-title'>
-            Countdown of this round of activities：{countdown}
+            Countdown of this round of activities：<CountDown countdown={countdown} />
           </div>
           <div className='section-title'>
             Current Address: {address || 'Please login'}
@@ -120,7 +116,9 @@ class DailyMissions extends Component {
           </div>
           <div className='section-content'>
             <div>Rule: During the activity period, you can get 100 elf for buying and selling resource token.</div>
-            {effectiveResourceTx.length ? <div>Effective transaction {effectiveResourceTx[0].tx_id}</div>  : null}
+            {effectiveResourceTx.length
+              ? <div>Effective transaction ID: {effectiveResourceTx[0].tx_id}</div>
+              : <div>There are no effective transaction.</div>}
           </div>
         </section>
         <div className='basic-blank'/>
@@ -130,25 +128,14 @@ class DailyMissions extends Component {
           </div>
           <div className='section-content swap-flex-wrap'>
             <div>Rule：During the activity, transfer token can receive 100 Elf.</div>
-            {effectiveTokenTx.length ? <div>Effective transaction {effectiveTokenTx[0].tx_id}</div> : null}
+            {effectiveTokenTx.length
+              ? <div>Effective transaction ID: {effectiveTokenTx[0].tx_id}</div>
+              : <div>There are no effective transaction.</div>}
           </div>
         </section>
       </div>
     );
   }
-}
-
-function getHoursMinutesSeconds(countdown) {
-  const hours = Math.floor(countdown / 3600);
-  const minutes = Math.floor(countdown % 3600 / 60);
-  const seconds = countdown % 60;
-
-  return [hours, minutes, seconds].map(item => {
-    if (item < 10) {
-      return '0' + item;
-    }
-    return item;
-  });
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DailyMissions);

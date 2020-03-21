@@ -77,8 +77,8 @@ module.exports = class DailyController extends Controller {
       };
       const options = {
         address,
-        limit: limit || 20,
-        offset: offset || 0,
+        limit: parseInt(limit, 10) || 20,
+        offset: parseInt(offset, 10) || 0,
         order: order || 'DESC'
       };
       ctx.validate(keysRule, options);

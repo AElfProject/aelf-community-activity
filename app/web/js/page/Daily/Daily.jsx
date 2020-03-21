@@ -55,7 +55,7 @@ class Daily extends Component {
     if (!address) {
       return;
     }
-    const result = await axios.get(`${GET_AWARD_HISTORY}?address=${address}`);
+    const result = await axios.get(`${GET_AWARD_HISTORY}?address=${address}&limit=100`);
 
     this.setState({
       dailyAwardHistory: result.data
@@ -75,7 +75,7 @@ class Daily extends Component {
         <div className='basic-blank'/>
         <Tabs defaultActiveKey="1">
           <TabPane tab="Daily Missions" key="1">
-            <DailyMissions/>
+            <DailyMissions dailyAwardHistory={dailyAwardHistory}/>
           </TabPane>
           <TabPane tab="Award History" key="2">
             <DailyHistory address={address} dailyAwardHistory={dailyAwardHistory}/>
