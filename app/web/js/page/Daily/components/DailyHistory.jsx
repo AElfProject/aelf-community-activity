@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Table } from 'antd';
+import { EXPLORER_URL } from '../../../constant/constant';
 
 export default function renderDailyHistory(props) {
 
@@ -14,9 +15,18 @@ export default function renderDailyHistory(props) {
       render: text => <div>{ moment(text * 1000).format('YYYY-MM-DD HH:mm') }</div>,
     },
     {
-      title: 'Tx id',
+      title: 'Tx Id',
       dataIndex: 'tx_id',
       key: 'tx_id',
+      width: 350,
+      render: text => <a target='_blank' href={`${EXPLORER_URL}/tx/${text}`}>{text}</a>
+    },
+    {
+      title: 'Award Id',
+      dataIndex: 'award_id',
+      key: 'award_id',
+      width: 350,
+      render: text => <a target='_blank' href={`${EXPLORER_URL}/tx/${text}`}>{text}</a>
     },
     {
       title: 'type',
@@ -37,7 +47,13 @@ export default function renderDailyHistory(props) {
         History
       </div>
       <div className='section-content swap-flex-wrap'>
-        <Table dataSource={dailyAwardHistory} columns={columns} pagination={false} rowKey='id'/>
+        <Table
+          dataSource={dailyAwardHistory}
+          columns={columns}
+          pagination={false}
+          rowKey='id'
+          scroll={{x: 1024}}
+        />
       </div>
     </section>
   );

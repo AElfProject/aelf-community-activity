@@ -75,7 +75,7 @@ class Daily extends Component {
         <div className='basic-blank'/>
         <Tabs defaultActiveKey="1">
           <TabPane tab="Daily Missions" key="1">
-            <DailyMissions dailyAwardHistory={dailyAwardHistory}/>
+            <DailyMissions dailyAwardHistory={dailyAwardHistory} getDailyAwardHistory={this.getDailyAwardHistory}/>
           </TabPane>
           <TabPane tab="Award History" key="2">
             <DailyHistory address={address} dailyAwardHistory={dailyAwardHistory}/>
@@ -84,19 +84,6 @@ class Daily extends Component {
       </div>
     );
   }
-}
-
-function getHoursMinutesSeconds(countdown) {
-  const hours = Math.floor(countdown / 3600);
-  const minutes = Math.floor(countdown % 3600 / 60);
-  const seconds = countdown % 60;
-
-  return [hours, minutes, seconds].map(item => {
-    if (item < 10) {
-      return '0' + item;
-    }
-    return item;
-  });
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Daily);

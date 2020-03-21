@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import {EXPLORER_URL} from '../../../constant/constant';
-import { Button, Tag } from 'antd';
+import { Tag } from 'antd';
 
 export default function renderSwapHistory(historyList) {
   // TODO: get data from explore api

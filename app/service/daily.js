@@ -104,7 +104,8 @@ module.exports = class TxsService extends Service {
       end_time: endTime,
       address,
       type,
-      tx_id
+      tx_id,
+      award_id: transferTxId.TransactionId
     });
 
     return transferTxId;

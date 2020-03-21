@@ -8,9 +8,7 @@ export default function renderAwardHistory() {
     {
       title: 'Random Hash',
       dataIndex: 'random_hash',
-      key: 'random_hash',
-      // render: text => <a>{text}</a>,
-      // render: text => <a>{text}</a>,
+      key: 'random_hash'
     },
     {
       title: 'Owner',

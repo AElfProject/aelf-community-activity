@@ -25,6 +25,11 @@ module.exports.awardHistories = function(Sequelize) {
       unique: true,
       allowNull: false
     },
+    award_id: {
+      type: STRING(64),
+      unique: true,
+      allowNull: false
+    },
     type: {
       type: STRING(16),
       allowNull: false
