@@ -2,6 +2,9 @@
 import React from 'react';
 import { Table, InputNumber, Button } from 'antd';
 
+import addressFormat from '../../../utils/addressFormat';
+import { LOTTERY } from '../../../constant/constant';
+
 const columns = [
   {
     title: 'ID',
@@ -59,7 +62,10 @@ function onExchangeNumberChange(value) {
   console.log('changed', value);
 }
 
-export default function renderPersonalDraw() {
+export default function renderPersonalDraw(props) {
+
+  const {voteBalance, address} = props;
+
   const historyHTML = renderHistory();
 
   return (
@@ -72,13 +78,13 @@ export default function renderPersonalDraw() {
         <div className='basic-line'/>
         <div className='basic-blank'/>
         <div>
-          <div>Address: ELF_2Dyh4ASm6z7CaJ1J1WyvMPe2sJx5TMBW8CMTKeVoTMJ3ugQi3P_AELF</div>
+          <div>Address: {address ? addressFormat(address) : 'Please login'}</div>
           <div className='basic-blank'/>
-          <div> Balance: 2000 ELF</div>
+          <div> Balance: {voteBalance ? voteBalance + ' VOTE' : '-'}</div>
           <div className='basic-blank'/>
           <div className='personal-exchange'>
-            Exchange Quantity (1000 ELF = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
-            <InputNumber min={1} max={2000/1000} defaultValue={1} onChange={onExchangeNumberChange} />
+            Exchange Quantity ({LOTTERY.RATIO} VOTE = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
+            <InputNumber min={1} max={voteBalance/LOTTERY.RATIO} defaultValue={1} onChange={onExchangeNumberChange} />
             &nbsp;&nbsp;&nbsp;
             <Button type="primary">Exchange</Button>
           </div>
