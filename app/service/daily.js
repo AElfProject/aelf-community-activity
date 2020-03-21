@@ -31,11 +31,10 @@ module.exports = class TxsService extends Service {
     } = options;
 
     const sqlValue = [ address, 'Mined' ];
-    const getTokenTxSql = 'select * from transactions_0 where address_from=? and tx_status=? order by id DESC limit 1';
+    const getTokenTxSql = 'select * from transactions_token where address_from=? and tx_status=? order by id DESC limit 1';
     const getResourceTxSql = 'select * from resource_0 where address=? and tx_status=? order by id DESC limit 1';
 
     const getSql = type === 'resource' ? getResourceTxSql : getTokenTxSql;
-
     const txResult = await aelf0.query(getSql, sqlValue);
 
     if (!txResult.length) {

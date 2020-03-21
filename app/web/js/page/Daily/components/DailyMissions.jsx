@@ -119,8 +119,8 @@ class DailyMissions extends Component {
             Mission 1 Resource
           </div>
           <div className='section-content'>
-            Rule: During the activity period, you can get 100 elf for buying and selling resource token.
-            {effectiveResourceTx.length && <div>Effective transaction {effectiveResourceTx[0].tx_id}</div>}
+            <div>Rule: During the activity period, you can get 100 elf for buying and selling resource token.</div>
+            {effectiveResourceTx.length ? <div>Effective transaction {effectiveResourceTx[0].tx_id}</div>  : null}
           </div>
         </section>
         <div className='basic-blank'/>
@@ -129,8 +129,8 @@ class DailyMissions extends Component {
             Mission 2 Token
           </div>
           <div className='section-content swap-flex-wrap'>
-            Rule：During the activity, transfer token can receive 100 Elf.
-            {effectiveTokenTx.length && <div>Effective transaction {effectiveTokenTx[0].tx_id}</div>}
+            <div>Rule：During the activity, transfer token can receive 100 Elf.</div>
+            {effectiveTokenTx.length ? <div>Effective transaction {effectiveTokenTx[0].tx_id}</div> : null}
           </div>
         </section>
       </div>
