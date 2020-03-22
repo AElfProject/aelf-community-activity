@@ -42,9 +42,9 @@ function renderPrizeSteps(props) {
     }
   ];
 
-  const stepsHTML = prizes.map(prize => {
+  const stepsHTML = prizes.map((prize, index) => {
     const descriptionHTML = <div className='prize-description'>{prize.description}</div>;
-    return <Step title={prize.limit} description={descriptionHTML} />
+    return <Step title={prize.limit} description={descriptionHTML} key={index}/>
   });
 
   return (

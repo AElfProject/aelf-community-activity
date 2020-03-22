@@ -134,7 +134,7 @@ export default class PersonalDraw extends Component{
     });
 
     this.setState({
-      boughtLotteries: boughtLotteries.lotteries.reverse()
+      boughtLotteries: boughtLotteries.lotteries ? boughtLotteries.lotteries.reverse() : []
     });
   }
 

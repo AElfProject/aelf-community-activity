@@ -50,8 +50,13 @@ export default class AwardHistory extends Component{
     this.updateRandomHashBelongsToCurrentAddress = this.updateRandomHashBelongsToCurrentAddress.bind(this);
   }
 
+  async componentDidMount() {
+    this.getRewardResults();
+  }
+
   async componentDidUpdate(prevProps, prevState, snapshot) {
     const currentPeriodNumberChanged = prevProps.currentPeriodNumber !== this.props.currentPeriodNumber;
+
     if (currentPeriodNumberChanged) {
       this.getRewardResults();
     }
@@ -65,7 +70,7 @@ export default class AwardHistory extends Component{
     const {address} = this.props;
     if (!address) {
       this.setState({
-        randomHashBelongsToCurrentAddress: []
+        rewardListBelongsToCurrentAddress: []
       });
       return;
     }
@@ -77,11 +82,7 @@ export default class AwardHistory extends Component{
       });
       return addressRewardLotteries.length;
     });
-    const hashList = addressRewardList.map(item => {
-      return item.randomHash
-    });
     this.setState({
-      randomHashBelongsToCurrentAddress: hashList,
       rewardListBelongsToCurrentAddress: addressRewardList
     });
   }

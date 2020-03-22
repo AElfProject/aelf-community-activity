@@ -3,7 +3,8 @@
  * @author hzz780
  */
 const AElf = require('aelf-sdk');
-const {HTTP_PROVIDER_INNER, TOKEN_CONTRACT_ADDRESS, AWARD_PRIVATE} = require('../../config/config');
+const {HTTP_PROVIDER_INNER, TOKEN_CONTRACT_ADDRESS} = require('../../config/config');
+const { AWARD_PRIVATE} = require('../../config/config.forserveronly');
 const Wallet = AElf.wallet;
 const wallet = Wallet.getWalletByPrivateKey(AWARD_PRIVATE);
 
