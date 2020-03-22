@@ -72,7 +72,7 @@ export default class NightElfCheck {
         if (contractInstances[contractAddress + address]) {
             return contractInstances[contractAddress + address];
         }
-        return await initContractInstance(inputInitParams);
+        return await NightElfCheck.initContractInstance(inputInitParams);
     }
 
     // singleton to get, new to init

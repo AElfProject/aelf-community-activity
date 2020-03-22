@@ -6,6 +6,7 @@ import {NightElfCheck} from '../../../utils/NightElf/NightElf';
 import addressFormat from '../../../utils/addressFormat';
 import { LOGIN_INFO, LOTTERY, TOKEN_CONTRACT_ADDRESS } from '../../../constant/constant';
 import TokenContract from '../../../utils/tokenContract';
+import Contract from '../../../utils/Contract';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
 
 const columns = [
@@ -15,17 +16,12 @@ const columns = [
     key: 'id',
     width: '180px'
   },
-  {
-    title: 'Random Hash',
-    dataIndex: 'random_hash',
-    key: 'random_hash',
-    // render: text => <a>{text}</a>,
-    // render: text => <a>{text}</a>,
-  },
   // {
-  //   title: 'Owner',
-  //   dataIndex: 'owner',
-  //   key: 'owner',
+  //   title: 'Random Hash',
+  //   dataIndex: 'random_hash',
+  //   key: 'random_hash',
+  //   // render: text => <a>{text}</a>,
+  //   // render: text => <a>{text}</a>,
   // },
   {
     title: 'level',
@@ -39,26 +35,17 @@ const columns = [
   },
 ];
 
-// TODO: get data from explore api
-const dataSource = [
-  {
-    id: '123',
-    random_hash: '3432e422aa802ff577722535097473f368868af6e84277496b80931f81a08cb5',
-    // owner: 'ELF_2Dyh4ASm6z7CaJ1J1WyvMPe2sJx5TMBW8CMTKeVoTMJ3ugQi3P_AELF',
-    level: 1,
-    block: 2791111
-  },
-  {
-    id:'223',
-    random_hash: '3432e422aa802ff577722535097473f368868af6e84277496b80931f81a08cb5',
-    // owner: 'ELF_2Dyh4ASm6z7CaJ1J1WyvMPe2sJx5TMBW8CMTKeVoTMJ3ugQi3P_AELF',
-    level: 2,
-    block: 2791112
-  },
-];
-
-function renderHistory() {
-  return <Table dataSource={dataSource} columns={columns} pagination={false} />;
+function renderHistory(dataSource) {
+  // const dataSource =  [
+  //   {
+  //     id: '36',
+  //     owner: '2hxkDg6Pd2d4yU1A16PTZVMMrEDYEPR8oQojMDwWdax5LsBaxX',
+  //     level: '0',
+  //     block: '116371',
+  //     registrationInformation: ''
+  //   },
+  // ];
+  return <Table dataSource={dataSource} columns={columns} pagination={false} rowKey='id'/>;
 }
 
 export default class PersonalDraw extends Component{
@@ -66,7 +53,9 @@ export default class PersonalDraw extends Component{
     super(props);
     this.state = {
       voteBalance: 0,
-      voteAllowance: 0
+      voteAllowance: 0,
+      currentPeriodNumber: '-',
+      boughtLotteries: []
     };
     this.voteApproveCount = 0;
     this.buyCount = 0;
@@ -75,6 +64,12 @@ export default class PersonalDraw extends Component{
     this.onApproveChange = this.onApproveChange.bind(this);
     this.onExchangeNumberChange = this.onExchangeNumberChange.bind(this);
     this.onApproveClick = this.onApproveClick.bind(this);
+    this.getCurrentPeriodNumber = this.getCurrentPeriodNumber.bind(this);
+    this.getBoughtLotteries = this.getBoughtLotteries.bind(this);
+  }
+
+  async componentDidMount() {
+    this.getCurrentPeriodNumber();
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -82,6 +77,7 @@ export default class PersonalDraw extends Component{
     if (addressChanged) {
       await this.getVoteToken();
       await this.getVoteAllowance();
+      await this.getBoughtLotteries();
     }
   }
 
@@ -95,7 +91,7 @@ export default class PersonalDraw extends Component{
         symbol: 'VOTE',
         owner: address
       });
-      voteBalance = balance.balance;
+      voteBalance = parseInt(balance.balance, 10);
     }
 
     this.setState({
@@ -122,6 +118,41 @@ export default class PersonalDraw extends Component{
     });
   }
 
+  async getCurrentPeriodNumber() {
+    const aelfContract = new Contract();
+    const lotteryContractInstance = await aelfContract.getContractInstance(LOTTERY.CONTRACT_ADDRESS);
+    const periodNumber = await lotteryContractInstance.GetCurrentPeriodNumber.call();
+    this.setState({
+      currentPeriodNumber: periodNumber.value
+    });
+  }
+
+  async getBoughtLotteries() {
+    const {currentPeriodNumber} = this.state;
+    const { address } = this.props;
+    if (!address) {
+      this.setState({
+        boughtLotteries: []
+      });
+      return;
+    }
+
+    const lotteryContract = await NightElfCheck.getContractInstance({
+      loginInfo: LOGIN_INFO,
+      contractAddress: LOTTERY.CONTRACT_ADDRESS,
+    });
+
+    const boughtLotteries = await lotteryContract.GetBoughtLotteries.call({
+      period: currentPeriodNumber,
+      startIndex: 0,
+      owner: address
+    });
+
+    this.setState({
+      boughtLotteries: boughtLotteries.lotteries.reverse()
+    });
+  }
+
   async onBuyClick() {
     try {
       await buyLottery(this.buyCount);
@@ -129,6 +160,9 @@ export default class PersonalDraw extends Component{
       this.setState({
         voteBalance: voteBalance - buyCount
       });
+      setTimeout(() => {
+        this.getBoughtLotteries();
+      }, 3000);
     } catch(e) {
       message.error(e.message || 'Failed to buy a lottery.')
     }
@@ -150,16 +184,15 @@ export default class PersonalDraw extends Component{
         this.getVoteAllowance();
       }, 3000);
     } catch(e) {
-      // console.log(e);
       message.error(e.message || 'Failed to approve.')
     }
   }
 
   render() {
     const {address} = this.props;
-    const {voteBalance, voteAllowance} = this.state;
+    const {voteBalance, voteAllowance, currentPeriodNumber, boughtLotteries} = this.state;
 
-    const historyHTML = renderHistory();
+    const historyHTML = renderHistory(boughtLotteries);
 
     return (
       <section className='section-basic basic-container'>
@@ -167,7 +200,7 @@ export default class PersonalDraw extends Component{
           My Lottery
         </div>
         <div className='section-content'>
-          <div className='personal-title'>Exchange Lottery Code</div>
+          <div className='personal-title'>Exchange Lottery Code (Current Period: {currentPeriodNumber})</div>
           <div className='basic-line'/>
           <div className='basic-blank'/>
           <div>
@@ -177,21 +210,21 @@ export default class PersonalDraw extends Component{
             <div className='basic-blank'/>
             <div>
               The vote token you can use to exchange: {voteAllowance ? voteAllowance + ' VOTE' : '-'} &nbsp;&nbsp;&nbsp;
-              <InputNumber min={1} max={voteBalance} onChange={this.onApproveChange} />
+              <InputNumber min={0} max={voteBalance} onChange={this.onApproveChange} />
               &nbsp;&nbsp;&nbsp;
               <Button type="primary" onClick={() => this.onApproveClick()}>Increase the upper limit</Button>
             </div>
             <div className='basic-blank'/>
             <div className='personal-exchange'>
               Exchange Quantity ({LOTTERY.RATIO} VOTE = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
-              <InputNumber min={1} max={voteAllowance/LOTTERY.RATIO} defaultValue={1} onChange={this.onExchangeNumberChange} />
+              <InputNumber min={0} max={voteAllowance/LOTTERY.RATIO} defaultValue={1} onChange={this.onExchangeNumberChange} />
               &nbsp;&nbsp;&nbsp;
               <Button type="primary" onClick={() => this.onBuyClick()}>Exchange</Button>
             </div>
           </div>
 
           <div className='basic-blank'/>
-          <div className='personal-title'>History</div>
+          <div className='personal-title'>Current Period Lottery Numbers</div>
           <div className='basic-line'/>
           <div className='basic-blank'/>
           {historyHTML}
