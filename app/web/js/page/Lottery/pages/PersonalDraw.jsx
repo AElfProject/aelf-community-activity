@@ -1,10 +1,12 @@
 /* From start */
-import React from 'react';
+import React, { Component } from 'react';
 import { Table, InputNumber, Button, message } from 'antd';
 
 import {NightElfCheck} from '../../../utils/NightElf/NightElf';
 import addressFormat from '../../../utils/addressFormat';
-import { EXPLORER_URL, LOGIN_INFO, LOTTERY } from '../../../constant/constant';
+import { LOGIN_INFO, LOTTERY, TOKEN_CONTRACT_ADDRESS } from '../../../constant/constant';
+import TokenContract from '../../../utils/tokenContract';
+import MessageTxToExplore from '../../../components/Message/TxToExplore';
 
 const columns = [
   {
@@ -54,97 +56,185 @@ const dataSource = [
     block: 2791112
   },
 ];
-let buyCount = 0;
 
 function renderHistory() {
   return <Table dataSource={dataSource} columns={columns} pagination={false} />;
 }
 
-function onExchangeNumberChange(value) {
-  console.log('changed', value);
-  buyCount = value;
+export default class PersonalDraw extends Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      voteBalance: 0,
+      voteAllowance: 0
+    };
+    this.voteApproveCount = 0;
+    this.buyCount = 0;
+    this.tokenContract = new TokenContract();
+    this.onBuyClick = this.onBuyClick.bind(this);
+    this.onApproveChange = this.onApproveChange.bind(this);
+    this.onExchangeNumberChange = this.onExchangeNumberChange.bind(this);
+    this.onApproveClick = this.onApproveClick.bind(this);
+  }
+
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+    const addressChanged = prevProps.address !== this.props.address;
+    if (addressChanged) {
+      await this.getVoteToken();
+      await this.getVoteAllowance();
+    }
+  }
+
+  async getVoteToken() {
+    const { address } = this.props;
+
+    let voteBalance = 0;
+    if (address) {
+      const tokenContractInstance = await this.tokenContract.getTokenContractInstance();
+      const balance = await tokenContractInstance.GetBalance.call({
+        symbol: 'VOTE',
+        owner: address
+      });
+      voteBalance = balance.balance;
+    }
+
+    this.setState({
+      voteBalance
+    });
+  }
+
+  async getVoteAllowance() {
+    const { address } = this.props;
+
+    let voteAllowance = 0;
+    if (address) {
+      const tokenContractInstance = await this.tokenContract.getTokenContractInstance();
+      const allowance = await tokenContractInstance.GetAllowance.call({
+        symbol: 'VOTE',
+        spender: LOTTERY.CONTRACT_ADDRESS,
+        owner: address
+      });
+      voteAllowance = allowance.allowance;
+    }
+
+    this.setState({
+      voteAllowance
+    });
+  }
+
+  async onBuyClick() {
+    try {
+      await buyLottery(this.buyCount);
+      const {voteBalance} = this.state;
+      this.setState({
+        voteBalance: voteBalance - buyCount
+      });
+    } catch(e) {
+      message.error(e.message || 'Failed to buy a lottery.')
+    }
+  }
+
+  onApproveChange(value) {
+    this.voteApproveCount = value;
+  }
+
+  onExchangeNumberChange(value) {
+    this.buyCount = value;
+  }
+
+  async onApproveClick() {
+    try {
+      await approveVote(this.voteApproveCount);
+      message.success('Please wait for block confirmation', 10);
+      setTimeout(() => {
+        this.getVoteAllowance();
+      }, 3000);
+    } catch(e) {
+      // console.log(e);
+      message.error(e.message || 'Failed to approve.')
+    }
+  }
+
+  render() {
+    const {address} = this.props;
+    const {voteBalance, voteAllowance} = this.state;
+
+    const historyHTML = renderHistory();
+
+    return (
+      <section className='section-basic basic-container'>
+        <div className='section-title'>
+          My Lottery
+        </div>
+        <div className='section-content'>
+          <div className='personal-title'>Exchange Lottery Code</div>
+          <div className='basic-line'/>
+          <div className='basic-blank'/>
+          <div>
+            <div>Address: {address ? addressFormat(address) : 'Please login'}</div>
+            <div className='basic-blank'/>
+            <div> Balance: {voteBalance ? voteBalance + ' VOTE' : '-'}</div>
+            <div className='basic-blank'/>
+            <div>
+              The vote token you can use to exchange: {voteAllowance ? voteAllowance + ' VOTE' : '-'} &nbsp;&nbsp;&nbsp;
+              <InputNumber min={1} max={voteBalance} onChange={this.onApproveChange} />
+              &nbsp;&nbsp;&nbsp;
+              <Button type="primary" onClick={() => this.onApproveClick()}>Increase the upper limit</Button>
+            </div>
+            <div className='basic-blank'/>
+            <div className='personal-exchange'>
+              Exchange Quantity ({LOTTERY.RATIO} VOTE = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
+              <InputNumber min={1} max={voteAllowance/LOTTERY.RATIO} defaultValue={1} onChange={this.onExchangeNumberChange} />
+              &nbsp;&nbsp;&nbsp;
+              <Button type="primary" onClick={() => this.onBuyClick()}>Exchange</Button>
+            </div>
+          </div>
+
+          <div className='basic-blank'/>
+          <div className='personal-title'>History</div>
+          <div className='basic-line'/>
+          <div className='basic-blank'/>
+          {historyHTML}
+        </div>
+      </section>
+    );
+  }
 }
 
-async function buyLottery () {
+async function buyLottery (buyCount) {
   if (!buyCount) {
     throw Error('Please input the amount to buy.');
   }
 
-  await NightElfCheck.getInstance().check;
-  const aelf = NightElfCheck.initAelfInstanceByExtension();
-  const accountInfo = await aelf.login(LOGIN_INFO);
+  const lotteryContract = await NightElfCheck.initContractInstance({
+    loginInfo: LOGIN_INFO,
+    contractAddress: LOTTERY.CONTRACT_ADDRESS,
+  });
 
-  if (accountInfo.error) {
-    throw Error(accountInfo.errorMessage.message || accountInfo.errorMessage);
-  }
-
-  await aelf.chain.getChainStatus();
-  const wallet = {
-    address: JSON.parse(accountInfo.detail).address
-  };
-  // It is different from the wallet created by Aelf.wallet.getWalletByPrivateKey();
-  // There is only one value named address;
-  const lotteryContract = await aelf.chain.contractAt(
-    LOTTERY.CONTRACT_ADDRESS,
-    wallet
-  );
   const lotteryResult = await lotteryContract.Buy({
     value: buyCount
   });
 
-  // TODO: new component
   const {TransactionId} = lotteryResult.result;
-  const explorerHref = `${EXPLORER_URL}/tx/${TransactionId}`;
-  const txIdHTML = <div>
-    <span>Transaction ID: {TransactionId}</span>
-    <br/>
-    <a target='_blank' href={explorerHref}>Turn to aelf explorer to get the information of this transaction</a>
-  </div>;
-  message.success(txIdHTML, 16);
+  MessageTxToExplore(TransactionId);
 }
 
-async function onBuyClick() {
-  try {
-    await buyLottery();
-  } catch(e) {
-    message.error(e.message || 'Failed to buy a lottery.')
+async function approveVote(voteApproveCount) {
+  if (!voteApproveCount) {
+    throw Error('Please input the amount to approve.');
   }
-}
 
-export default function renderPersonalDraw(props) {
+  const tokenContract = await NightElfCheck.initContractInstance({
+    loginInfo: LOGIN_INFO,
+    contractAddress: TOKEN_CONTRACT_ADDRESS,
+  });
 
-  const {voteBalance, address} = props;
+  const approveResult = await tokenContract.Approve({
+    symbol: 'VOTE',
+    spender: LOTTERY.CONTRACT_ADDRESS,
+    amount: voteApproveCount
+  });
 
-  const historyHTML = renderHistory();
-
-  return (
-    <section className='section-basic basic-container'>
-      <div className='section-title'>
-        My Lottery
-      </div>
-      <div className='section-content'>
-        <div className='personal-title'>Exchange Lottery Code</div>
-        <div className='basic-line'/>
-        <div className='basic-blank'/>
-        <div>
-          <div>Address: {address ? addressFormat(address) : 'Please login'}</div>
-          <div className='basic-blank'/>
-          <div> Balance: {voteBalance ? voteBalance + ' VOTE' : '-'}</div>
-          <div className='basic-blank'/>
-          <div className='personal-exchange'>
-            Exchange Quantity ({LOTTERY.RATIO} VOTE = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
-            <InputNumber min={1} max={voteBalance/LOTTERY.RATIO} defaultValue={1} onChange={onExchangeNumberChange} />
-            &nbsp;&nbsp;&nbsp;
-            <Button type="primary" onClick={onBuyClick}>Exchange</Button>
-          </div>
-        </div>
-
-        <div className='basic-blank'/>
-        <div className='personal-title'>History</div>
-        <div className='basic-line'/>
-        <div className='basic-blank'/>
-        {historyHTML}
-      </div>
-    </section>
-  );
+  const {TransactionId} = approveResult.result;
+  MessageTxToExplore(TransactionId);
 }

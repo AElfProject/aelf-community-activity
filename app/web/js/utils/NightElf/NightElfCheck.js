@@ -9,6 +9,7 @@ import {
 
 let nightElfInstance = null;
 let aelfInstanceByExtension = null;
+let contractInstances = {};
 export default class NightElfCheck {
     constructor() {
         let resovleTemp = null;
@@ -53,5 +54,51 @@ export default class NightElfCheck {
             APPNAME
         });
         return aelfInstanceByExtension;
+    }
+
+    static async getContractInstance(inputInitParams) {
+        const {loginInfo, contractAddress} = inputInitParams;
+        await NightElfCheck.getInstance().check;
+        const aelf = NightElfCheck.getAelfInstanceByExtension();
+
+        const accountInfo = await aelf.login(loginInfo);
+        if (accountInfo.error) {
+            throw Error(accountInfo.errorMessage.message || accountInfo.errorMessage);
+        }
+        const address = JSON.parse(accountInfo.detail).address;
+
+        await aelf.chain.getChainStatus();
+
+        if (contractInstances[contractAddress + address]) {
+            return contractInstances[contractAddress + address];
+        }
+        return await initContractInstance(inputInitParams);
+    }
+
+    // singleton to get, new to init
+    static async initContractInstance(inputInitParams) {
+        const {loginInfo, contractAddress} = inputInitParams;
+        await NightElfCheck.getInstance().check;
+        const aelf = NightElfCheck.getAelfInstanceByExtension();
+
+        const accountInfo = await aelf.login(loginInfo);
+        if (accountInfo.error) {
+            throw Error(accountInfo.errorMessage.message || accountInfo.errorMessage);
+        }
+        const address = JSON.parse(accountInfo.detail).address;
+
+        await aelf.chain.getChainStatus();
+
+        const wallet = {
+            address
+        };
+        // It is different from the wallet created by Aelf.wallet.getWalletByPrivateKey();
+        // There is only one value named address;
+        const contractInstance = await aelf.chain.contractAt(
+          contractAddress,
+          wallet
+        );
+        contractInstances[contractAddress + address] = contractInstance;
+        return contractInstance;
     }
 }
