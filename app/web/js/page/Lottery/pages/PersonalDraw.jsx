@@ -1,9 +1,10 @@
 /* From start */
 import React from 'react';
-import { Table, InputNumber, Button } from 'antd';
+import { Table, InputNumber, Button, message } from 'antd';
 
+import {NightElfCheck} from '../../../utils/NightElf/NightElf';
 import addressFormat from '../../../utils/addressFormat';
-import { LOTTERY } from '../../../constant/constant';
+import { EXPLORER_URL, LOGIN_INFO, LOTTERY } from '../../../constant/constant';
 
 const columns = [
   {
@@ -53,6 +54,7 @@ const dataSource = [
     block: 2791112
   },
 ];
+let buyCount = 0;
 
 function renderHistory() {
   return <Table dataSource={dataSource} columns={columns} pagination={false} />;
@@ -60,6 +62,53 @@ function renderHistory() {
 
 function onExchangeNumberChange(value) {
   console.log('changed', value);
+  buyCount = value;
+}
+
+async function buyLottery () {
+  if (!buyCount) {
+    throw Error('Please input the amount to buy.');
+  }
+
+  await NightElfCheck.getInstance().check;
+  const aelf = NightElfCheck.initAelfInstanceByExtension();
+  const accountInfo = await aelf.login(LOGIN_INFO);
+
+  if (accountInfo.error) {
+    throw Error(accountInfo.errorMessage.message || accountInfo.errorMessage);
+  }
+
+  await aelf.chain.getChainStatus();
+  const wallet = {
+    address: JSON.parse(accountInfo.detail).address
+  };
+  // It is different from the wallet created by Aelf.wallet.getWalletByPrivateKey();
+  // There is only one value named address;
+  const lotteryContract = await aelf.chain.contractAt(
+    LOTTERY.CONTRACT_ADDRESS,
+    wallet
+  );
+  const lotteryResult = await lotteryContract.Buy({
+    value: buyCount
+  });
+
+  // TODO: new component
+  const {TransactionId} = lotteryResult.result;
+  const explorerHref = `${EXPLORER_URL}/tx/${TransactionId}`;
+  const txIdHTML = <div>
+    <span>Transaction ID: {TransactionId}</span>
+    <br/>
+    <a target='_blank' href={explorerHref}>Turn to aelf explorer to get the information of this transaction</a>
+  </div>;
+  message.success(txIdHTML, 16);
+}
+
+async function onBuyClick() {
+  try {
+    await buyLottery();
+  } catch(e) {
+    message.error(e.message || 'Failed to buy a lottery.')
+  }
 }
 
 export default function renderPersonalDraw(props) {
@@ -86,7 +135,7 @@ export default function renderPersonalDraw(props) {
             Exchange Quantity ({LOTTERY.RATIO} VOTE = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
             <InputNumber min={1} max={voteBalance/LOTTERY.RATIO} defaultValue={1} onChange={onExchangeNumberChange} />
             &nbsp;&nbsp;&nbsp;
-            <Button type="primary">Exchange</Button>
+            <Button type="primary" onClick={onBuyClick}>Exchange</Button>
           </div>
         </div>
 
