@@ -15,8 +15,11 @@ const customDot = (dot, { status, index }) => (
     {dot}
   </Popover>
 );
-function renderPrizeSteps() {
-  const html = <span>test</span>;
+
+// TODO: 【Low priority】 get prize from api
+function renderPrizeSteps(props) {
+
+  const {currentStep} = props;
 
   const prizes = [
     {
@@ -45,14 +48,24 @@ function renderPrizeSteps() {
   });
 
   return (
-    <Steps current={1} progressDot={customDot}>
+    <Steps current={currentStep} progressDot={customDot}>
       {stepsHTML}
     </Steps>
   );
 }
 
-export default function renderLotteryDraw() {
-  const prizeStepsHTML = renderPrizeSteps();
+export default function renderLotteryDraw(props) {
+
+  const {swapInfo} = props;
+  const {swapRatio, currentRound} = swapInfo;
+
+  const currentSwappedToken = currentRound.swappedAmount / (swapRatio.originShare / swapRatio.targetShare);
+  const currentSwappedTokenStr = currentSwappedToken.toLocaleString();
+
+  const currentStep = getCurrentStep(currentSwappedToken);
+  const prizeStepsHTML = renderPrizeSteps({
+    currentStep
+  });
 
   return (
     <section className='section-basic basic-container'>
@@ -60,7 +73,7 @@ export default function renderLotteryDraw() {
         Lottery
       </div>
       <div className='section-content lottery-prize-step-container'>
-        <div className='prize-title'>Test Tokens Issued：<span className='prize-current-token'>17,000 ELF</span></div>
+        <div className='prize-title'>Test Tokens Issued：<span className='prize-current-token'>{currentSwappedTokenStr} ELF</span></div>
         <div className='prize-sub-title'>蓝牙耳机、小米音响、天猫精灵、华为手环  各 1 款</div>
         <div className='basic-line'/>
         <div className='prize-step-container'>
@@ -69,4 +82,17 @@ export default function renderLotteryDraw() {
       </div>
     </section>
   );
+}
+
+function getCurrentStep(currentSwappedToken) {
+  let currentStep = 0;
+
+  if (currentSwappedToken >= 100000) {
+    currentStep = 3;
+  } else if (currentSwappedToken >= 50000) {
+    currentStep = 2;
+  } else if (currentSwappedToken >= 10000) {
+    currentStep = 1;
+  }
+  return currentStep;
 }

@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
-import { Tabs } from 'antd';
+import { message, Tabs } from 'antd';
 const { TabPane } = Tabs;
 
 import TokenContract from '../../utils/tokenContract';
 
 import renderLotteryAward from './pages/LotteryAward';
 import renderAwardHistory from './pages/AwardHistory';
-import renderLotteryDraw from './pages/LotteryDraw';
+import LotteryDraw from './pages/LotteryDraw';
 import PersonalDraw from './pages/PersonalDraw';
 import './Lottery.less';
 
 import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux';
 import * as ActionsAccount from '../../actions/account';
+import getSwapInfo from '../../utils/getSwapInfo';
 
 function mapStateToProps(state) {
   return {
@@ -29,8 +30,32 @@ class Lottery extends Component {
   constructor() {
     super();
     this.state = {
+      swapInfo: {
+        swapRatio: {
+          originShare: 1,
+          targetShare: 1
+        },
+        currentRound: {
+          swappedAmount: 0,
+        }
+      },
     };
     this.tokenContract = new TokenContract();
+  }
+
+  componentDidMount() {
+    getSwapInfo().then(result => {
+      if (result) {
+        console.log('swapInfo: ', result);
+        this.setState({
+          swapInfo: result,
+        });
+      } else {
+        message.warning('Can not get the swap information.');
+      }
+    }).catch(error => {
+      message.error(error.message);
+    });
   }
 
   render() {
@@ -39,7 +64,9 @@ class Lottery extends Component {
     const {accountInfo} = account;
     const {address} = accountInfo;
 
-    const lotteryDrawHTML = renderLotteryDraw();
+    const {swapInfo} = this.state;
+
+    // const lotteryDrawHTML = renderLotteryDraw();
     const lotteryAwardHTML = renderLotteryAward();
     const awardHistoryHTML = renderAwardHistory();
 
@@ -49,7 +76,7 @@ class Lottery extends Component {
         <div className='basic-container lottery-container'>
           <Tabs defaultActiveKey="1">
             <TabPane tab="Lottery Draw" key="1">
-              {lotteryDrawHTML}
+              <LotteryDraw swapInfo={swapInfo}/>
               <div className='basic-blank'/>
               <PersonalDraw
                 address={address}
