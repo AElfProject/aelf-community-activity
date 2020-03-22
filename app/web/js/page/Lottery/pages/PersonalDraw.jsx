@@ -54,7 +54,6 @@ export default class PersonalDraw extends Component{
     this.state = {
       voteBalance: 0,
       voteAllowance: 0,
-      currentPeriodNumber: '-',
       boughtLotteries: []
     };
     this.voteApproveCount = 0;
@@ -64,12 +63,7 @@ export default class PersonalDraw extends Component{
     this.onApproveChange = this.onApproveChange.bind(this);
     this.onExchangeNumberChange = this.onExchangeNumberChange.bind(this);
     this.onApproveClick = this.onApproveClick.bind(this);
-    this.getCurrentPeriodNumber = this.getCurrentPeriodNumber.bind(this);
     this.getBoughtLotteries = this.getBoughtLotteries.bind(this);
-  }
-
-  async componentDidMount() {
-    this.getCurrentPeriodNumber();
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -118,17 +112,8 @@ export default class PersonalDraw extends Component{
     });
   }
 
-  async getCurrentPeriodNumber() {
-    const aelfContract = new Contract();
-    const lotteryContractInstance = await aelfContract.getContractInstance(LOTTERY.CONTRACT_ADDRESS);
-    const periodNumber = await lotteryContractInstance.GetCurrentPeriodNumber.call();
-    this.setState({
-      currentPeriodNumber: periodNumber.value
-    });
-  }
-
   async getBoughtLotteries() {
-    const {currentPeriodNumber} = this.state;
+    const {currentPeriodNumber} = this.props;
     const { address } = this.props;
     if (!address) {
       this.setState({
@@ -189,8 +174,8 @@ export default class PersonalDraw extends Component{
   }
 
   render() {
-    const {address} = this.props;
-    const {voteBalance, voteAllowance, currentPeriodNumber, boughtLotteries} = this.state;
+    const {address, currentPeriodNumber} = this.props;
+    const {voteBalance, voteAllowance, boughtLotteries} = this.state;
 
     const historyHTML = renderHistory(boughtLotteries);
 

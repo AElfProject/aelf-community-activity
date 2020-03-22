@@ -4,8 +4,7 @@ const { TabPane } = Tabs;
 
 import TokenContract from '../../utils/tokenContract';
 
-import renderLotteryAward from './pages/LotteryAward';
-import renderAwardHistory from './pages/AwardHistory';
+import AwardHistory from './pages/AwardHistory';
 import LotteryDraw from './pages/LotteryDraw';
 import PersonalDraw from './pages/PersonalDraw';
 import './Lottery.less';
@@ -14,6 +13,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux';
 import * as ActionsAccount from '../../actions/account';
 import getSwapInfo from '../../utils/getSwapInfo';
+import Contract from '../../utils/Contract';
+import { LOTTERY } from '../../constant/constant';
 
 function mapStateToProps(state) {
   return {
@@ -30,6 +31,7 @@ class Lottery extends Component {
   constructor() {
     super();
     this.state = {
+      currentPeriodNumber: 0,
       swapInfo: {
         swapRatio: {
           originShare: 1,
@@ -41,6 +43,7 @@ class Lottery extends Component {
       },
     };
     this.tokenContract = new TokenContract();
+    this.getCurrentPeriodNumber = this.getCurrentPeriodNumber.bind(this);
   }
 
   componentDidMount() {
@@ -56,7 +59,18 @@ class Lottery extends Component {
     }).catch(error => {
       message.error(error.message);
     });
+    this.getCurrentPeriodNumber();
   }
+
+  async getCurrentPeriodNumber() {
+    const aelfContract = new Contract();
+    const lotteryContractInstance = await aelfContract.getContractInstance(LOTTERY.CONTRACT_ADDRESS);
+    const periodNumber = await lotteryContractInstance.GetCurrentPeriodNumber.call();
+    this.setState({
+      currentPeriodNumber: periodNumber.value
+    });
+  }
+
 
   render() {
 
@@ -64,11 +78,7 @@ class Lottery extends Component {
     const {accountInfo} = account;
     const {address} = accountInfo;
 
-    const {swapInfo} = this.state;
-
-    // const lotteryDrawHTML = renderLotteryDraw();
-    const lotteryAwardHTML = renderLotteryAward();
-    const awardHistoryHTML = renderAwardHistory();
+    const {swapInfo, currentPeriodNumber} = this.state;
 
     return (
       <div>
@@ -76,16 +86,21 @@ class Lottery extends Component {
         <div className='basic-container lottery-container'>
           <Tabs defaultActiveKey="1">
             <TabPane tab="Lottery Draw" key="1">
-              <LotteryDraw swapInfo={swapInfo}/>
+              <LotteryDraw
+                swapInfo={swapInfo}
+                currentPeriodNumber={currentPeriodNumber}
+              />
               <div className='basic-blank'/>
               <PersonalDraw
                 address={address}
+                currentPeriodNumber={currentPeriodNumber}
               />
             </TabPane>
             <TabPane tab="Lottery Award" key="2">
-              {lotteryAwardHTML}
-              <div className='basic-blank'/>
-              {awardHistoryHTML}
+              <AwardHistory
+                currentPeriodNumber={currentPeriodNumber}
+                address={address}
+              />
             </TabPane>
           </Tabs>
         </div>
