@@ -35,7 +35,6 @@ export default class LotteryAward extends Component {
   }
 
   async removeLotteryIdArray(index) {
-    console.log('removeLotteryIdArray', index);
     let {lotteryIdArray} = this.state;
     lotteryIdArray = lotteryIdArray.filter(item => {
       return parseInt(item) !== index;
@@ -165,9 +164,10 @@ export default class LotteryAward extends Component {
     return (
       <section className='section-basic basic-container'>
         <div className='section-title'>
-          Information (Latest Award Period: {currentPeriodNumber ? currentPeriodNumber - 1 : 0})
+          Take Award (Latest Award Period: {currentPeriodNumber ? currentPeriodNumber - 1 : 0})
         </div>
         <div className='section-content lottery-form-container'>
+          <div className='basic-blank'/>
           <Form
             {...layout}
             name="basic"

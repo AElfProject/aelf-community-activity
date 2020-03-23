@@ -87,6 +87,7 @@ export default class AwardHistory extends Component{
     });
   }
 
+  // TODO: maybe we need combine these request in server and use cache.
   async getRewardResults() {
     const { currentPeriodNumber } = this.props;
 
