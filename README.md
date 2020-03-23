@@ -1,17 +1,51 @@
 # aelf-community-activity
 
-
-
 ## QuickStart
 
 <!-- add docs here for user -->
 
 see [egg docs][egg] for more detail.
 
+### Dependencies
+
+### aelf-block-api
+
+Github: [aelf-block-api](https://github.com/AElfProject/aelf-block-api)
+
+We use the database of this api.
+
+```bash
+config/config.default.js -> config.mysql
+```
+
+#### mysql & sequelize
+
+```bash
+# config sequelize
+database/config.json
+config/config.default.js -> config.sequelize
+```
+
+```bash
+npm run create-db # dev: npm run create-db:dev
+npm run migrate # dev: npm run migrate:dev
+# npm run undo-all
+```
+
+### Config
+
+Set you own keys, contract address, block chain provider, etc.
+
+```bash
+config/config.json
+config/config.forserveronly.json
+```
+
 ### Development
 
 ```bash
 $ npm i
+$ npm run watch:dev
 $ npm run dev
 $ open http://localhost:7100/
 ```
@@ -19,6 +53,7 @@ $ open http://localhost:7100/
 ### Deploy
 
 ```bash
+$ npm run build
 $ npm start
 $ npm stop
 ```
