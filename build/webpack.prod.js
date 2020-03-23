@@ -15,10 +15,10 @@ const {
 module.exports = {
   // When mode is production or not defined, minimize is enabled. This option automatically adds Uglify plugin.
   // production will remove the 'dead code'. Look at Tree Shaking
-  // mode: 'production',
   mode: 'production',
+  // mode: 'development',
   entry: {
-    activity: './app/web/js/index.jsx',
+    activity: ['@babel/polyfill','./app/web/js/index.jsx'],
   },
   output: {
     path: path.resolve('./app', ''), // equal to __diname + '/build'
