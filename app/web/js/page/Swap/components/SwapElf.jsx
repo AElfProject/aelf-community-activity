@@ -21,13 +21,13 @@ export default function renderSwapElf(swapInfo) {
 
     try {
       const {pairId, originAmount, merklePathBytes, merklePathBool, receiverAddress, uniqueId} = values;
-      const merklePath = getMerklePathFromOtherChain(merklePathBytes, merklePathBool);
+      const merklePath = getMerklePathFromOtherChain(merklePathBytes.trim(), merklePathBool.trim());
       const swapTokenInput = {
         pairId,
-        originAmount,
+        originAmount: originAmount.trim(),
         merklePath,
-        receiverAddress,
-        uniqueId,
+        receiverAddress: receiverAddress.trim(),
+        uniqueId: uniqueId.trim(),
       };
 
       await NightElfCheck.getInstance().check;
