@@ -54,7 +54,7 @@ export default class BrowserHeader extends Component {
       {
         url: '/daily',
         key: 'daily',
-        title: 'Daily Award'
+        title: 'Daily Tasks'
       },
       {
         url: '/swap',

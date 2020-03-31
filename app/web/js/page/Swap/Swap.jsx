@@ -174,7 +174,7 @@ class Swap extends Component {
     return (
       <div>
         <div className='basic-blank'/>
-        <a href='/#'>Click to get the swapping tutorial</a>
+        <a href='/#' className='font-18'>Click to get the swapping tutorial</a>
 
         <div className='basic-blank'/>
         {swapPairsInfoHTML}

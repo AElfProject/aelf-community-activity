@@ -58,8 +58,8 @@ module.exports = class TxsService extends Service {
 
     const tokenContractInstance = await tokenContract.getTokenContractInstance();
     const balanceResult = await tokenContract.getBalance();
-    // avoid 50 person get award at the same time.
-    if (balanceResult && balanceResult.balance <= 50 * 101 * 10 ** 8 ) {
+    // avoid 20 person get award at the same time.
+    if (balanceResult && balanceResult.balance <= 20 * 101 * 10 ** 8 ) {
       throw Error('Insufficient ELF, please report in telegram.');
     }
 

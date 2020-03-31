@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux';
 import * as ActionsAccount from '../../../actions/account';
 import { Button, message } from 'antd';
-import { EXPLORER_URL } from '../../../constant/constant';
+import { EXPLORER_URL, WALLET_WEB_URL, WALLET_IOS_URL, WALLET_ANDROID_URL } from '../../../constant/constant';
 import addressFormat from '../../../utils/addressFormat';
 import { add } from '../../../actions/counter';
 
@@ -36,6 +36,7 @@ class DailyMissions extends Component {
     this.getCountdown = this.getCountdown.bind(this);
     this.hasAward = this.hasAward.bind(this);
     this.getAward = this.getAward.bind(this);
+    this.onGetAward = this.onGetAward.bind(this);
     this.renderMission = this.renderMission.bind(this);
     this.getEffectiveTxs = this.getEffectiveTxs.bind(this);
   }
@@ -117,6 +118,7 @@ class DailyMissions extends Component {
       return;
     }
     const {address} = this.props.account.accountInfo;
+
     const awardId = await axios.get(`${GET_AWARD}`, {
       params: {
         address,
@@ -140,11 +142,20 @@ class DailyMissions extends Component {
     });
   }
 
+  async onGetAward(txId, type) {
+    try {
+      await this.getAward(txId, type);
+    } catch {
+      // do nothing
+      // console.log('onGetAward', e);
+    }
+  }
+
   renderMission (effectiveTx, type) {
     const effectiveTxId = effectiveTx.length ? effectiveTx[0].tx_id : null;
     const hasAward = this.hasAward(type);
     const awardedButton =  <Button type="primary" disabled>Had awarded</Button>;
-    const awardButton = <Button type="primary" onClick={() => this.getAward(effectiveTxId, type)}>GO!</Button>;
+    const awardButton = <Button type="primary" onClick={() => this.onGetAward(effectiveTxId, type)}>Collect</Button>;
     const buttonShow = hasAward ? awardedButton : awardButton;
     return (
       <div>
@@ -155,7 +166,7 @@ class DailyMissions extends Component {
                 {effectiveTxId}
               </a>
             </div>
-          : <div>There are no effective transaction.</div>}
+          : <div>If you have completed the task, you can click 'collect' to receive your test token reward.</div>}
         {buttonShow}
       </div>
     );
@@ -172,6 +183,7 @@ class DailyMissions extends Component {
     // console.log('dailyAwardHistory: ', dailyAwardHistory);
     return (
       <div>
+        <p>During the event, you can get test tokens by completing daily tasks. </p>
         <section className='section-basic basic-container'>
           <div className='section-title'>
             Countdown of this round of activities：<CountDown countdown={countdown} />
@@ -186,7 +198,10 @@ class DailyMissions extends Component {
             Mission 1 Resource
           </div>
           <div className='section-content'>
-            <div>Rule: During the activity period, you can get 100 elf for buying and selling resource token.</div>
+            <div>
+              During the event, you can collect 100 ELF test tokens each day through the resource token trading function.
+            </div>
+            <a href={EXPLORER_URL + '/resource'} target='_blank'>Turn to aelf explorer</a>
             {this.renderMission(effectiveResourceTx, 'resource')}
           </div>
         </section>
@@ -196,8 +211,40 @@ class DailyMissions extends Component {
             Mission 2 Token
           </div>
           <div className='section-content swap-flex-wrap'>
-            <div>Rule：During the activity, transfer token can receive 100 Elf.</div>
+            <div>Rule：During the event, you can collect 100 ELF test tokens each day by transferring tokens. </div>
+            <div>
+              <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>
+              <a href={WALLET_ANDROID_URL} target='_blank'>Android wallet, </a>
+              <a href={WALLET_IOS_URL} target='_blank'>iOS wallet</a>
+            </div>
+
             {this.renderMission(effectiveTokenTx, 'token')}
+          </div>
+        </section>
+
+        <div className='basic-blank'/>
+        <div className='basic-blank'/>
+        <div>Users who participate in the following two tasks need to register with the aelf community staff.</div>
+        <div>Contact information： Wechat: a439714 (big fish) Telegram：Doris Guo (@dorisYG)</div>
+        <div className='basic-blank'/>
+        <section className='section-basic basic-container'>
+          <div className='section-title'>
+            Mission 3 Bug Bounty
+          </div>
+          <div className='section-content swap-flex-wrap'>
+            <div>Complete a bug submission on the aelf chain to collect test token rewards:</div>
+            <div>Reward Range: 1,000-5,000 Test Tokens,</div>
+            <div>Bug Bonus Levels: Minor = 1,000 test tokens, Major = 3,000 test tokens, Critical = 5,000 test tokens.</div>
+          </div>
+        </section>
+
+        <div className='basic-blank'/>
+        <section className='section-basic basic-container'>
+          <div className='section-title'>
+            Mission 4 DApp Develop
+          </div>
+          <div className='section-content swap-flex-wrap'>
+            <div>Develop a DApp on the aelf Enterprise Blockchain and collect a large reward: 20,000 test tokens for each DAPP.</div>
           </div>
         </section>
       </div>

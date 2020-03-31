@@ -1,13 +1,16 @@
 {
   "APPNAME": "aelf community",
   "COMMON_PRIVATE": "f6e512a3c259e5f9af981d7f99d245aa5bc52fe448495e0b0dd56e8406be6f71",
-  "SWAP_CONTRACT_ADDRESS": "uSXxaGWKDBPV6Z8EG8Et9sjaXhH1uMWEpVvmo2KzKEaueWzSe",
-  "SWAP_PAIR": "73073e03fbecf2cf23e8a30083881dcd82f2677c3b7e6faad98a326ac33586ce",
+  "SWAP_CONTRACT_ADDRESS": "SuaPmtyFjozAVCbubchFHL2yLUrpgWYM67CMgNES1v16xanq9",
+  "SWAP_PAIR": "98eb44801c016daf4d3282c2e7893f3fa0fb01ef316c2063169337a533ba8149",
   "HTTP_PROVIDER": "http://1.119.195.50:11105/chain",
   "HTTP_PROVIDER_INNER": "http://1.119.195.50:11105/chain",
   "TOKEN_CONTRACT_ADDRESS": "25CecrU94dmMdbhC3LWMKxtoaL4Wv8PChGvVJM6PxkHAyvXEhB",
   "CHAIN_ID": "AELF",
   "EXPLORER_URL": "http://1.119.195.50:11104",
+  "WALLET_WEB_URL": "http://1.119.195.50:11105",
+  "WALLET_IOS_URL": "http://d.6short.com/iOSAElf",
+  "WALLET_ANDROID_URL": "http://d.6short.com/AelfAndroid",
   "ADDRESS_INFO": {
     "prefix": "ELF",
     "suffix": "AELF"

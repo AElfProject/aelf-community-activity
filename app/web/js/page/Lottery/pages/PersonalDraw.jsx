@@ -4,7 +4,7 @@ import { Table, InputNumber, Button, message } from 'antd';
 
 import {NightElfCheck} from '../../../utils/NightElf/NightElf';
 import addressFormat from '../../../utils/addressFormat';
-import { LOGIN_INFO, LOTTERY, TOKEN_CONTRACT_ADDRESS } from '../../../constant/constant';
+import { LOGIN_INFO, LOTTERY, TOKEN_CONTRACT_ADDRESS, EXPLORER_URL } from '../../../constant/constant';
 import TokenContract from '../../../utils/tokenContract';
 import Contract from '../../../utils/Contract';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
@@ -179,6 +179,13 @@ export default class PersonalDraw extends Component{
 
     const historyHTML = renderHistory(boughtLotteries);
 
+    const voteUrl = EXPLORER_URL + '/vote/election';
+    const noVoteTokenHTML = [
+      'Please vote in the ',
+      <a href={voteUrl} target='_blank'>browser</a>,
+      ' to get the vote token'
+    ];
+
     return (
       <section className='section-basic basic-container'>
         <div className='section-title'>
@@ -191,10 +198,10 @@ export default class PersonalDraw extends Component{
           <div>
             <div>Address: {address ? addressFormat(address) : 'Please login'}</div>
             <div className='basic-blank'/>
-            <div> Balance: {voteBalance ? voteBalance + ' VOTE' : '-'}</div>
+            <div> Balance: {voteBalance ? voteBalance + ' VOTE' : noVoteTokenHTML}</div>
             <div className='basic-blank'/>
             <div>
-              The vote token you can use to exchange: {voteAllowance ? voteAllowance + ' VOTE' : '-'} &nbsp;&nbsp;&nbsp;
+              The vote token you can use to exchange: {voteAllowance ? voteAllowance + ' VOTE' : 0} &nbsp;&nbsp;&nbsp;
               <InputNumber min={0} max={voteBalance} onChange={this.onApproveChange} />
               &nbsp;&nbsp;&nbsp;
               <Button type="primary" onClick={() => this.onApproveClick()}>Increase the upper limit</Button>

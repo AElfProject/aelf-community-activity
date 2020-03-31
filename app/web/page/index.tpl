@@ -22,4 +22,11 @@
 
     <div id="root"></div>
 </body>
+<script>
+    // function isIE() {
+    if (!!window.ActiveXObject || "ActiveXObject" in window) {
+      alert('Please use Chrome');
+    }
+
+</script>
 </html>
