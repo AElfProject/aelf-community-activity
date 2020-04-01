@@ -7,6 +7,7 @@
   "HTTP_PROVIDER_INNER": "http://1.119.195.50:11105/chain",
   "TOKEN_CONTRACT_ADDRESS": "25CecrU94dmMdbhC3LWMKxtoaL4Wv8PChGvVJM6PxkHAyvXEhB",
   "CHAIN_ID": "AELF",
+  "TOKEN_DECIMAL": 8,
   "EXPLORER_URL": "http://1.119.195.50:11104",
   "WALLET_WEB_URL": "http://1.119.195.50:11105",
   "WALLET_IOS_URL": "http://d.6short.com/iOSAElf",
@@ -21,7 +22,7 @@
       "method": "LOGIN",
       "contracts": [{
         "chainId": "AELF",
-        "contractAddress": "uSXxaGWKDBPV6Z8EG8Et9sjaXhH1uMWEpVvmo2KzKEaueWzSe",
+        "contractAddress": "SuaPmtyFjozAVCbubchFHL2yLUrpgWYM67CMgNES1v16xanq9",
         "contractName": "Token swap contract",
         "description": "Swap token from the other chain. Base on protocol [-]",
         "github": "https://github.com/AElfProject/AElf/blob/token-swap-contract/protobuf/token_swap_contract.proto"

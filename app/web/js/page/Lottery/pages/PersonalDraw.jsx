@@ -4,7 +4,7 @@ import { Table, InputNumber, Button, message } from 'antd';
 
 import {NightElfCheck} from '../../../utils/NightElf/NightElf';
 import addressFormat from '../../../utils/addressFormat';
-import { LOGIN_INFO, LOTTERY, TOKEN_CONTRACT_ADDRESS, EXPLORER_URL } from '../../../constant/constant';
+import { LOGIN_INFO, LOTTERY, TOKEN_CONTRACT_ADDRESS, EXPLORER_URL, TOKEN_DECIMAL } from '../../../constant/constant';
 import TokenContract from '../../../utils/tokenContract';
 import Contract from '../../../utils/Contract';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
@@ -177,6 +177,9 @@ export default class PersonalDraw extends Component{
     const {address, currentPeriodNumber} = this.props;
     const {voteBalance, voteAllowance, boughtLotteries} = this.state;
 
+    const voteBalanceActual = voteBalance / 10 ** 8;
+    const voteAllowanceActual = voteAllowance / 10 ** 8;
+
     const historyHTML = renderHistory(boughtLotteries);
 
     const voteUrl = EXPLORER_URL + '/vote/election';
@@ -198,18 +201,18 @@ export default class PersonalDraw extends Component{
           <div>
             <div>Address: {address ? addressFormat(address) : 'Please login'}</div>
             <div className='basic-blank'/>
-            <div> Balance: {voteBalance ? voteBalance + ' VOTE' : noVoteTokenHTML}</div>
+            <div> Balance: {voteBalance ? voteBalanceActual + ' VOTE' : noVoteTokenHTML}</div>
             <div className='basic-blank'/>
             <div>
-              The vote token you can use to exchange: {voteAllowance ? voteAllowance + ' VOTE' : 0} &nbsp;&nbsp;&nbsp;
-              <InputNumber min={0} max={voteBalance} onChange={this.onApproveChange} />
+              The vote token you can use to exchange: {voteAllowance ? voteAllowanceActual + ' VOTE' : 0} &nbsp;&nbsp;&nbsp;
+              <InputNumber min={0} max={voteBalanceActual} onChange={this.onApproveChange} />
               &nbsp;&nbsp;&nbsp;
               <Button type="primary" onClick={() => this.onApproveClick()}>Increase the upper limit</Button>
             </div>
             <div className='basic-blank'/>
             <div className='personal-exchange'>
               Exchange Quantity ({LOTTERY.RATIO} VOTE = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
-              <InputNumber min={0} max={voteAllowance/LOTTERY.RATIO} defaultValue={1} onChange={this.onExchangeNumberChange} />
+              <InputNumber min={0} max={voteAllowanceActual/LOTTERY.RATIO} defaultValue={1} onChange={this.onExchangeNumberChange} />
               &nbsp;&nbsp;&nbsp;
               <Button type="primary" onClick={() => this.onBuyClick()}>Exchange</Button>
             </div>
@@ -237,7 +240,7 @@ async function buyLottery (buyCount) {
   });
 
   const lotteryResult = await lotteryContract.Buy({
-    value: buyCount
+    value: buyCount * 10 ** TOKEN_DECIMAL
   });
 
   const {TransactionId} = lotteryResult.result;
@@ -257,7 +260,7 @@ async function approveVote(voteApproveCount) {
   const approveResult = await tokenContract.Approve({
     symbol: 'VOTE',
     spender: LOTTERY.CONTRACT_ADDRESS,
-    amount: voteApproveCount
+    amount: voteApproveCount * 10 ** TOKEN_DECIMAL
   });
 
   const {TransactionId} = approveResult.result;
