@@ -12,7 +12,7 @@ export default function renderDailyHistory(props) {
       title: 'End Time',
       dataIndex: 'end_time',
       key: 'end_time',
-      render: text => <div>{ moment(text * 1000).format('YYYY-MM-DD HH:mm') }</div>,
+      render: text => <div>{ moment.utc(text * 1000).local().format('YYYY-MM-DD HH:mm') }</div>,
     },
     {
       title: 'Tx Id',
@@ -37,7 +37,7 @@ export default function renderDailyHistory(props) {
       title: 'time',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: text => <div>{ moment(text).format('YYYY-MM-DD HH:mm:ss') }</div>,
+      render: text => <div>{ moment.utc(text).local().format('YYYY-MM-DD HH:mm:ss') }</div>,
     },
   ];
 
@@ -46,7 +46,7 @@ export default function renderDailyHistory(props) {
       <div className='section-title'>
         History
       </div>
-      <div className='section-content swap-flex-wrap'>
+      <div className='section-content swap-flex-wrap overflow-x-scroll'>
         <Table
           dataSource={dailyAwardHistory}
           columns={columns}

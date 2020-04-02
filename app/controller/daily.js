@@ -13,7 +13,7 @@ module.exports = class DailyController extends Controller {
   async getCountdownTime() {
     const { ctx } = this;
     try {
-      const time = moment().endOf('day').unix() - moment().unix();
+      const time = moment.utc().endOf('day').unix() - moment().unix();
       formatOutput(ctx, 'get', time);
     } catch (error) {
       formatOutput(ctx, 'error', error, 422);

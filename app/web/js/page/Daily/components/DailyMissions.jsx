@@ -59,7 +59,6 @@ class DailyMissions extends Component {
     const firstTx = dailyAwardHistory[0] || {};
     const secondTx = dailyAwardHistory[1] || {};
     const typeArray = [firstTx.type, secondTx.type];
-
     // check type
     const index = typeArray.indexOf(type);
     if (index < 0) {
@@ -69,7 +68,8 @@ class DailyMissions extends Component {
     const transaction = dailyAwardHistory[index] || {
       end_time: 0
     };
-    return moment()
+
+    return moment.utc()
       .startOf('day')
       .unix() <= transaction.end_time;
   }

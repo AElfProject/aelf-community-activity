@@ -16,9 +16,9 @@ const aelf = new AElf(new AElf.providers.HttpProvider(HTTP_PROVIDER_INNER));
 const whiteListType = ['token', 'resource'];
 
 function checkTimeIsEffective(time) {
-  const startTime = moment().startOf('day');
-  const timeNow =  moment();
-  return moment(time).isBetween(startTime, timeNow);
+  const startTime = moment.utc().startOf('day');
+  const timeNow =  moment.utc();
+  return moment.utc(time).isBetween(startTime, timeNow);
 }
 
 module.exports = class TxsService extends Service {
@@ -63,7 +63,7 @@ module.exports = class TxsService extends Service {
       throw Error('Insufficient ELF, please report in telegram.');
     }
 
-    const endTime = moment().endOf('day').unix();
+    const endTime = moment.utc().endOf('day').unix();
 
     const history = await ctx.model.AwardHistories.findOne({
       where: {
@@ -88,7 +88,7 @@ module.exports = class TxsService extends Service {
     }
 
     const blockTemp = await aelf.chain.getBlock(resultTemp.BlockHash, false);
-    const txTime = moment(blockTemp.Header.Time).unix();
+    const txTime = moment.utc(blockTemp.Header.Time).unix();
     if (endTime - txTime < 0) {
       throw Error('Current round is over.');
     }
@@ -105,7 +105,8 @@ module.exports = class TxsService extends Service {
       address,
       type,
       tx_id,
-      award_id: transferTxId.TransactionId
+      award_id: transferTxId.TransactionId,
+
     });
 
     return transferTxId;

@@ -7,7 +7,7 @@ export default function renderCurrentSwapInfo(swapInfo) {
 
     if (key === 'startTime' && swapInfo[key].seconds) {
       const format = 'YYYY-MM-DD HH:mm:ss';
-      swapInfo[key] = moment(new Date(swapInfo[key].seconds * 1000)).format(format);
+      swapInfo[key] = moment.utc(new Date(swapInfo[key].seconds * 1000)).local().format(format);
     }
     const valueShow = typeof swapInfo[key] === 'object' ? JSON.stringify(swapInfo[key]): '' + swapInfo[key];
 

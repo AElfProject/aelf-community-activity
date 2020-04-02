@@ -122,8 +122,6 @@ export default class AwardHistory extends Component{
     if (!period || !randomHash) {
       return null;
     }
-    // const format = 'YYYY-MM-DD';
-    // const timeFormatted = moment(new Date()).format(format);
 
     return (<div key={randomHash}>
       {/*<div className='history-period'>{timeFormatted}</div>*/}

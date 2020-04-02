@@ -240,10 +240,11 @@ async function buyLottery (buyCount) {
   });
 
   const lotteryResult = await lotteryContract.Buy({
-    value: buyCount * 10 ** TOKEN_DECIMAL
+    value: buyCount
   });
 
   const {TransactionId} = lotteryResult.result;
+  message.success('You can see ths new lottery number after the transaction is confirmed if you refresh the page', 6);
   MessageTxToExplore(TransactionId);
 }
 

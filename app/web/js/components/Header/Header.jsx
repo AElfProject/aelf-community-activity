@@ -59,7 +59,7 @@ export default class BrowserHeader extends Component {
       {
         url: '/swap',
         key: 'swap',
-        title: 'Tokne Swap'
+        title: 'Token Swap'
       },
       {
         url: '/lottery',
