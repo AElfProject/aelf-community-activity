@@ -45,7 +45,7 @@ function renderHistory(dataSource) {
   //     registrationInformation: ''
   //   },
   // ];
-  return <Table dataSource={dataSource} columns={columns} pagination={false} rowKey='id'/>;
+  return <Table dataSource={dataSource} columns={columns} pagination={false} rowKey='block'/>;
 }
 
 export default class PersonalDraw extends Component{
@@ -173,6 +173,13 @@ export default class PersonalDraw extends Component{
     }
   }
 
+  renderNoVoteToken() {
+    const voteUrl = EXPLORER_URL + '/vote/election';
+    return <>
+      Please vote in the <a href={voteUrl} target='_blank'>browser</a> to get the vote token
+    </>;
+  }
+
   render() {
     const {address, currentPeriodNumber} = this.props;
     const {voteBalance, voteAllowance, boughtLotteries} = this.state;
@@ -182,12 +189,7 @@ export default class PersonalDraw extends Component{
 
     const historyHTML = renderHistory(boughtLotteries);
 
-    const voteUrl = EXPLORER_URL + '/vote/election';
-    const noVoteTokenHTML = [
-      'Please vote in the ',
-      <a href={voteUrl} target='_blank'>browser</a>,
-      ' to get the vote token'
-    ];
+    const noVoteTokenHTML = this.renderNoVoteToken();
 
     return (
       <section className='section-basic basic-container'>

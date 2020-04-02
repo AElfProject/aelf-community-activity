@@ -2,6 +2,7 @@
 import React from 'react';
 import { Steps, Popover } from 'antd';
 const { Step } = Steps;
+import {TOKEN_DECIMAL} from '../../../constant/constant';
 import './LotteryDraw.less';
 
 const customDot = (dot, { status, index }) => (
@@ -64,7 +65,7 @@ export default function renderLotteryDraw(props) {
   const {swapInfo} = props;
   const {swapRatio, currentRound} = swapInfo;
 
-  const currentSwappedToken = currentRound.swappedAmount / (swapRatio.originShare / swapRatio.targetShare);
+  const currentSwappedToken = currentRound.swappedAmount / (10 ** TOKEN_DECIMAL);
   const currentSwappedTokenStr = currentSwappedToken.toLocaleString();
 
   const currentStep = getCurrentStep(currentSwappedToken);
@@ -78,7 +79,7 @@ export default function renderLotteryDraw(props) {
         Lottery (Draw today at 5:00 p.m. East 8)
       </div>
       <div className='section-content lottery-prize-step-container'>
-        <div className='prize-title'>Test Tokens Issued：<span className='prize-current-token'>{currentSwappedTokenStr} ELF</span></div>
+        <div className='prize-title'>Test Tokens Issued Of This Lottery Round：<span className='prize-current-token'>{currentSwappedTokenStr} ELF</span></div>
         <div className='prize-sub-title'>{prizes[currentStep].description}</div>
         <div className='basic-line'/>
         <div className='prize-step-container'>

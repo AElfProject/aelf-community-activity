@@ -163,14 +163,14 @@ class Swap extends Component {
   render() {
 
     const {swapInfo, swapHistory} = this.state;
-    const { account } = this.props;
+    // const { account } = this.props;
 
-    const swapPairsInfoHTML = renderSwapPairInfo(swapInfo);
-    const currentSwapInfoHTML = renderCurrentSwapInfo(swapInfo.currentRound);
-    const swapElfHTML = swapInfo.pairId === '-' ? null : renderSwapElf(swapInfo);
-    const swapHistoryHTML = renderSwapHistory(swapHistory);
+    const swapPairsInfoHTML = renderSwapPairInfo(JSON.parse(JSON.stringify(swapInfo)));
+    const currentSwapInfoHTML = renderCurrentSwapInfo(JSON.parse(JSON.stringify(swapInfo.currentRound)));
+    const swapElfHTML = swapInfo.pairId === '-' ? null : renderSwapElf(JSON.parse(JSON.stringify(swapInfo)));
+    const swapHistoryHTML = renderSwapHistory(swapHistory, swapInfo);
 
-    console.log('re render', account);
+    // console.log('re render', account);
     return (
       <div>
         <div className='basic-blank'/>

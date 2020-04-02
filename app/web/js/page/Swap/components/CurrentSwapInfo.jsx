@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { TOKEN_DECIMAL } from '../../../constant/constant';
 
 export default function renderCurrentSwapInfo(swapInfo) {
   const keys = Object.keys(swapInfo);
@@ -9,6 +10,11 @@ export default function renderCurrentSwapInfo(swapInfo) {
       const format = 'YYYY-MM-DD HH:mm:ss';
       swapInfo[key] = moment.utc(new Date(swapInfo[key].seconds * 1000)).local().format(format);
     }
+
+    if (['swappedAmount', 'depositAmount'].includes(key)) {
+      swapInfo[key] = swapInfo[key] / (10 ** TOKEN_DECIMAL);
+    }
+
     const valueShow = typeof swapInfo[key] === 'object' ? JSON.stringify(swapInfo[key]): '' + swapInfo[key];
 
     return (

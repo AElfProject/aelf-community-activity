@@ -1,5 +1,6 @@
 import React from 'react';
 import addressFormat from '../../../utils/addressFormat';
+import { TOKEN_DECIMAL } from '../../../constant/constant'
 
 export default function renderSwapPairInfo(swapPair) {
   const keys = Object.keys(swapPair);
@@ -14,6 +15,10 @@ export default function renderSwapPairInfo(swapPair) {
       const ratio = parseInt(originShare, 10) / parseInt(targetShare, 10)
         + ' ' + JSON.stringify(swapPair[key]);
       swapPair[key] = ratio;
+    }
+
+    if (['swappedAmount', 'depositAmount'].includes(key)) {
+      swapPair[key] = swapPair[key] / (10 ** TOKEN_DECIMAL);
     }
 
     if (key === 'controller') {

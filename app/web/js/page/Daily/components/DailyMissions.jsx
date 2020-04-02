@@ -186,7 +186,7 @@ class DailyMissions extends Component {
         <p>During the event, you can get test tokens by completing daily tasks. </p>
         <section className='section-basic basic-container'>
           <div className='section-title'>
-            Countdown of this round of activities：<CountDown countdown={countdown} />
+            Countdown of this round of activities (UTC +0 23:59:59)：<CountDown countdown={countdown} />
           </div>
           <div className='section-title'>
             Current Address: {address ? addressFormat(address) : 'Please login'}
