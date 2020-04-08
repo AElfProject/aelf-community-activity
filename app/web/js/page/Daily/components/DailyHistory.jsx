@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { Table } from 'antd';
+import { Card, Table } from 'antd';
 import { EXPLORER_URL } from '../../../constant/constant';
 
 export default function renderDailyHistory(props) {
@@ -44,10 +44,9 @@ export default function renderDailyHistory(props) {
   ];
 
   return (
-    <section className='section-basic basic-container'>
-      <div className='section-title'>
-        History
-      </div>
+    <Card
+      hoverable
+      title='History'>
       <div className='section-content swap-flex-wrap overflow-x-scroll'>
         <span>Time is local time</span>
         <Table
@@ -58,6 +57,6 @@ export default function renderDailyHistory(props) {
           scroll={{x: 1024}}
         />
       </div>
-    </section>
+    </Card>
   );
 }

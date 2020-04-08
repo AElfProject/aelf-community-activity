@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { Card } from 'antd';
 import { TOKEN_DECIMAL } from '../../../constant/constant';
 
 export default function renderCurrentSwapInfo(swapInfo) {
@@ -26,13 +27,12 @@ export default function renderCurrentSwapInfo(swapInfo) {
   });
 
   return (
-    <section className='section-basic basic-container'>
-      <div className='section-title'>
-        Information of the current round
-      </div>
+    <Card
+      hoverable
+      title='Information of the current round'>
       <div className='section-content swap-flex-wrap'>
         {swapPairsHTML}
       </div>
-    </section>
+    </Card>
   );
 }

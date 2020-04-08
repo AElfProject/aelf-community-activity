@@ -1,6 +1,6 @@
 /* From start */
 import React, { Component } from 'react';
-import { Table, InputNumber, Button, message } from 'antd';
+import { Table, InputNumber, Button, message, Card } from 'antd';
 
 import {NightElfCheck} from '../../../utils/NightElf/NightElf';
 import addressFormat from '../../../utils/addressFormat';
@@ -64,6 +64,12 @@ export default class PersonalDraw extends Component{
     this.onExchangeNumberChange = this.onExchangeNumberChange.bind(this);
     this.onApproveClick = this.onApproveClick.bind(this);
     this.getBoughtLotteries = this.getBoughtLotteries.bind(this);
+  }
+
+  async componentDidMount() {
+    await this.getVoteToken();
+    await this.getVoteAllowance();
+    await this.getBoughtLotteries();
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -192,10 +198,9 @@ export default class PersonalDraw extends Component{
     const noVoteTokenHTML = this.renderNoVoteToken();
 
     return (
-      <section className='section-basic basic-container'>
-        <div className='section-title'>
-          My Lottery
-        </div>
+      <Card
+        hoverable
+        title='My Lottery'>
         <div className='section-content'>
           <div className='personal-title'>Exchange Lottery Code (Current Period: {currentPeriodNumber})</div>
           <div className='basic-line'/>
@@ -226,7 +231,7 @@ export default class PersonalDraw extends Component{
           <div className='basic-blank'/>
           {historyHTML}
         </div>
-      </section>
+      </Card>
     );
   }
 }

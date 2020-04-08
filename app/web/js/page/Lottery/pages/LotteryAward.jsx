@@ -1,6 +1,6 @@
 /* From start */
 import React, { Component } from 'react';
-import { Button, Form, Input, Select, Modal, message } from 'antd';
+import { Button, Form, Input, Select, Modal, message, Card } from 'antd';
 import { NightElfCheck } from '../../../utils/NightElf/NightElf';
 import { LOGIN_INFO, LOTTERY } from '../../../constant/constant';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
@@ -162,10 +162,9 @@ export default class LotteryAward extends Component {
     const lotteryIdItemHTML = this.renderFromItemSelect(lotteryIdArray, 'lotteryId', 'Lottery ID');
 
     return (
-      <section className='section-basic basic-container'>
-        <div className='section-title'>
-          Take Award (Latest Award Period: {currentPeriodNumber ? currentPeriodNumber - 1 : 0})
-        </div>
+      <Card
+        hoverable
+        title={'Take Award (Latest Award Period: ' + (currentPeriodNumber ? currentPeriodNumber - 1 : 0)}>
         <div className='section-content lottery-form-container'>
           <div className='basic-blank'/>
           <Form
@@ -211,7 +210,7 @@ export default class LotteryAward extends Component {
           <p>Period: {period} &nbsp;&nbsp;&nbsp; Lottery ID: {lotteryId}</p>
           <p>{registrationInformation}</p>
         </Modal>
-      </section>
+      </Card>
     );
   }
 }

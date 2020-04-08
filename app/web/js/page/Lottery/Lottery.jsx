@@ -90,17 +90,19 @@ class Lottery extends Component {
                 swapInfo={swapInfo}
                 currentPeriodNumber={currentPeriodNumber}
               />
-              <div className='basic-blank'/>
+              <div className='next-card-blank'/>
               <PersonalDraw
                 address={address}
                 currentPeriodNumber={currentPeriodNumber}
               />
+              <div className='next-card-blank'/>
             </TabPane>
             <TabPane tab="Lottery Award" key="2">
               <AwardHistory
                 currentPeriodNumber={currentPeriodNumber}
                 address={address}
               />
+              <div className='next-card-blank'/>
             </TabPane>
           </Tabs>
         </div>

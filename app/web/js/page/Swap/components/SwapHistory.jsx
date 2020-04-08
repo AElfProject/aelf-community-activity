@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { Tag } from 'antd';
+import { Card, Tag } from 'antd';
 
 import {EXPLORER_URL, TOKEN_DECIMAL} from '../../../constant/constant';
 import addressFormat from '../../../utils/addressFormat';
@@ -88,13 +88,12 @@ export default function renderSwapHistory(historyList, swapInfo) {
   });
 
   return (
-    <section className='section-basic basic-container'>
-      <div className='section-title'>
-        History of this Address (last 30 txs)
-      </div>
+    <Card
+      hoverable
+      title='History of this Address (last 30 txs)'>
       <div className='section-content swap-flex-wrap'>
         {swapListHTML}
       </div>
-    </section>
+    </Card>
   );
 }

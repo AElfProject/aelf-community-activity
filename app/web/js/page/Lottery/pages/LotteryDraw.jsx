@@ -1,6 +1,6 @@
 /* From start */
 import React from 'react';
-import { Steps, Popover } from 'antd';
+import { Steps, Popover, Card } from 'antd';
 const { Step } = Steps;
 import {TOKEN_DECIMAL} from '../../../constant/constant';
 import './LotteryDraw.less';
@@ -74,10 +74,9 @@ export default function renderLotteryDraw(props) {
   });
 
   return (
-    <section className='section-basic basic-container'>
-      <div className='section-title'>
-        Lottery (Draw today at 5:00 p.m. East 8)
-      </div>
+    <Card
+      hoverable
+      title='Lottery (Draw today at 5:00 p.m. East 8)'>
       <div className='section-content lottery-prize-step-container'>
         <div className='prize-title'>Test Tokens Issued Of This Lottery Round：<span className='prize-current-token'>{currentSwappedTokenStr} ELF</span></div>
         <div className='prize-sub-title'>{prizes[currentStep].description}</div>
@@ -86,7 +85,7 @@ export default function renderLotteryDraw(props) {
           {prizeStepsHTML}
         </div>
       </div>
-    </section>
+    </Card>
   );
 }
 

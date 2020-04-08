@@ -1,6 +1,6 @@
 /* From start */
 import React from 'react';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, Input, message, Card } from 'antd';
 import { Link } from 'react-router';
 import {getMerklePathFromOtherChain} from '../../../utils/getMerklePath';
 
@@ -76,10 +76,9 @@ export default function renderSwapElf(swapInfo) {
   console.log('swapInfo.pairId: ', swapInfo.pairId);
 
   return (
-    <section className='section-basic basic-container'>
-      <div className='section-title'>
-        Swap Test ELF
-      </div>
+    <Card
+      hoverable
+      title='Swap Test ELF'>
       <div className='section-content swap-form-container'>
         <Form
           {...layout}
@@ -143,6 +142,6 @@ export default function renderSwapElf(swapInfo) {
           </Form.Item>
         </Form>
       </div>
-    </section>
+    </Card>
   );
 }

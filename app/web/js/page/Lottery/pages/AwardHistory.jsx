@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table } from 'antd';
+import { Card, Table } from 'antd';
 import Contract from '../../../utils/Contract';
 import addressFormat from '../../../utils/addressFormat';
 import { LOTTERY } from '../../../constant/constant';
@@ -159,15 +159,14 @@ export default class AwardHistory extends Component{
           rewardListBelongsToCurrentAddress={rewardListBelongsToCurrentAddress}
           address={address}
         />
-        <div className='basic-blank'/>
-        <section className='section-basic basic-container'>
-          <div className='section-title'>
-            All Award History
-          </div>
+        <div className='next-card-blank'/>
+        <Card
+          hoverable
+          title='All Award History'>
           <div className='section-content swap-flex-wrap'>
             {historyPeriodsHTML}
           </div>
-        </section>
+        </Card>
       </>
     );
   }

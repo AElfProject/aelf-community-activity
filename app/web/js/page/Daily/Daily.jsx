@@ -76,9 +76,11 @@ class Daily extends Component {
         <Tabs defaultActiveKey="1">
           <TabPane tab="Daily Tasks" key="1">
             <DailyMissions dailyAwardHistory={dailyAwardHistory} getDailyAwardHistory={this.getDailyAwardHistory}/>
+            <div className='next-card-blank'/>
           </TabPane>
           <TabPane tab="Award History" key="2">
             <DailyHistory address={address} dailyAwardHistory={dailyAwardHistory}/>
+            <div className='next-card-blank'/>
           </TabPane>
         </Tabs>
       </div>

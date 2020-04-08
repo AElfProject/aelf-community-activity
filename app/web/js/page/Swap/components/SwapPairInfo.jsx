@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card } from 'antd';
 import addressFormat from '../../../utils/addressFormat';
 import { TOKEN_DECIMAL } from '../../../constant/constant'
 
@@ -35,13 +36,12 @@ export default function renderSwapPairInfo(swapPair) {
   });
 
   return (
-    <section className='section-basic basic-container'>
-      <div className='section-title'>
-        Information of SwapPair
-      </div>
+    <Card
+      hoverable
+      title='Information of SwapPair'>
       <div className='section-content swap-flex-wrap'>
         {swapPairsHTML}
       </div>
-    </section>
+    </Card>
   );
 }

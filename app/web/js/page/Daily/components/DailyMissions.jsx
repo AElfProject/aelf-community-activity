@@ -9,7 +9,7 @@ import CountDown from '../../../components/Countdown/Countdown';
 import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux';
 import * as ActionsAccount from '../../../actions/account';
-import { Button, message } from 'antd';
+import { Button, Card, message } from 'antd';
 import { EXPLORER_URL, WALLET_WEB_URL, WALLET_IOS_URL, WALLET_ANDROID_URL } from '../../../constant/constant';
 import addressFormat from '../../../utils/addressFormat';
 import { add } from '../../../actions/counter';
@@ -184,19 +184,21 @@ class DailyMissions extends Component {
     return (
       <div>
         <p>During the event, you can get test tokens by completing daily tasks. </p>
-        <section className='section-basic basic-container'>
-          <div className='section-title'>
-            Countdown of this round of activities (UTC +0 23:59:59)：<CountDown countdown={countdown} />
-          </div>
+        <Card
+          hoverable
+          title={[
+              <span key='1'>Countdown of this round of activities (UTC +0 23:59:59)：</span>,
+              <CountDown key='2' countdown={countdown} />
+            ]}>
           <div className='section-title'>
             Current Address: {address ? addressFormat(address) : 'Please login'}
           </div>
-        </section>
-        <div className='basic-blank'/>
-        <section className='section-basic basic-container'>
-          <div className='section-title'>
-            Mission 1 Resource
-          </div>
+        </Card>
+
+        <div className='next-card-blank'/>
+        <Card
+          hoverable
+          title='Mission 1 Resource'>
           <div className='section-content'>
             <div>
               During the event, you can collect 100 ELF test tokens each day through the resource token trading function.
@@ -204,12 +206,12 @@ class DailyMissions extends Component {
             <a href={EXPLORER_URL + '/resource'} target='_blank'>Turn to aelf explorer</a>
             {this.renderMission(effectiveResourceTx, 'resource')}
           </div>
-        </section>
-        <div className='basic-blank'/>
-        <section className='section-basic basic-container'>
-          <div className='section-title'>
-            Mission 2 Token
-          </div>
+        </Card>
+
+        <div className='next-card-blank'/>
+        <Card
+          hoverable
+          title='Mission 2 Token'>
           <div className='section-content swap-flex-wrap'>
             <div>Rule：During the event, you can collect 100 ELF test tokens each day by transferring tokens. </div>
             <div>
@@ -220,33 +222,30 @@ class DailyMissions extends Component {
 
             {this.renderMission(effectiveTokenTx, 'token')}
           </div>
-        </section>
+        </Card>
 
-        <div className='basic-blank'/>
-        <div className='basic-blank'/>
+        <div className='next-card-blank'/>
         <div>Users who participate in the following two tasks need to register with the aelf community staff.</div>
         <div>Contact information： Wechat: a439714 (big fish) Telegram：Doris Guo (@dorisYG)</div>
-        <div className='basic-blank'/>
-        <section className='section-basic basic-container'>
-          <div className='section-title'>
-            Mission 3 Bug Bounty
-          </div>
+        <div className='next-card-blank'/>
+        <Card
+          hoverable
+          title='Mission 3 Bug Bounty'>
           <div className='section-content swap-flex-wrap'>
             <div>Complete a bug submission on the aelf chain to collect test token rewards:</div>
             <div>Reward Range: 1,000-5,000 Test Tokens,</div>
             <div>Bug Bonus Levels: Minor = 1,000 test tokens, Major = 3,000 test tokens, Critical = 5,000 test tokens.</div>
           </div>
-        </section>
+        </Card>
+        <div className='next-card-blank'/>
 
-        <div className='basic-blank'/>
-        <section className='section-basic basic-container'>
-          <div className='section-title'>
-            Mission 4 DApp Develop
-          </div>
+        <Card
+          hoverable
+          title='Mission 4 DApp Develop'>
           <div className='section-content swap-flex-wrap'>
             <div>Develop a DApp on the aelf Enterprise Blockchain and collect a large reward: 20,000 test tokens for each DAPP.</div>
           </div>
-        </section>
+        </Card>
       </div>
     );
   }

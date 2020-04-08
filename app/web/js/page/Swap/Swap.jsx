@@ -179,16 +179,16 @@ class Swap extends Component {
         <div className='basic-blank'/>
         {swapPairsInfoHTML}
 
-        <div className='basic-blank'/>
+        <div className='next-card-blank'/>
         {currentSwapInfoHTML}
 
-        <div className='basic-blank'/>
+        <div className='next-card-blank'/>
         {swapElfHTML}
 
-        <div className='basic-blank'/>
+        <div className='next-card-blank'/>
         {swapHistoryHTML}
 
-        <div className='basic-blank'/>
+        <div className='next-card-blank'/>
       </div>
     );
   }
