@@ -96,14 +96,15 @@ export default class AwardHistory extends Component{
       promiseList.push(getRewardResultByPeriod(index).then(rewardResult => {
         const { rewardResults } = this.state;
         const reverseIndex = currentPeriodNumber - 1 - index;
-        rewardResults[reverseIndex] = rewardResult;
-        this.setState(
-          rewardResults
-        );
-        // return true;
+        if (rewardResult) {
+          rewardResults[reverseIndex] = rewardResult;
+        }
+        // If network is not ok, update every time.
+        this.setState({
+            rewardResults: rewardResults.length ? rewardResults : []
+        });
       }).catch(e => {
         message.error(`Get ${index} period reward result failed.`);
-        // return e;
       }));
     }
 
