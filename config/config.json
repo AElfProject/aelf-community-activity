@@ -1,8 +1,8 @@
 {
   "APPNAME": "aelf community",
   "COMMON_PRIVATE": "f6e512a3c259e5f9af981d7f99d245aa5bc52fe448495e0b0dd56e8406be6f71",
-  "SWAP_CONTRACT_ADDRESS": "SuaPmtyFjozAVCbubchFHL2yLUrpgWYM67CMgNES1v16xanq9",
-  "SWAP_PAIR": "98eb44801c016daf4d3282c2e7893f3fa0fb01ef316c2063169337a533ba8149",
+  "SWAP_CONTRACT_ADDRESS": "B2HK7R8HPDdR7t8J7U2ChN6NVYYA81ZmphhH8szavGX6WuybT",
+  "SWAP_PAIR": "4f590903b5a97e424439d86392e38abf6e21457ff1b4adca960839d9a057b5dd",
   "HTTP_PROVIDER": "http://1.119.195.50:11105/chain",
   "HTTP_PROVIDER_INNER": "http://1.119.195.50:11105/chain",
   "TOKEN_CONTRACT_ADDRESS": "25CecrU94dmMdbhC3LWMKxtoaL4Wv8PChGvVJM6PxkHAyvXEhB",
@@ -22,13 +22,13 @@
       "method": "LOGIN",
       "contracts": [{
         "chainId": "AELF",
-        "contractAddress": "SuaPmtyFjozAVCbubchFHL2yLUrpgWYM67CMgNES1v16xanq9",
+        "contractAddress": "B2HK7R8HPDdR7t8J7U2ChN6NVYYA81ZmphhH8szavGX6WuybT",
         "contractName": "Token swap contract",
         "description": "Swap token from the other chain. Base on protocol [-]",
         "github": "https://github.com/AElfProject/AElf/blob/token-swap-contract/protobuf/token_swap_contract.proto"
       }, {
         "chainId": "AELF",
-        "contractAddress": "q6B5hzdSMaXZqjrYHVakngmL1xfUoWyfQnDttf4ktxoRSTUC7",
+        "contractAddress": "2KHGEcNomdekZ7SRyqLVGn8ubrxqonmToU4NtzxaE5g3TEEDPz",
         "contractName": "Lottery contract",
         "description": "Good Luck",
         "github": "https://github.com/AElfProject/aelf-boilerplate/blob/ferrari/chain/contract/AElf.Contracts.LotteryDemoContract/LotteryDemoContract.cs"
@@ -43,6 +43,7 @@
   },
   "LOTTERY": {
     "RATIO": 1,
-    "CONTRACT_ADDRESS": "q6B5hzdSMaXZqjrYHVakngmL1xfUoWyfQnDttf4ktxoRSTUC7"
+    "SYMBOL": "LOT",
+    "CONTRACT_ADDRESS": "2KHGEcNomdekZ7SRyqLVGn8ubrxqonmToU4NtzxaE5g3TEEDPz"
   }
 }

@@ -12,7 +12,7 @@ import './Lottery.less';
 import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux';
 import * as ActionsAccount from '../../actions/account';
-import getSwapInfo from '../../utils/getSwapInfo';
+import {getSwapPair} from '../../utils/getSwapInfo';
 import Contract from '../../utils/Contract';
 import { LOTTERY } from '../../constant/constant';
 
@@ -47,7 +47,7 @@ class Lottery extends Component {
   }
 
   componentDidMount() {
-    getSwapInfo().then(result => {
+    getSwapPair().then(result => {
       if (result) {
         console.log('swapInfo: ', result);
         this.setState({
@@ -57,7 +57,11 @@ class Lottery extends Component {
         message.warning('Can not get the swap information.');
       }
     }).catch(error => {
-      message.error(error.message);
+      if (error.Error && error.Error.Message) {
+        message.error(error.Error.Message);
+      } else {
+        message.error(error.message);
+      }
     });
     this.getCurrentPeriodNumber();
   }

@@ -20,10 +20,10 @@ export default function renderSwapElf(swapInfo) {
   const onFinish = async values => {
 
     try {
-      const {pairId, originAmount, merklePathBytes, merklePathBool, receiverAddress, uniqueId} = values;
+      const {swapId, originAmount, merklePathBytes, merklePathBool, receiverAddress, uniqueId} = values;
       const merklePath = getMerklePathFromOtherChain(merklePathBytes.trim(), merklePathBool.trim());
       const swapTokenInput = {
-        pairId,
+        swapId,
         originAmount: originAmount.trim(),
         merklePath,
         receiverAddress: receiverAddress.trim(),
@@ -73,26 +73,26 @@ export default function renderSwapElf(swapInfo) {
     console.log('Failed:', errorInfo);
   };
 
-  console.log('swapInfo.pairId: ', swapInfo.pairId);
+  console.log('swapInfo.swapId: ', swapInfo.swapId);
 
   return (
     <Card
       hoverable
-      title='Swap Test ELF'>
+      title='Swap Test Token'>
       <div className='section-content swap-form-container'>
         <Form
           {...layout}
           name="basic"
-          initialValues={{ pairId: swapInfo.pairId }}
+          initialValues={{ swapId: '' + swapInfo.swapId }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
         >
           <Form.Item
-            label="Pair ID"
-            name="pairId"
-            rules={[{ required: true, message: 'Please input the pair ID!' }]}
+            label="Swap ID"
+            name="swapId"
+            rules={[{ required: true, message: 'Please input the swap ID!' }]}
           >
-            <Input disabled defaultValue={swapInfo.pairId} value={swapInfo.pairId}/>
+            <Input disabled defaultValue={swapInfo.swapId} value={swapInfo.swapId}/>
           </Form.Item>
 
           <Form.Item

@@ -37,8 +37,9 @@ export default function renderSwapPairInfo(swapPair) {
 
   return (
     <Card
+      key={swapPair.targetTokenSymbol}
       hoverable
-      title='Information of SwapPair'>
+      title={'Information of SwapPair - ' + swapPair.targetTokenSymbol}>
       <div className='section-content swap-flex-wrap'>
         {swapPairsHTML}
       </div>

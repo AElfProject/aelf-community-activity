@@ -1,19 +1,21 @@
 import React, { Component} from 'react';
 
-import {message} from 'antd';
+import { message, Tabs } from 'antd';
+const { TabPane } = Tabs;
 
+import renderSwapInfo from './components/SwapInfo';
 import renderSwapPairInfo from './components/SwapPairInfo';
 import renderCurrentSwapInfo from './components/CurrentSwapInfo';
 import renderSwapElf from './components/SwapElf';
 import renderSwapHistory from './components/SwapHistory';
 
-import getSwapInfo from '../../utils/getSwapInfo';
+import {getSwapPair, getSwapInfo} from '../../utils/getSwapInfo';
 
 import axios from '../../service/axios';
 import { GET_SWAP_HISTORY } from '../../constant/apis';
 
 import AElf from 'aelf-sdk';
-import {HTTP_PROVIDER} from '../../constant/constant';
+import { HTTP_PROVIDER, SWAP_PAIR } from '../../constant/constant';
 
 import './Swap.less';
 
@@ -41,6 +43,11 @@ class Swap extends Component {
     super();
     this.state = {
       swapInfo: {
+        swapTargetTokenMap: {},
+        swapId: '',
+        controller: '',
+      },
+      swapPairInfo: {
         pairId: '-',
         originTokenSizeInByte: '-',
         originTokenNumericBigEndian: '-',
@@ -58,27 +65,75 @@ class Swap extends Component {
         },
         depositAmount: '-'
       },
+      swapPairInformation: {}, // swapPairInformation: {ELF: swapPairInfo, LOT: swapPairInfo, ...}
       swapHistory: []
     };
 
     this.aelf = new AElf(new AElf.providers.HttpProvider(HTTP_PROVIDER));
     this.getSwapHistory = this.getSwapHistory.bind(this);
+    this.renderSwapPairTokens = this.renderSwapPairTokens.bind(this);
   }
 
   async componentDidMount() {
+    const {swapPairInformation} = this.state;
+    getSwapPair().then(result => {
+      if (result) {
+        console.log('swapPairInfo: ', result);
+        swapPairInformation.ELF = result;
+        this.setState({
+          swapPairInfo: result,
+          swapPairInformation
+        });
+      } else {
+        message.warning('Can not get the swap pair information.');
+      }
+
+    }).catch(error => {
+      // console.log('swapPairInfo error: ', error);
+      if (error.Error && error.Error.Message) {
+        message.error(error.Error.Message);
+      } else {
+        message.error(error.message);
+      }
+    });
+
+    getSwapPair('LOT').then(result => {
+      if (result) {
+        console.log('swapPairInfo LOT: ', result);
+        swapPairInformation.LOT = result;
+        this.setState({
+          swapPairInfo: result,
+          swapPairInformation
+        });
+      } else {
+        message.warning('Can not get the swap pair information.');
+      }
+
+    }).catch(error => {
+      // console.log('swapPairInfo error: ', error);
+      if (error.Error && error.Error.Message) {
+        message.error(error.Error.Message);
+      } else {
+        message.error(error.message);
+      }
+    });
+
     getSwapInfo().then(result => {
       if (result) {
-        console.log('swapInfo: ', result);
+        console.log('getSwapInfo: ', result);
         this.setState({
           swapInfo: result,
         });
       } else {
         message.warning('Can not get the swap information.');
       }
-
     }).catch(error => {
-      message.error(error.message);
-      // console.log('swapInfo error: ', error);
+      // console.log('swapPairInfo error: ', error);
+      if (error.Error && error.Error.Message) {
+        message.error(error.Error.Message);
+      } else {
+        message.error(error.message);
+      }
     });
 
     await this.getSwapHistory();
@@ -160,15 +215,46 @@ class Swap extends Component {
     }
   }
 
+  renderSwapPairTokens() {
+    const {swapPairInformation} = this.state;
+
+    const reducer = (accumulator, currentValue) => {
+      if (Array.isArray(accumulator)) {
+        const currentValueHTML = renderSwapPairInfo(JSON.parse(JSON.stringify(swapPairInformation[currentValue])));
+        accumulator.push(<div className='basic-blank'/>);
+        accumulator.push(currentValueHTML);
+        return accumulator;
+      } else {
+        const accumulatorHTML = renderSwapPairInfo(JSON.parse(JSON.stringify(swapPairInformation[accumulator])));
+        const currentValueHTML = renderSwapPairInfo(JSON.parse(JSON.stringify(swapPairInformation[currentValue])));
+        return [accumulatorHTML, <div className='next-card-blank' key={accumulator + currentValue}/>, currentValueHTML];
+      }
+    };
+    const pairKeys = Object.keys(swapPairInformation);
+    if (pairKeys.length > 1) {
+      return pairKeys.reduce(reducer);
+    } else if (pairKeys.length === 1) {
+      return renderSwapPairInfo(JSON.parse(JSON.stringify(swapPairInformation[pairKeys[0]])));
+    }
+    return null;
+    // return Object.keys(swapPairInformation).map(key => {
+    //   return renderSwapPairInfo(JSON.parse(JSON.stringify(swapPairInformation[key])));
+    // });
+  }
+
   render() {
 
-    const {swapInfo, swapHistory} = this.state;
+    const {swapInfo, swapPairInfo, swapHistory} = this.state;
     // const { account } = this.props;
 
-    const swapPairsInfoHTML = renderSwapPairInfo(JSON.parse(JSON.stringify(swapInfo)));
-    const currentSwapInfoHTML = renderCurrentSwapInfo(JSON.parse(JSON.stringify(swapInfo.currentRound)));
-    const swapElfHTML = swapInfo.pairId === '-' ? null : renderSwapElf(JSON.parse(JSON.stringify(swapInfo)));
-    const swapHistoryHTML = renderSwapHistory(swapHistory, swapInfo);
+    const swapInfoHTML = renderSwapInfo(JSON.parse(JSON.stringify(swapInfo)));
+    const swapPairTokensHTML = this.renderSwapPairTokens();
+    const currentSwapInfoHTML = renderCurrentSwapInfo(JSON.parse(JSON.stringify(swapPairInfo.currentRound)));
+    // const swapElfHTML = swapInfo.swapId === '-' ? null : renderSwapElf(JSON.parse(JSON.stringify(swapInfo)));
+    const swapElfHTML = swapInfo.swapId === '-' ? null : renderSwapElf({
+      swapId: SWAP_PAIR
+    });
+    const swapHistoryHTML = renderSwapHistory(swapHistory, swapPairInfo);
 
     // console.log('re render', account);
     return (
@@ -176,19 +262,29 @@ class Swap extends Component {
         <div className='basic-blank'/>
         <a href='/#' className='font-18'>Click to get the swapping tutorial</a>
 
-        <div className='basic-blank'/>
-        {swapPairsInfoHTML}
+        <Tabs defaultActiveKey="1">
+          <TabPane tab="Swap Information" key="1">
+            <div className='basic-blank'/>
+            {swapInfoHTML}
 
-        <div className='next-card-blank'/>
-        {currentSwapInfoHTML}
+            <div className='next-card-blank'/>
+            {currentSwapInfoHTML}
 
-        <div className='next-card-blank'/>
-        {swapElfHTML}
+            <div className='next-card-blank'/>
+            {swapPairTokensHTML}
 
-        <div className='next-card-blank'/>
-        {swapHistoryHTML}
+            <div className='next-card-blank'/>
+          </TabPane>
+          <TabPane tab="Swap Token" key="2">
+            <div className='next-card-blank'/>
+            {swapElfHTML}
 
-        <div className='next-card-blank'/>
+            <div className='next-card-blank'/>
+            {swapHistoryHTML}
+
+            <div className='next-card-blank'/>
+          </TabPane>
+        </Tabs>
       </div>
     );
   }

@@ -76,7 +76,7 @@ export default function renderSwapHistory(historyList, swapInfo) {
             <a href={`${EXPLORER_URL}/tx/${tx.tx_id}`} target='_blank'>{tx.tx_id}</a>
           </div>
           {/*<div> <b>Origin Amount:</b> {tx.origin_amount}</div>*/}
-          <div> <b>Amount:</b> {tx.origin_amount / ratio / (10 ** TOKEN_DECIMAL)} ELF</div>
+          <div> <b>Amount:</b> {tx.origin_amount / ratio / (10 ** TOKEN_DECIMAL)}</div>
           <div> <b>Time:</b> {timeFormatted}</div>
           <div> <b>Status:</b> {txStatusHTML}</div>
         </div>

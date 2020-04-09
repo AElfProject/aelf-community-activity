@@ -52,11 +52,11 @@ export default class PersonalDraw extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      voteBalance: 0,
-      voteAllowance: 0,
+      tokenBalance: 0,
+      tokenAllowance: 0,
       boughtLotteries: []
     };
-    this.voteApproveCount = 0;
+    this.tokenApproveCount = 0;
     this.buyCount = 0;
     this.tokenContract = new TokenContract();
     this.onBuyClick = this.onBuyClick.bind(this);
@@ -84,37 +84,37 @@ export default class PersonalDraw extends Component{
   async getVoteToken() {
     const { address } = this.props;
 
-    let voteBalance = 0;
+    let tokenBalance = 0;
     if (address) {
       const tokenContractInstance = await this.tokenContract.getTokenContractInstance();
       const balance = await tokenContractInstance.GetBalance.call({
-        symbol: 'VOTE',
+        symbol: LOTTERY.SYMBOL,
         owner: address
       });
-      voteBalance = parseInt(balance.balance, 10);
+      tokenBalance = parseInt(balance.balance, 10);
     }
 
     this.setState({
-      voteBalance
+      tokenBalance
     });
   }
 
   async getVoteAllowance() {
     const { address } = this.props;
 
-    let voteAllowance = 0;
+    let tokenAllowance = 0;
     if (address) {
       const tokenContractInstance = await this.tokenContract.getTokenContractInstance();
       const allowance = await tokenContractInstance.GetAllowance.call({
-        symbol: 'VOTE',
+        symbol: LOTTERY.SYMBOL,
         spender: LOTTERY.CONTRACT_ADDRESS,
         owner: address
       });
-      voteAllowance = allowance.allowance;
+      tokenAllowance = allowance.allowance;
     }
 
     this.setState({
-      voteAllowance
+      tokenAllowance
     });
   }
 
@@ -147,9 +147,9 @@ export default class PersonalDraw extends Component{
   async onBuyClick() {
     try {
       await buyLottery(this.buyCount);
-      const {voteBalance} = this.state;
+      const {tokenBalance} = this.state;
       this.setState({
-        voteBalance: voteBalance - buyCount
+        tokenBalance: tokenBalance - buyCount
       });
       setTimeout(() => {
         this.getBoughtLotteries();
@@ -160,7 +160,7 @@ export default class PersonalDraw extends Component{
   }
 
   onApproveChange(value) {
-    this.voteApproveCount = value;
+    this.tokenApproveCount = value;
   }
 
   onExchangeNumberChange(value) {
@@ -169,7 +169,7 @@ export default class PersonalDraw extends Component{
 
   async onApproveClick() {
     try {
-      await approveVote(this.voteApproveCount);
+      await approveVote(this.tokenApproveCount);
       message.success('Please wait for block confirmation', 10);
       setTimeout(() => {
         this.getVoteAllowance();
@@ -179,23 +179,24 @@ export default class PersonalDraw extends Component{
     }
   }
 
-  renderNoVoteToken() {
-    const voteUrl = EXPLORER_URL + '/vote/election';
-    return <>
-      Please vote in the <a href={voteUrl} target='_blank'>browser</a> to get the vote token
-    </>;
+  renderNoToken() {
+    // const voteUrl = EXPLORER_URL + '/vote/election';
+    return null;
+    // return <>
+    //   Please vote in the <a href={voteUrl} target='_blank'>browser</a> to get the {LOTTERY.SYMBOL} token
+    // </>;
   }
 
   render() {
     const {address, currentPeriodNumber} = this.props;
-    const {voteBalance, voteAllowance, boughtLotteries} = this.state;
+    const {tokenBalance, tokenAllowance, boughtLotteries} = this.state;
 
-    const voteBalanceActual = voteBalance / 10 ** 8;
-    const voteAllowanceActual = voteAllowance / 10 ** 8;
+    const tokenBalanceActual = tokenBalance / 10 ** 8;
+    const tokenAllowanceActual = tokenAllowance / 10 ** 8;
 
     const historyHTML = renderHistory(boughtLotteries);
 
-    const noVoteTokenHTML = this.renderNoVoteToken();
+    const noTokenHTML = this.renderNoToken();
 
     return (
       <Card
@@ -208,18 +209,18 @@ export default class PersonalDraw extends Component{
           <div>
             <div>Address: {address ? addressFormat(address) : 'Please login'}</div>
             <div className='basic-blank'/>
-            <div> Balance: {voteBalance ? voteBalanceActual + ' VOTE' : noVoteTokenHTML}</div>
+            <div> Balance: {tokenBalance ? tokenBalanceActual + ' ' + LOTTERY.SYMBOL : noTokenHTML}</div>
             <div className='basic-blank'/>
             <div>
-              The vote token you can use to exchange: {voteAllowance ? voteAllowanceActual + ' VOTE' : 0} &nbsp;&nbsp;&nbsp;
-              <InputNumber min={0} max={voteBalanceActual} onChange={this.onApproveChange} />
+              The {LOTTERY.SYMBOL} token you can use to exchange: {tokenAllowance ? tokenAllowanceActual + ' ' + LOTTERY.SYMBOL : 0} &nbsp;&nbsp;&nbsp;
+              <InputNumber min={0} max={tokenBalanceActual} onChange={this.onApproveChange} />
               &nbsp;&nbsp;&nbsp;
               <Button type="primary" onClick={() => this.onApproveClick()}>Increase the upper limit</Button>
             </div>
             <div className='basic-blank'/>
             <div className='personal-exchange'>
-              Exchange Quantity ({LOTTERY.RATIO} VOTE = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
-              <InputNumber min={0} max={voteAllowanceActual/LOTTERY.RATIO} defaultValue={1} onChange={this.onExchangeNumberChange} />
+              Exchange Quantity ({LOTTERY.RATIO} {LOTTERY.SYMBOL} = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
+              <InputNumber min={0} max={tokenAllowanceActual/LOTTERY.RATIO} defaultValue={1} onChange={this.onExchangeNumberChange} />
               &nbsp;&nbsp;&nbsp;
               <Button type="primary" onClick={() => this.onBuyClick()}>Exchange</Button>
             </div>
@@ -255,8 +256,8 @@ async function buyLottery (buyCount) {
   MessageTxToExplore(TransactionId);
 }
 
-async function approveVote(voteApproveCount) {
-  if (!voteApproveCount) {
+async function approveVote(tokenApproveCount) {
+  if (!tokenApproveCount) {
     throw Error('Please input the amount to approve.');
   }
 
@@ -266,9 +267,9 @@ async function approveVote(voteApproveCount) {
   });
 
   const approveResult = await tokenContract.Approve({
-    symbol: 'VOTE',
+    symbol: LOTTERY.SYMBOL,
     spender: LOTTERY.CONTRACT_ADDRESS,
-    amount: voteApproveCount * 10 ** TOKEN_DECIMAL
+    amount: tokenApproveCount * 10 ** TOKEN_DECIMAL
   });
 
   const {TransactionId} = approveResult.result;
