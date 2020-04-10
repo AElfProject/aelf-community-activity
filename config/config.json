@@ -42,7 +42,7 @@
     }
   },
   "LOTTERY": {
-    "RATIO": 1,
+    "RATIO": 1000,
     "SYMBOL": "LOT",
     "CONTRACT_ADDRESS": "2KHGEcNomdekZ7SRyqLVGn8ubrxqonmToU4NtzxaE5g3TEEDPz"
   }

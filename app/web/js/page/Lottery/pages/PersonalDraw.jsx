@@ -145,11 +145,18 @@ export default class PersonalDraw extends Component{
   }
 
   async onBuyClick() {
+    if (this.buyCount%1) {
+      message.error('Please enter a positive integer.');
+      return;
+    }
     try {
       await buyLottery(this.buyCount);
-      const {tokenBalance} = this.state;
+      const {tokenBalance, tokenAllowance} = this.state;
+      const costToken = this.buyCount * LOTTERY.RATIO * 10 ** 8;
       this.setState({
-        tokenBalance: tokenBalance - buyCount
+        tokenBalance: tokenBalance - costToken,
+        tokenAllowance: tokenAllowance - costToken,
+
       });
       setTimeout(() => {
         this.getBoughtLotteries();
@@ -220,7 +227,11 @@ export default class PersonalDraw extends Component{
             <div className='basic-blank'/>
             <div className='personal-exchange'>
               Exchange Quantity ({LOTTERY.RATIO} {LOTTERY.SYMBOL} = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
-              <InputNumber min={0} max={tokenAllowanceActual/LOTTERY.RATIO} defaultValue={1} onChange={this.onExchangeNumberChange} />
+              <InputNumber
+                min={0}
+                max={tokenAllowanceActual/LOTTERY.RATIO}
+                defaultValue={1}
+                onChange={this.onExchangeNumberChange} />
               &nbsp;&nbsp;&nbsp;
               <Button type="primary" onClick={() => this.onBuyClick()}>Exchange</Button>
             </div>
@@ -251,6 +262,10 @@ async function buyLottery (buyCount) {
     value: buyCount
   });
 
+  if (lotteryResult.error) {
+    throw Error(lotteryResult.errorMessage.message || lotteryResult.errorMessage);
+  }
+
   const {TransactionId} = lotteryResult.result;
   message.success('You can see ths new lottery number after the transaction is confirmed if you refresh the page', 6);
   MessageTxToExplore(TransactionId);
@@ -271,6 +286,10 @@ async function approveVote(tokenApproveCount) {
     spender: LOTTERY.CONTRACT_ADDRESS,
     amount: tokenApproveCount * 10 ** TOKEN_DECIMAL
   });
+
+  if (approveResult.error) {
+    throw Error(approveResult.errorMessage.message || approveResult.errorMessage);
+  }
 
   const {TransactionId} = approveResult.result;
   MessageTxToExplore(TransactionId);
