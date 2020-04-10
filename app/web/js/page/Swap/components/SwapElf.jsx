@@ -54,7 +54,7 @@ export default function renderSwapElf(swapInfo) {
         message.warning(swapResult.errorMessage.message || swapResult.errorMessage);
         return;
       }
-      const {TransactionId} = swapResult.result;
+      const {TransactionId} = swapResult.result || swapResult;
       const explorerHref = `${EXPLORER_URL}/tx/${TransactionId}`;
       const txIdHTML = <div>
         <span>Transaction ID: {TransactionId}</span>

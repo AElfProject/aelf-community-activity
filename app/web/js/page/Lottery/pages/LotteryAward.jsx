@@ -51,7 +51,8 @@ export default class LotteryAward extends Component {
     const { address } = this.props;
     if (address) {
       try {
-        const lotteryContract = await NightElfCheck.getContractInstance({
+        // const lotteryContract = await NightElfCheck.getContractInstance({
+        const lotteryContract = await NightElfCheck.initContractInstance({
           loginInfo: LOGIN_INFO,
           contractAddress: LOTTERY.CONTRACT_ADDRESS,
         });
@@ -67,7 +68,7 @@ export default class LotteryAward extends Component {
           return;
         }
 
-        const {TransactionId} = takeRewardResult.result;
+        const {TransactionId} = takeRewardResult.result || takeRewardResult;
         MessageTxToExplore(TransactionId);
 
         this.removeLotteryIdArray(parseInt(lotteryId, 10));
@@ -89,21 +90,17 @@ export default class LotteryAward extends Component {
   }
 
   onPeriodChange(value) {
-    const {rewardListBelongsToCurrentAddress} = this.props;
+    const {rewardListBelongsToCurrentAddress, address} = this.props;
     const rewardListThisPeriod = rewardListBelongsToCurrentAddress.filter(item => {
       return parseInt(item.period, 10) === parseInt(value, 10);
     });
     const rewardLotteriesTemp = rewardListThisPeriod[0].rewardLotteries.filter(item => {
-      return !item.registrationInformation;
+      return !item.registrationInformation && item.owner === address;
     });
 
     const lotteryIdArray = rewardLotteriesTemp.map(item => {
       return item.id;
     });
-    //
-    // const lotteryIdArray = rewardListThisPeriod[0].rewardLotteries.map(item => {
-    //   return item.id;
-    // });
 
     this.setState({
       lotteryIdArray

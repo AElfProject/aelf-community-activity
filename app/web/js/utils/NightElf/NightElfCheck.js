@@ -41,6 +41,7 @@ export default class NightElfCheck {
     // For extension users
     static getAelfInstanceByExtension() {
         if (!aelfInstanceByExtension) {
+            NightElfCheck.resetContractInstances();
             NightElfCheck.initAelfInstanceByExtension();
         }
         return aelfInstanceByExtension;
@@ -54,6 +55,10 @@ export default class NightElfCheck {
             APPNAME
         });
         return aelfInstanceByExtension;
+    }
+
+    static resetContractInstances() {
+        contractInstances = {};
     }
 
     static async getContractInstance(inputInitParams) {

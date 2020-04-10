@@ -128,7 +128,7 @@ export default class PersonalDraw extends Component{
       return;
     }
 
-    const lotteryContract = await NightElfCheck.getContractInstance({
+    const lotteryContract = await NightElfCheck.initContractInstance({
       loginInfo: LOGIN_INFO,
       contractAddress: LOTTERY.CONTRACT_ADDRESS,
     });
@@ -266,7 +266,7 @@ async function buyLottery (buyCount) {
     throw Error(lotteryResult.errorMessage.message || lotteryResult.errorMessage);
   }
 
-  const {TransactionId} = lotteryResult.result;
+  const {TransactionId} = lotteryResult.result || lotteryResult;
   message.success('You can see ths new lottery number after the transaction is confirmed if you refresh the page', 6);
   MessageTxToExplore(TransactionId);
 }
@@ -291,6 +291,6 @@ async function approveVote(tokenApproveCount) {
     throw Error(approveResult.errorMessage.message || approveResult.errorMessage);
   }
 
-  const {TransactionId} = approveResult.result;
+  const {TransactionId} = approveResult.result || approveResult;
   MessageTxToExplore(TransactionId);
 }
