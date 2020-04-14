@@ -75,6 +75,7 @@ export default function renderLotteryDraw(props) {
 
   return (
     <Card
+      className='hover-cursor-auto'
       hoverable
       title='Lottery (Draw today at 5:00 p.m. East 8)'>
       <div className='section-content lottery-prize-step-container'>

@@ -77,6 +77,7 @@ export default function renderSwapElf(swapInfo) {
 
   return (
     <Card
+      className='hover-cursor-auto'
       hoverable
       title='Swap Test Token'>
       <div className='section-content swap-form-container'>

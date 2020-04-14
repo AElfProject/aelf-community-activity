@@ -31,6 +31,7 @@ export default function renderSwapInfo(swapInfo) {
 
   return (
     <Card
+      className='hover-cursor-auto'
       hoverable
       title='Information of Swap'>
       <div className='section-content swap-flex-wrap'>

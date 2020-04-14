@@ -37,6 +37,7 @@ export default function renderSwapPairInfo(swapPair) {
 
   return (
     <Card
+      className='hover-cursor-auto'
       key={swapPair.targetTokenSymbol}
       hoverable
       title={'Information of SwapPair - ' + swapPair.targetTokenSymbol}>

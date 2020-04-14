@@ -161,6 +161,7 @@ export default class AwardHistory extends Component{
         />
         <div className='next-card-blank'/>
         <Card
+          className='hover-cursor-auto'
           hoverable
           title='All Award History'>
           <div className='section-content swap-flex-wrap'>

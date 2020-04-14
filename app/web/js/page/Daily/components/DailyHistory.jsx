@@ -45,6 +45,7 @@ export default function renderDailyHistory(props) {
 
   return (
     <Card
+      className='hover-cursor-auto'
       hoverable
       title='History'>
       <div className='section-content swap-flex-wrap overflow-x-scroll'>

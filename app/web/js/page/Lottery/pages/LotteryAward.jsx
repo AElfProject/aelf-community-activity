@@ -160,6 +160,7 @@ export default class LotteryAward extends Component {
 
     return (
       <Card
+        className='hover-cursor-auto'
         hoverable
         title={'Take Award (Latest Award Period: ' + (currentPeriodNumber ? currentPeriodNumber - 1 : 0)}>
         <div className='section-content lottery-form-container'>

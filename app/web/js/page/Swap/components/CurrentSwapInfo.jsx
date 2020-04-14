@@ -28,6 +28,7 @@ export default function renderCurrentSwapInfo(swapInfo) {
 
   return (
     <Card
+      className='hover-cursor-auto'
       hoverable
       title='Information of the current round'>
       <div className='section-content swap-flex-wrap'>

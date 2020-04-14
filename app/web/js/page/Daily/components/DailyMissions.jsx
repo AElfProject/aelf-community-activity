@@ -185,6 +185,7 @@ class DailyMissions extends Component {
       <div>
         <p>During the event, you can get test tokens by completing daily tasks. </p>
         <Card
+          className='hover-cursor-auto'
           hoverable
           title={[
               <span key='1'>Countdown of this round of activities (UTC +0 23:59:59)：</span>,
@@ -197,6 +198,7 @@ class DailyMissions extends Component {
 
         <div className='next-card-blank'/>
         <Card
+          className='hover-cursor-auto'
           hoverable
           title='Mission 1 Resource'>
           <div className='section-content'>
@@ -210,6 +212,7 @@ class DailyMissions extends Component {
 
         <div className='next-card-blank'/>
         <Card
+          className='hover-cursor-auto'
           hoverable
           title='Mission 2 Token'>
           <div className='section-content swap-flex-wrap'>
@@ -229,6 +232,7 @@ class DailyMissions extends Component {
         <div>Contact information： Wechat: a439714 (big fish) Telegram：Doris Guo (@dorisYG)</div>
         <div className='next-card-blank'/>
         <Card
+          className='hover-cursor-auto'
           hoverable
           title='Mission 3 Bug Bounty'>
           <div className='section-content swap-flex-wrap'>
@@ -240,6 +244,7 @@ class DailyMissions extends Component {
         <div className='next-card-blank'/>
 
         <Card
+          className='hover-cursor-auto'
           hoverable
           title='Mission 4 DApp Develop'>
           <div className='section-content swap-flex-wrap'>

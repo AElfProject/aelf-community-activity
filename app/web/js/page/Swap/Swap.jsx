@@ -1,6 +1,6 @@
 import React, { Component} from 'react';
 
-import { message, Tabs } from 'antd';
+import { Card, message, Tabs } from 'antd';
 const { TabPane } = Tabs;
 
 import renderSwapInfo from './components/SwapInfo';
@@ -8,8 +8,10 @@ import renderSwapPairInfo from './components/SwapPairInfo';
 import renderCurrentSwapInfo from './components/CurrentSwapInfo';
 import renderSwapElf from './components/SwapElf';
 import renderSwapHistory from './components/SwapHistory';
+import Web3Info from './components/Web3Info';
 
 import {getSwapPair, getSwapInfo} from '../../utils/getSwapInfo';
+import {Web3Plugin} from '../../utils/Web3Plugin';
 
 import axios from '../../service/axios';
 import { GET_SWAP_HISTORY } from '../../constant/apis';
@@ -66,11 +68,13 @@ class Swap extends Component {
         depositAmount: '-'
       },
       swapPairInformation: {}, // swapPairInformation: {ELF: swapPairInfo, LOT: swapPairInfo, ...}
-      swapHistory: []
+      swapHistory: [],
+      web3PluginInstance: {}
     };
 
     this.aelf = new AElf(new AElf.providers.HttpProvider(HTTP_PROVIDER));
     this.getSwapHistory = this.getSwapHistory.bind(this);
+    this.initWeb3Plugin = this.initWeb3Plugin.bind(this);
     this.renderSwapPairTokens = this.renderSwapPairTokens.bind(this);
   }
 
@@ -136,6 +140,7 @@ class Swap extends Component {
       }
     });
 
+    this.initWeb3Plugin();
     await this.getSwapHistory();
   }
 
@@ -145,6 +150,16 @@ class Swap extends Component {
     if (addressChanged) {
       await this.getSwapHistory();
     }
+  }
+
+  initWeb3Plugin() {
+    const web3PluginInstance = new Web3Plugin();
+    web3PluginInstance.install();
+    // if web3PluginInstance === null wait
+    // if === 'undefined', warning.
+    this.setState({
+      web3PluginInstance,
+    });
   }
 
   async getSwapHistory() {
@@ -244,7 +259,7 @@ class Swap extends Component {
 
   render() {
 
-    const {swapInfo, swapPairInfo, swapHistory} = this.state;
+    const {swapInfo, swapPairInfo, swapHistory, web3PluginInstance} = this.state;
     // const { account } = this.props;
 
     const swapInfoHTML = renderSwapInfo(JSON.parse(JSON.stringify(swapInfo)));
@@ -262,7 +277,7 @@ class Swap extends Component {
         <div className='basic-blank'/>
         <a href='/#' className='font-18'>Click to get the swapping tutorial</a>
 
-        <Tabs defaultActiveKey="1">
+        <Tabs defaultActiveKey="2">
           <TabPane tab="Swap Information" key="1">
             <div className='basic-blank'/>
             {swapInfoHTML}
@@ -276,6 +291,11 @@ class Swap extends Component {
             <div className='next-card-blank'/>
           </TabPane>
           <TabPane tab="Swap Token" key="2">
+
+            <Web3Info
+              web3PluginInstance={web3PluginInstance}
+            />
+
             <div className='next-card-blank'/>
             {swapElfHTML}
 

@@ -207,6 +207,7 @@ export default class PersonalDraw extends Component{
 
     return (
       <Card
+        className='hover-cursor-auto'
         hoverable
         title='My Lottery'>
         <div className='section-content'>
