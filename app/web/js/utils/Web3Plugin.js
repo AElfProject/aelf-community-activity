@@ -37,10 +37,10 @@ export class Web3Plugin {
     const URL_PRE = 'https://' + this.currentNetwork + '.etherscan.io/address/';
 
     this.tokenContract = new this.web3.eth.Contract(tokenAbi, TOKEN_ADDRESS);
-    this.tokenContractLink = URL_PRE + this.tokenAddress + '#writeContract';
+    this.tokenContractLink = URL_PRE + TOKEN_ADDRESS + '#writeContract';
 
     this.lockContract = new this.web3.eth.Contract(lockAbi, LOCK_ADDRESS);
-    this.lockContractLink = URL_PRE + this.lockAddress + '#writeContract';
+    this.lockContractLink = URL_PRE + LOCK_ADDRESS + '#writeContract';
 
     this.merkleContract = new this.web3.eth.Contract(merkleAbi, MERKLE_ADDRESS);
 
@@ -111,11 +111,125 @@ export class Web3Plugin {
     }
   }
 
+  // send类方法必须有to，否则交易会变成创建合约
+  // 还必须有gas，否则交易gas要么不足要么超出，注意gas的估算写法
+  async sendTx (transaction, from, to) {
+    return new Promise(async (resolve, reject) => {
+      const gas = await this.web3.eth.estimateGas({from: from, to: to, data: transaction.encodeABI()});
+      const options = {
+        from,
+        to,
+        gas
+      };
+      transaction.send(options)
+        .on('receipt', receipt => resolve(receipt))
+        .on('error', err => reject(err));
+    });
+  }
+
+  async approve (approveValue) {
+      // this.showApproveWaitting = true;
+      const from = this.myAccounts[0].address;
+      const to = TOKEN_ADDRESS;
+      const transaction = this.tokenContract.methods.approve(
+        LOCK_ADDRESS,
+        this.web3.utils.toWei(approveValue.toString(), 'ether')
+      );
+
+      // let sucessFn = function (receipt) {
+      //   self.showApproveWaitting = false;
+      //   self.approveTxHash = receipt.transactionHash;
+      //   self.approveTxHashLink = 'https://' + this.currentNetwork + '.etherscan.io/tx/' + receipt.transactionHash;
+      //   // 更新授权额度
+      //   self.getAllowance()
+      // }
+      // let failFn = function (err) {
+      //   self.showApproveWaitting = false
+      //   self.$Modal.warning({
+      //     title: '授权失败',
+      //     content: err
+      //   })
+      // }
+      return this.sendTx(transaction, from, to);
+  }
+
+  async createReceipt (mortgageData) {
+    const {amount, address} = mortgageData;
+
+    let from = this.myAccounts[0].address;
+    let to = LOCK_ADDRESS;
+    let transaction = this.lockContract.methods.createReceipt(
+      this.web3.utils.toWei(amount.toString(), 'ether'),
+      address // target address
+    );
+
+    // let sucessFn = function (receipt) {
+    //   self.showCreateReceiptWaitting = false
+    //   self.createReceiptTxHash = receipt.transactionHash
+    //   self.createReceiptTxHashLink = 'https://' + self.currentNetwork + '.etherscan.io/tx/' + receipt.transactionHash
+    //   // 更新抵押额度
+    //   self.getLockTokens()
+    //   self.getAllowance()
+    // }
+    // let failFn = function (err) {
+    //   self.showCreateReceiptWaitting = false
+    //   self.$Modal.warning({
+    //     title: '抵押失败',
+    //     content: err
+    //   })
+    // }
+    return this.sendTx(transaction, from, to);
+  }
+
+  async getMyReceiptIds (address) {
+    let ids = await this.lockContract.methods.getMyReceipts(address).call();
+    let temp = [];
+    ids.forEach((v, i) => {
+      temp.push({'text': v, 'value': v})
+    });
+    return temp;
+    // this.formRedeem.receiptIds = temp;
+    // this.formRedeem.receiptId = ids[ids.length - 1];
+  }
+
+  async execRedeem (redeemData) {
+    let res = await this.lockContract.methods.receipts(redeemData.receiptId).call();
+    if (!res) {
+      throw Error('Invalid receipt ID');
+    }
+    if (res.finished) {
+      throw Error('Already redeemed.');
+    }
+    console.log('res.endTime, ', res);
+    if (res.endTime * 1000 > Date.parse(new Date())) {
+      throw Error('Not ready to redeem, time of redemption: ' + new Date(res.endTime * 1000).toLocaleString());
+    }
+
+    let from = this.myAccounts[0].address;
+    let to = LOCK_ADDRESS;
+    let transaction = this.lockContract.methods.finishReceipt(redeemData.receiptId);
+
+    return this.sendTx(transaction, from, to);
+  }
+
+  async getReceiptInfo (id) {
+    return await this.lockContract.methods.getReceiptInfo(id).call();
+    // receiverAddress = info[1]
+    // mapUniqueId = info[0]
+    // originAmount = info[2]
+  }
+
+  async getMerklePathInfo (id) {
+    return await this.merkleContract.methods.GenerateMerklePath(id).call();
+    // merkleBytes = info[0]
+    // merkleBool = info[1]
+  }
+
   async getAllowance () {
     // try {
     const allowance = await this.tokenContract.methods.allowance(this.myAccounts[0].address, LOCK_ADDRESS).call();
-    this.allowanceAmount = this.web3.utils.fromWei(allowance, 'ether') + ' ELF'
-    return allowanceAmount;
+    this.allowanceAmount = this.web3.utils.fromWei(allowance, 'ether'); // + ' ELF';
+    return this.allowanceAmount;
     // } catch (e) {
     //   console.log(e)
     // }
@@ -124,8 +238,8 @@ export class Web3Plugin {
   async getLockTokens () {
     // try {
     const lock = this.lockAmount = await this.lockContract.methods.getLockTokens(this.myAccounts[0].address).call();
-    this.lockAmount = this.web3.utils.fromWei(lock, 'ether') + ' ELF';
-    return lockAmount;
+    this.lockAmount = this.web3.utils.fromWei(lock, 'ether'); // + ' ELF';
+    return this.lockAmount;
     // } catch (e) {
     //   console.log(e)
     // }

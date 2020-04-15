@@ -266,9 +266,9 @@ class Swap extends Component {
     const swapPairTokensHTML = this.renderSwapPairTokens();
     const currentSwapInfoHTML = renderCurrentSwapInfo(JSON.parse(JSON.stringify(swapPairInfo.currentRound)));
     // const swapElfHTML = swapInfo.swapId === '-' ? null : renderSwapElf(JSON.parse(JSON.stringify(swapInfo)));
-    const swapElfHTML = swapInfo.swapId === '-' ? null : renderSwapElf({
-      swapId: SWAP_PAIR
-    });
+    // const swapElfHTML = swapInfo.swapId === '-' ? null : renderSwapElf({
+    //   swapId: SWAP_PAIR
+    // });
     const swapHistoryHTML = renderSwapHistory(swapHistory, swapPairInfo);
 
     // console.log('re render', account);
@@ -296,8 +296,8 @@ class Swap extends Component {
               web3PluginInstance={web3PluginInstance}
             />
 
-            <div className='next-card-blank'/>
-            {swapElfHTML}
+            {/*<div className='next-card-blank'/>*/}
+            {/*{swapElfHTML}*/}
 
             <div className='next-card-blank'/>
             {swapHistoryHTML}

@@ -52,14 +52,14 @@ export default class BrowserHeader extends Component {
 
     const menuList = [
       {
-        url: '/daily',
-        key: 'daily',
-        title: 'Daily Tasks'
-      },
-      {
         url: '/swap',
         key: 'swap',
         title: 'Token Swap'
+      },
+      {
+        url: '/daily',
+        key: 'daily',
+        title: 'Daily Tasks'
       },
       {
         url: '/lottery',
