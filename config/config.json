@@ -28,7 +28,7 @@
         "github": "https://github.com/AElfProject/AElf/blob/token-swap-contract/protobuf/token_swap_contract.proto"
       }, {
         "chainId": "AELF",
-        "contractAddress": "2KHGEcNomdekZ7SRyqLVGn8ubrxqonmToU4NtzxaE5g3TEEDPz",
+        "contractAddress": "2YZHrPCRvdWJYr42gtde7dvC5mFwdJyaFZbpgYWw2PytmPcp9w",
         "contractName": "Lottery contract",
         "description": "Good Luck",
         "github": "https://github.com/AElfProject/aelf-boilerplate/blob/ferrari/chain/contract/AElf.Contracts.LotteryDemoContract/LotteryDemoContract.cs"
@@ -44,7 +44,7 @@
   "LOTTERY": {
     "RATIO": 1000,
     "SYMBOL": "LOT",
-    "CONTRACT_ADDRESS": "2KHGEcNomdekZ7SRyqLVGn8ubrxqonmToU4NtzxaE5g3TEEDPz"
+    "CONTRACT_ADDRESS": "2YZHrPCRvdWJYr42gtde7dvC5mFwdJyaFZbpgYWw2PytmPcp9w"
   },
   "WEB3": {
     "TOKEN_ADDRESS": "0x730785d79D7f8E31BF0173E8396d92B42f019062",
