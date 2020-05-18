@@ -43,6 +43,7 @@ export class Web3Plugin {
     this.lockContractLink = URL_PRE + LOCK_ADDRESS + '#writeContract';
 
     this.merkleContract = new this.web3.eth.Contract(merkleAbi, MERKLE_ADDRESS);
+    this.merkleContractLink = URL_PRE + MERKLE_ADDRESS + '#readContract';
 
     await this.getAccounts();
   }

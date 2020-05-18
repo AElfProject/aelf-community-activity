@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Button, Card, Form, Input, Spin, message, Select } from 'antd';
-
+import { InfoCircleFilled } from '@ant-design/icons';
 import SwapElf from './SwapElf';
 import { WEB3, SWAP_PAIR } from '../../../constant/constant';
 const {LOCK_ADDRESS} = WEB3;
@@ -48,7 +48,7 @@ export default class Web3Info extends Component{
       redeemedTxHash: null,
       receiptIds: [],
       swapELFReceiptInfo: [],
-      swapELFMerklePathInfo: [[], []]
+      swapELFMerklePathInfo: [[], [], [], []]
     };
 
     this.redeemFormRef = React.createRef();
@@ -254,7 +254,7 @@ export default class Web3Info extends Component{
           <div className='section-content'>
             {
               web3PluginInstance.web3 === 'undefined'
-              ? <a href='https://metamask.io/download.html' target='_blank'>Download MetaMask</a>
+              ? <a href='https://metamask.io/download.html' target='_blank'>Download MetaMask (If not, you can't even open the web link)</a>
               : null
             }
             { account.address
@@ -272,6 +272,18 @@ export default class Web3Info extends Component{
               : null }
             { !account.address && web3PluginInstance.web3 && web3PluginInstance.web3 !== 'undefined'
             &&  <a onClick={this.connectMetaMask}>Connect to Web3</a>}
+          </div>
+        </Card>
+
+        <div className='next-card-blank'/>
+
+        <Card
+          className='hover-cursor-auto'
+          hoverable>
+          <div className='section-content'>
+            <InfoCircleFilled style={{
+              color: 'orange'
+            }} /> During the process of swap token, we adopt the open-source contract of Ethereum, and users can check the data on the chain
           </div>
         </Card>
 
@@ -359,9 +371,7 @@ export default class Web3Info extends Component{
                 >
                   <Input/>
                 </Form.Item>
-                <div>Please input the quantity of ELF mortgaged (the quantity should be less than or equal to the authorized amount)
-                  and the elf address received in the elf test network;
-                  this step can be operated in the writecontract - createreceipt of the
+                <div>After completing the authorization, please provide the amount of the staked ELF (the amount should be no more than the authorized quantity) and the address for receiving aelf in the aelf testnet. After staked your ELF, your ELF will be locked and can only be redeemed from this page after one month. This step can be executed in the writecontract-createreceipt of the
                   <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
                 </div>
               </Form.Item>
@@ -384,6 +394,17 @@ export default class Web3Info extends Component{
         </Card>
 
         <div className='next-card-blank'/>
+        <Card
+          className='hover-cursor-auto'
+          hoverable>
+          <div className='section-content'>
+            <InfoCircleFilled style={{
+              color: 'orange'
+            }} /> After staked ELF tokens, you can get the data used to swap tokens (LOT and ELF). You need to wait a while to get the data. You can check the data status in step 3.
+          </div>
+        </Card>
+
+        <div className='next-card-blank'/>
         <SwapElf
           ethAddress={account.address}
           swapId={SWAP_PAIR}
@@ -391,6 +412,7 @@ export default class Web3Info extends Component{
           onSwapELFReceiptIdChange={this.onSwapELFReceiptIdChange}
           swapELFReceiptInfo={swapELFReceiptInfo}
           swapELFMerklePathInfo={swapELFMerklePathInfo}
+          web3PluginInstance={web3PluginInstance}
         />
 
         <div className='next-card-blank'/>
@@ -430,6 +452,10 @@ export default class Web3Info extends Component{
                     return <Select.Option value={receiptId.value} key={receiptId.value}>{receiptId.value}</Select.Option>
                   })}
                 </Select>
+                <div>
+                  When the event is completed, the ELF can be redeemed by submitting the Lock Receipt ID. According to the time of the lock start, users can redeem ELF after one month. This step is available in the WriteContract-finishReceipt of the
+                  <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
+                </div>
               </Form.Item>
 
               <Form.Item {...tailLayout}>

@@ -118,9 +118,10 @@ export default class PersonalDraw extends Component{
     });
   }
 
-  async getBoughtLotteries() {
+  async getBoughtLotteries(newPageIndex = 0, clearPre = true) {
     const {currentPeriodNumber} = this.props;
     const { address } = this.props;
+    const { boughtLotteries: boughtLotteriesPre } = this.state;
     if (!address) {
       this.setState({
         boughtLotteries: []
@@ -135,15 +136,19 @@ export default class PersonalDraw extends Component{
 
     const boughtLotteriesResult = await lotteryContract.GetBoughtLotteries.call({
       period: currentPeriodNumber,
-      startId: 0,
+      startId: newPageIndex,
       owner: address
     });
 
     const boughtLotteries = boughtLotteriesResult.result && boughtLotteriesResult.result.lotteries || [];
 
     this.setState({
-      boughtLotteries: boughtLotteries.reverse()
+      boughtLotteries: clearPre ? boughtLotteries.reverse() : [...boughtLotteries.reverse(), ...boughtLotteriesPre]
     });
+
+    if (boughtLotteries.length === 20) {
+      await this.getBoughtLotteries(newPageIndex + 20, false);
+    }
   }
 
   async onBuyClick() {

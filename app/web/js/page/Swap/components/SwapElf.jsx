@@ -36,12 +36,15 @@ export default class SwapElf extends React.Component{
       const originAmount = swapInfo.swapELFReceiptInfo[2];
       const uniqueId = swapInfo.swapELFReceiptInfo[0];
       const receiverAddress = swapInfo.swapELFReceiptInfo[1];
-      const merklePathBytes = swapInfo.swapELFMerklePathInfo[0].join(',');
-      const merklePathBool = swapInfo.swapELFMerklePathInfo[1].join(',');
+      const merklePathTreeIndex = swapInfo.swapELFMerklePathInfo[0];
+      // const merklePathLength = swapInfo.swapELFMerklePathInfo[1];
+      const merklePathBytes = swapInfo.swapELFMerklePathInfo[2].join(',');
+      const merklePathBool = swapInfo.swapELFMerklePathInfo[3].join(',');
 
       const merklePath = getMerklePathFromOtherChain(merklePathBytes.trim(), merklePathBool.trim());
       const swapTokenInput = {
         swapId,
+        roundId: parseInt(merklePathTreeIndex, 10),
         originAmount: originAmount.trim(),
         merklePath,
         receiverAddress: receiverAddress.trim(),
@@ -99,6 +102,7 @@ export default class SwapElf extends React.Component{
   render() {
 
     const swapInfo = this.props;
+    const {web3PluginInstance} = swapInfo;
     const {swappedLink, swappedTxHash} = this.state;
 
     console.log('swapInfo.swapId: ', swapInfo.swapId);
@@ -117,8 +121,8 @@ export default class SwapElf extends React.Component{
               originAmount: swapInfo.swapELFReceiptInfo[2],
               uniqueId: swapInfo.swapELFReceiptInfo[0],
               receiverAddress: swapInfo.swapELFReceiptInfo[1],
-              merklePathBytes: swapInfo.swapELFMerklePathInfo[0].join(','),
-              merklePathBool: swapInfo.swapELFMerklePathInfo[1].join(',')
+              merklePathBytes: swapInfo.swapELFMerklePathInfo[2].join(','),
+              merklePathBool: swapInfo.swapELFMerklePathInfo[3].join(',')
             }}
             onFinish={this.onFinish}
             onFinishFailed={this.onFinishFailed}
@@ -143,6 +147,10 @@ export default class SwapElf extends React.Component{
                   return <Select.Option value={receiptId.value} key={receiptId.value}>{receiptId.value}</Select.Option>
                 })}
               </Select>
+              <div>Once you do a lock, you get a lock receipt ID, which is verified by the ReadContract-getMyReceipts of the
+                <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
+              </div>
+              <div>You may have to wait a day or two to swap token in aelf chain after your step2.</div>
             </Form.Item>
 
             <Form.Item
@@ -152,7 +160,10 @@ export default class SwapElf extends React.Component{
             >
               <Input disabled value={swapInfo.swapId}/>
               {/*<Input disabled defaultValue={swapInfo.swapId} value={swapInfo.swapId}/>*/}
+              <div>Swap ID offered by aelf</div>
             </Form.Item>
+
+            <div className='border-top border-top-blank'/>
 
             <Form.Item
               label="Origin Amount"
@@ -163,23 +174,7 @@ export default class SwapElf extends React.Component{
             </Form.Item>
 
             <Form.Item
-              label="Merkle Path (bytes)"
-              // name="merklePathBytes"
-              // rules={[{ required: true, message: 'Please input the Merkle Path!' }]}
-            >
-              <Input disabled value={swapInfo.swapELFMerklePathInfo[0].join(',')}/>
-            </Form.Item>
-
-            <Form.Item
-              label="Merkle Path (bool)"
-              // name="merklePathBool"
-              // rules={[{ required: true, message: 'Please input the Merkle Path!' }]}
-            >
-              <Input disabled value={swapInfo.swapELFMerklePathInfo[1].join(',')}/>
-            </Form.Item>
-
-            <Form.Item
-              label="Receiver Address"
+              label="aelf Receiving Address"
               // name="receiverAddress"
               // rules={[{ required: true, message: 'Please input the receiver address!' }]}
             >
@@ -194,6 +189,36 @@ export default class SwapElf extends React.Component{
             >
               <Input disabled value={swapInfo.swapELFReceiptInfo[2]}/>
               {/*<Input />*/}
+              <div>
+                These three data are available through the lock receipt ID (index of Ethereum) , which can be verified in the ReadContract-getReceiptInfo of the
+                <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
+              </div>
+            </Form.Item>
+
+            <div className='border-top border-top-blank'/>
+
+            <Form.Item
+              label="Merkle Tree Index (int)"
+            >
+              <Input disabled value={swapInfo.swapELFMerklePathInfo[0]}/>
+            </Form.Item>
+
+            <Form.Item
+              label="Merkle Path (bytes)"
+            >
+              <Input disabled value={swapInfo.swapELFMerklePathInfo[2].join(',')}/>
+            </Form.Item>
+
+            <Form.Item
+              label="Merkle Path (bool)"
+              // name="merklePathBool"
+              // rules={[{ required: true, message: 'Please input the Merkle Path!' }]}
+            >
+              <Input disabled value={swapInfo.swapELFMerklePathInfo[3].join(',')}/>
+              <div>
+                These three data are available through the lock receipt ID (index of the Ether House) , which can be verified in the ReadContract-GenerateMerklePath of the
+                <a href={web3PluginInstance.merkleContractLink} target='_blank'> Ethereum MerkleTreeContract page</a>
+              </div>
             </Form.Item>
 
             <Form.Item {...tailLayout}>

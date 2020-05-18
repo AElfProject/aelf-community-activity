@@ -264,7 +264,7 @@ class Swap extends Component {
 
     const swapInfoHTML = renderSwapInfo(JSON.parse(JSON.stringify(swapInfo)));
     const swapPairTokensHTML = this.renderSwapPairTokens();
-    const currentSwapInfoHTML = renderCurrentSwapInfo(JSON.parse(JSON.stringify(swapPairInfo.currentRound)));
+    // const currentSwapInfoHTML = renderCurrentSwapInfo(JSON.parse(JSON.stringify(swapPairInfo.currentRound)));
     // const swapElfHTML = swapInfo.swapId === '-' ? null : renderSwapElf(JSON.parse(JSON.stringify(swapInfo)));
     // const swapElfHTML = swapInfo.swapId === '-' ? null : renderSwapElf({
     //   swapId: SWAP_PAIR
@@ -275,22 +275,8 @@ class Swap extends Component {
     return (
       <div>
         <div className='basic-blank'/>
-        <a href='/#' className='font-18'>Click to get the swapping tutorial</a>
-
-        <Tabs defaultActiveKey="2">
-          <TabPane tab="Swap Information" key="1">
-            <div className='basic-blank'/>
-            {swapInfoHTML}
-
-            <div className='next-card-blank'/>
-            {currentSwapInfoHTML}
-
-            <div className='next-card-blank'/>
-            {swapPairTokensHTML}
-
-            <div className='next-card-blank'/>
-          </TabPane>
-          <TabPane tab="Swap Token" key="2">
+        <Tabs defaultActiveKey="1" tabBarExtraContent={<a href='/#' target='_blank'>Swap Token Tutorial</a>}>
+          <TabPane tab="Swap Token" key="1">
 
             <Web3Info
               web3PluginInstance={web3PluginInstance}
@@ -301,6 +287,18 @@ class Swap extends Component {
 
             <div className='next-card-blank'/>
             {swapHistoryHTML}
+
+            <div className='next-card-blank'/>
+          </TabPane>
+          <TabPane tab="Swap Information" key="2">
+            <div className='basic-blank'/>
+            {swapInfoHTML}
+
+            {/*<div className='next-card-blank'/>*/}
+            {/*{currentSwapInfoHTML}*/}
+
+            <div className='next-card-blank'/>
+            {swapPairTokensHTML}
 
             <div className='next-card-blank'/>
           </TabPane>
