@@ -188,7 +188,7 @@ class DailyMissions extends Component {
           className='hover-cursor-auto'
           hoverable
           title={[
-              <span key='1'>Countdown of this round of activities (UTC +0 23:59:59)：</span>,
+              <span key='1'>Countdown (UTC +0 23:59:59)：</span>,
               <CountDown key='2' countdown={countdown} />
             ]}>
           <div className='section-title'>
@@ -200,7 +200,7 @@ class DailyMissions extends Component {
         <Card
           className='hover-cursor-auto'
           hoverable
-          title='Mission 1 Resource'>
+          title='Task 1 Resource'>
           <div className='section-content'>
             <div>
               During the event, you can collect 100 ELF test tokens each day through the resource token trading function.
@@ -214,7 +214,7 @@ class DailyMissions extends Component {
         <Card
           className='hover-cursor-auto'
           hoverable
-          title='Mission 2 Token'>
+          title='Task 2 Token'>
           <div className='section-content swap-flex-wrap'>
             <div>Rule：During the event, you can collect 100 ELF test tokens each day by transferring tokens. </div>
             <div>
@@ -234,7 +234,7 @@ class DailyMissions extends Component {
         <Card
           className='hover-cursor-auto'
           hoverable
-          title='Mission 3 Bug Bounty'>
+          title='Task 3 Bug Bounty'>
           <div className='section-content swap-flex-wrap'>
             <div>Complete a bug submission on the aelf chain to collect test token rewards:</div>
             <div>Reward Range: 1,000-5,000 Test Tokens,</div>
@@ -246,7 +246,7 @@ class DailyMissions extends Component {
         <Card
           className='hover-cursor-auto'
           hoverable
-          title='Mission 4 DApp Develop'>
+          title='Task 4 DApp Develop'>
           <div className='section-content swap-flex-wrap'>
             <div>Develop a DApp on the aelf Enterprise Blockchain and collect a large reward: 20,000 test tokens for each DAPP.</div>
           </div>

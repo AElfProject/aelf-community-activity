@@ -12,20 +12,26 @@ export default function renderDailyHistory(props) {
       title: 'Tx Id',
       dataIndex: 'tx_id',
       key: 'tx_id',
-      width: 350,
+      width: 320,
       render: text => <a target='_blank' href={`${EXPLORER_URL}/tx/${text}`}>{text}</a>
     },
     {
       title: 'Award Id',
       dataIndex: 'award_id',
       key: 'award_id',
-      width: 350,
+      width: 320,
       render: text => <a target='_blank' href={`${EXPLORER_URL}/tx/${text}`}>{text}</a>
     },
     {
       title: 'type',
       dataIndex: 'type',
+      width: 80,
       key: 'type',
+    },
+    {
+      title: 'Award',
+      width: 100,
+      render: () => <div>100 ELF</div>,
     },
     {
       title: 'Award Time',
