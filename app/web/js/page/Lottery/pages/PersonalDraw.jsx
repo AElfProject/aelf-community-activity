@@ -133,14 +133,16 @@ export default class PersonalDraw extends Component{
       contractAddress: LOTTERY.CONTRACT_ADDRESS,
     });
 
-    const boughtLotteries = await lotteryContract.GetBoughtLotteries.call({
+    const boughtLotteriesResult = await lotteryContract.GetBoughtLotteries.call({
       period: currentPeriodNumber,
-      startIndex: 0,
+      startId: 0,
       owner: address
     });
 
+    const boughtLotteries = boughtLotteriesResult.result && boughtLotteriesResult.result.lotteries || [];
+
     this.setState({
-      boughtLotteries: boughtLotteries.lotteries ? boughtLotteries.lotteries.reverse() : []
+      boughtLotteries: boughtLotteries.reverse()
     });
   }
 
@@ -156,7 +158,6 @@ export default class PersonalDraw extends Component{
       this.setState({
         tokenBalance: tokenBalance - costToken,
         tokenAllowance: tokenAllowance - costToken,
-
       });
       setTimeout(() => {
         this.getBoughtLotteries();
@@ -188,10 +189,7 @@ export default class PersonalDraw extends Component{
 
   renderNoToken() {
     // const voteUrl = EXPLORER_URL + '/vote/election';
-    return null;
-    // return <>
-    //   Please vote in the <a href={voteUrl} target='_blank'>browser</a> to get the {LOTTERY.SYMBOL} token
-    // </>;
+    return 0;
   }
 
   render() {
@@ -211,7 +209,7 @@ export default class PersonalDraw extends Component{
         hoverable
         title='My Lottery'>
         <div className='section-content'>
-          <div className='personal-title'>Exchange Lottery Code (Current Period: {currentPeriodNumber})</div>
+          <div className='personal-title'>Switch Lottery Code (Current Period: {currentPeriodNumber})</div>
           <div className='basic-line'/>
           <div className='basic-blank'/>
           <div>
@@ -220,21 +218,21 @@ export default class PersonalDraw extends Component{
             <div> Balance: {tokenBalance ? tokenBalanceActual + ' ' + LOTTERY.SYMBOL : noTokenHTML}</div>
             <div className='basic-blank'/>
             <div>
-              The {LOTTERY.SYMBOL} token you can use to exchange: {tokenAllowance ? tokenAllowanceActual + ' ' + LOTTERY.SYMBOL : 0} &nbsp;&nbsp;&nbsp;
+              Authorized credit limit for lottery application: {tokenAllowance ? tokenAllowanceActual + ' ' + LOTTERY.SYMBOL : 0} &nbsp;&nbsp;&nbsp;
               <InputNumber min={0} max={tokenBalanceActual} onChange={this.onApproveChange} />
               &nbsp;&nbsp;&nbsp;
               <Button type="primary" onClick={() => this.onApproveClick()}>Increase the upper limit</Button>
             </div>
             <div className='basic-blank'/>
             <div className='personal-exchange'>
-              Exchange Quantity ({LOTTERY.RATIO} {LOTTERY.SYMBOL} = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
+              Code Amount ({LOTTERY.RATIO} {LOTTERY.SYMBOL} = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
               <InputNumber
                 min={0}
-                max={tokenAllowanceActual/LOTTERY.RATIO}
+                max={Math.min(tokenAllowanceActual, tokenBalanceActual)/LOTTERY.RATIO}
                 defaultValue={1}
                 onChange={this.onExchangeNumberChange} />
               &nbsp;&nbsp;&nbsp;
-              <Button type="primary" onClick={() => this.onBuyClick()}>Exchange</Button>
+              <Button type="primary" onClick={() => this.onBuyClick()}>Switch</Button>
             </div>
           </div>
 

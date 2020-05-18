@@ -88,6 +88,7 @@ class Lottery extends Component {
       <div>
         <div className='basic-blank'/>
         <div className='basic-container lottery-container'>
+          <a href='#' target='_blank'>Click to get Lottery Tutorial</a>
           <Tabs defaultActiveKey="1">
             <TabPane tab="Lottery Draw" key="1">
               <LotteryDraw

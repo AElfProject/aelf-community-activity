@@ -1,9 +1,19 @@
 /* From start */
 import React from 'react';
 import { Steps, Popover, Card } from 'antd';
+import { StarFilled } from '@ant-design/icons';
 const { Step } = Steps;
 import {TOKEN_DECIMAL} from '../../../constant/constant';
+import { getPrizeListInfo } from '../../../constant/prizeList';
 import './LotteryDraw.less';
+
+// const prizeListInfo = getPrizeListInfo();
+const prizeListInfo = getPrizeListInfo(630, 6, 30);
+// const prizeListInfo = getPrizeListInfo(718, 7, 1);
+const {
+  prizes,
+  gameStart
+} = prizeListInfo;
 
 const customDot = (dot, { status, index }) => (
   <Popover
@@ -17,40 +27,15 @@ const customDot = (dot, { status, index }) => (
   </Popover>
 );
 
-const prizes = [
-  {
-    limit: '0ELF',
-    // description: 'aelf周边大礼包随机空投3个'
-    description: 'aelf gift bags, 3 random drops.'
-  },
-  {
-    limit: '10,000 ELF',
-    // description: '移动硬盘、蓝牙耳机、小米音响、天猫精灵、华为手环各1款\n' +
-    //   '\n' +
-    //   '（在4月10日将只发放法拉利奖项，抽奖要求为拥有10个Lottery Code ）',
-    description: 'External Hard Drive, Bluetooth Headset, Xiaomi Stereo, Tmall Genie, Huawei Smart Bracelet (Choose One at Random)',
-  },
-  {
-    limit: '50,000 ELF',
-    // description: '99 - 999ELF奖项，随机空投5份(199ELF*2+399ELF*2+999ELF*1) +扫地机器人1款',
-    // description: '99 - 999ELF奖项，随机空投5份(199ELF*2+399ELF*2+999ELF*1) +扫地机器人1款',
-    description: '99-999ELF prizes, 5 random drops (199ELF * 2 + 399ELF * 2 + 999ELF * 1) + 1 Robot Vacuum Cleaner',
-  },
-  {
-    limit: '100,000 ELF',
-    // description: 'iPhone11、小米笔记本、airpods、小米平板各1款'
-    description: 'iPhone 11, Xiaomi Laptop, Airpods, Xiaomi Tablet (Choose One at Random)'
-  }
-];
-
 // TODO: 【Low priority】 get prize from api
 function renderPrizeSteps(props) {
 
   const {currentStep} = props;
 
   const stepsHTML = prizes.map((prize, index) => {
+    const title = prize.heavyweight ? [<StarFilled key={1}/>, ' ' + prize.time]: prize.time;
     const descriptionHTML = <div className='prize-description'>{prize.description}</div>;
-    return <Step title={prize.limit} description={descriptionHTML} key={index}/>
+    return <Step title={title} description={descriptionHTML} key={index}/>
   });
 
   return (
@@ -60,27 +45,25 @@ function renderPrizeSteps(props) {
   );
 }
 
-export default function renderLotteryDraw(props) {
+export default function renderLotteryDraw() {
 
-  const {swapInfo} = props;
-  const {swapRatio, currentRound} = swapInfo;
-
-  const currentSwappedToken = currentRound.swappedAmount / (10 ** TOKEN_DECIMAL);
-  const currentSwappedTokenStr = currentSwappedToken.toLocaleString();
-
-  const currentStep = getCurrentStep(currentSwappedToken);
+  const currentStep = 0;
   const prizeStepsHTML = renderPrizeSteps({
     currentStep
   });
+  let currentDesc = prizes[currentStep] ? prizes[currentStep].description : 'Game Over~';
+  currentDesc = gameStart ? currentDesc : 'Coming soon~';
 
   return (
     <Card
       className='hover-cursor-auto'
       hoverable
-      title='Lottery (Draw today at 5:00 p.m. East 8)'>
+      title='Lottery Draw: We draw the winning lottery code at 5 pm (GMT + 8)'>
       <div className='section-content lottery-prize-step-container'>
-        <div className='prize-title'>Test Tokens Issued Of This Lottery Round：<span className='prize-current-token'>{currentSwappedTokenStr} ELF</span></div>
-        <div className='prize-sub-title'>{prizes[currentStep].description}</div>
+        <div className='prize-title'>
+          <span className='prize-current-token'>{currentDesc}</span>
+        </div>
+        <div className='prize-sub-title'>After the Draw, please visit the Draw History Page to see the details of the prizes.</div>
         <div className='basic-line'/>
         <div className='prize-step-container'>
           {prizeStepsHTML}
@@ -88,17 +71,4 @@ export default function renderLotteryDraw(props) {
       </div>
     </Card>
   );
-}
-
-function getCurrentStep(currentSwappedToken) {
-  let currentStep = 0;
-
-  if (currentSwappedToken >= 100000) {
-    currentStep = 3;
-  } else if (currentSwappedToken >= 50000) {
-    currentStep = 2;
-  } else if (currentSwappedToken >= 10000) {
-    currentStep = 1;
-  }
-  return currentStep;
 }

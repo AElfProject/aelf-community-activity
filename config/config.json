@@ -1,11 +1,11 @@
 {
   "APPNAME": "aelf community",
   "COMMON_PRIVATE": "f6e512a3c259e5f9af981d7f99d245aa5bc52fe448495e0b0dd56e8406be6f71",
-  "SWAP_CONTRACT_ADDRESS": "B2HK7R8HPDdR7t8J7U2ChN6NVYYA81ZmphhH8szavGX6WuybT",
-  "SWAP_PAIR": "4f590903b5a97e424439d86392e38abf6e21457ff1b4adca960839d9a057b5dd",
+  "SWAP_CONTRACT_ADDRESS": "2LUmicHyH4RXrMjG4beDwuDsiWJESyLkgkwPdGTR8kahRzq5XS",
+  "SWAP_PAIR": "fccb3863ef305a4f8761522afdcc3fc00160e3ee8034bb05e86cd33f856f10ad",
   "HTTP_PROVIDER": "http://1.119.195.50:11105/chain",
   "HTTP_PROVIDER_INNER": "http://1.119.195.50:11105/chain",
-  "TOKEN_CONTRACT_ADDRESS": "25CecrU94dmMdbhC3LWMKxtoaL4Wv8PChGvVJM6PxkHAyvXEhB",
+  "TOKEN_CONTRACT_ADDRESS": "JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE",
   "CHAIN_ID": "AELF",
   "TOKEN_DECIMAL": 8,
   "EXPLORER_URL": "http://1.119.195.50:11104",
@@ -22,19 +22,19 @@
       "method": "LOGIN",
       "contracts": [{
         "chainId": "AELF",
-        "contractAddress": "B2HK7R8HPDdR7t8J7U2ChN6NVYYA81ZmphhH8szavGX6WuybT",
+        "contractAddress": "2LUmicHyH4RXrMjG4beDwuDsiWJESyLkgkwPdGTR8kahRzq5XS",
         "contractName": "Token swap contract",
         "description": "Swap token from the other chain. Base on protocol [-]",
         "github": "https://github.com/AElfProject/AElf/blob/token-swap-contract/protobuf/token_swap_contract.proto"
       }, {
         "chainId": "AELF",
-        "contractAddress": "2YZHrPCRvdWJYr42gtde7dvC5mFwdJyaFZbpgYWw2PytmPcp9w",
+        "contractAddress": "2WHXRoLRjbUTDQsuqR5CntygVfnDb125qdJkudev4kVNbLhTdG",
         "contractName": "Lottery contract",
         "description": "Good Luck",
         "github": "https://github.com/AElfProject/aelf-boilerplate/blob/ferrari/chain/contract/AElf.Contracts.LotteryDemoContract/LotteryDemoContract.cs"
       }, {
         "chainId": "AELF",
-        "contractAddress": "25CecrU94dmMdbhC3LWMKxtoaL4Wv8PChGvVJM6PxkHAyvXEhB",
+        "contractAddress": "JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE",
         "contractName": "Token contract",
         "description": "You can transfer, approve, get balance, etc.",
         "github": "https://github.com/AElfProject/aelf-boilerplate/blob/ferrari/chain/protobuf/token_contract.proto"
@@ -44,11 +44,11 @@
   "LOTTERY": {
     "RATIO": 1000,
     "SYMBOL": "LOT",
-    "CONTRACT_ADDRESS": "2YZHrPCRvdWJYr42gtde7dvC5mFwdJyaFZbpgYWw2PytmPcp9w"
+    "CONTRACT_ADDRESS": "2WHXRoLRjbUTDQsuqR5CntygVfnDb125qdJkudev4kVNbLhTdG"
   },
   "WEB3": {
     "TOKEN_ADDRESS": "0x730785d79D7f8E31BF0173E8396d92B42f019062",
-    "LOCK_ADDRESS": "0x1e24247dd4977498568B8636D6ae65729cB7a10C",
-    "MERKLE_ADDRESS": "0x9fc64F2b38c074A145462A21C750ba7f847A2220"
+    "LOCK_ADDRESS": "0x1cE0B847aB903510AE132646091B796DFfFF2b80",
+    "MERKLE_ADDRESS": "0xf8B1e741f191cEb2477dB0D213635b554ba55f7a"
   }
 }

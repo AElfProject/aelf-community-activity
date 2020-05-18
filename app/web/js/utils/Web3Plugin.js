@@ -107,6 +107,7 @@ export class Web3Plugin {
       this.myAccounts.push(myAccount);
       return this.myAccounts;
     } catch (e) {
+      return
       message.warning(e.message);
     }
   }
