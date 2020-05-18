@@ -112,6 +112,11 @@ export default class LotteryAward extends Component {
   }
   renderFromItemSelect(arrayInput, nameInput, labelInput, onChange) {
 
+    const desc = {
+      period: 'If you have won the prize, please check your number of period on the lottery draw page and fill in here.',
+      lotteryId: 'You can check the lottery code in the lottery draw page.'
+    };
+
     const optionsHTML = arrayInput.map(value => {
       return this.renderOption(value);
     });
@@ -128,6 +133,7 @@ export default class LotteryAward extends Component {
       >
         {optionsHTML}
       </Select>
+      <div>{desc[nameInput]}</div>
     </Form.Item>;
   }
 
@@ -182,6 +188,7 @@ export default class LotteryAward extends Component {
               rules={[{ required: true, message: 'Please input the receiving address!' }]}
             >
               <Input />
+              <div>If the prizes need to be mailed, you need to enter the shipping address, contact information, name. If the prize is ELF Tokens, you only need to enter the wallet address</div>
             </Form.Item>
 
             <Form.Item
@@ -190,6 +197,7 @@ export default class LotteryAward extends Component {
               rules={[{ required: true, message: 'Please input the telegram!' }]}
             >
               <Input />
+              <div>Please enter your user name (Telegram) so that we can contact you</div>
             </Form.Item>
 
             <Form.Item {...tailLayout}>
