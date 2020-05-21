@@ -23,12 +23,13 @@ const awardHistoryColumns = [
     dataIndex: 'owner',
     key: 'owner',
     render: text => <div>{addressFormat(text)}</div>,
-    width: 520
+    width: 550
   },
   {
     title: 'Block',
     dataIndex: 'block',
-    key: 'block'
+    key: 'block',
+    width: 100
   },
   {
     title: 'Registration Information',

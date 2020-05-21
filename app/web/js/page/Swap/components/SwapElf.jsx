@@ -59,7 +59,7 @@ export default class SwapElf extends React.Component{
 
       const {swapPairInfo} = swapInfo;
 
-      if (swapPairInfo.roundCount < merklePathTreeIndex) {
+      if (swapPairInfo.roundCount < (merklePathTreeIndex - 1)) {
         message.warning('This receipt ID not ready yet.');
         return;
       }
@@ -137,7 +137,7 @@ export default class SwapElf extends React.Component{
     const {web3PluginInstance, swapPairInfo} = swapInfo;
     const {swappedLink, swappedTxHash} = this.state;
 
-    console.log('swapInfo.swapId: ', swapInfo.swapId);
+    // console.log('swapInfo.swapId: ', swapInfo.swapId, swapInfo.swapELFReceiptInfo);
 
     return (
       <Card
@@ -228,7 +228,7 @@ export default class SwapElf extends React.Component{
               // name="uniqueId"
               // rules={[{ required: true, message: 'Please input the unique ID!' }]}
             >
-              <Input disabled value={swapInfo.swapELFReceiptInfo[2]}/>
+              <Input disabled value={swapInfo.swapELFReceiptInfo[0]}/>
               {/*<Input />*/}
               <div>
                 These three data are available through the lock receipt ID (index of Ethereum) , which can be verified in the ReadContract-getReceiptInfo of the
