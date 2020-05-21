@@ -16,6 +16,10 @@ const tailLayout = {
 };
 
 const styles = {
+  cardMainHeader: {
+    fontSize: '18px',
+    color: '#5c28a9'
+  },
   cardSubHeader: {
     fontWeight: 400
   }
@@ -49,6 +53,13 @@ export default class SwapElf extends React.Component{
 
       if (!(swapId && originAmount && uniqueId && receiverAddress
         && merklePathTreeIndex && merklePathBytes && merklePathBool)) {
+        message.warning('This receipt ID not ready yet.');
+        return;
+      }
+
+      const {swapPairInfo} = swapInfo;
+
+      if (swapPairInfo.roundCount < merklePathTreeIndex) {
         message.warning('This receipt ID not ready yet.');
         return;
       }
@@ -123,7 +134,7 @@ export default class SwapElf extends React.Component{
   render() {
 
     const swapInfo = this.props;
-    const {web3PluginInstance} = swapInfo;
+    const {web3PluginInstance, swapPairInfo} = swapInfo;
     const {swappedLink, swappedTxHash} = this.state;
 
     console.log('swapInfo.swapId: ', swapInfo.swapId);
@@ -132,8 +143,9 @@ export default class SwapElf extends React.Component{
       <Card
         className='hover-cursor-auto'
         hoverable
-        headStyle={styles.cardSubHeader}
-        title='Step3: Swap Test Token'>
+        headStyle={styles.cardMainHeader}
+        extra={<span>Available Time: 24 June, 2020 12:00 - 16 July, 2020 17:00</span>}
+        title='Swap Test Token'>
         <div className='section-content swap-form-container'>
           <Form
             {...layout}
@@ -208,6 +220,7 @@ export default class SwapElf extends React.Component{
             >
               <Input disabled value={swapInfo.swapELFReceiptInfo[1]}/>
               {/*<Input />*/}
+              <span>aelf Receiving Address must the same as your elf wallet address you.</span>
             </Form.Item>
 
             <Form.Item
@@ -217,9 +230,6 @@ export default class SwapElf extends React.Component{
             >
               <Input disabled value={swapInfo.swapELFReceiptInfo[2]}/>
               {/*<Input />*/}
-              <div>
-                aelf Receiving Address must the same as your elf wallet address you.
-              </div>
               <div>
                 These three data are available through the lock receipt ID (index of Ethereum) , which can be verified in the ReadContract-getReceiptInfo of the
                 <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
@@ -232,6 +242,7 @@ export default class SwapElf extends React.Component{
               label="Merkle Tree Index (int)"
             >
               <Input disabled value={swapInfo.swapELFMerklePathInfo[0]}/>
+              <span>Merkle Tree Index can not be greater than  {swapPairInfo.roundCount || ''} now.</span>
             </Form.Item>
 
             <Form.Item

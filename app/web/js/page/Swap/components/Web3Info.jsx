@@ -275,7 +275,7 @@ export default class Web3Info extends Component{
     //   swapELFMerklePathInfo
     // });
 
-    const {web3PluginInstance} = this.props;
+    const {web3PluginInstance, swapPairInfo} = this.props;
     window.web3PluginInstance2 = web3PluginInstance;
     console.log('web3PluginInstance', web3PluginInstance, account.address, receiptIds);
     return (
@@ -313,7 +313,7 @@ export default class Web3Info extends Component{
         <Card
           className='hover-cursor-auto'
           headStyle={styles.cardMainHeader}
-          title='Swap Token'
+          title='Mortgage Token'
           extra={<span>Available Time: 19 June, 2020 00:00 - 23 June, 2020 16:00</span>}
           hoverable>
           <div className='section-content'>
@@ -438,12 +438,13 @@ export default class Web3Info extends Component{
           <div className='section-content'>
             <InfoCircleFilled style={{
               color: 'orange'
-            }} /> After staked ELF tokens, you can get the data used to swap tokens (LOT and ELF). You need to wait a while to get the data. You can check the data status in step 3.
+            }} /> After staked ELF tokens, you can get the data used to swap tokens (LOT and ELF). You need to wait 5 days to get the data. You can check the data status in "Swap Test Token".
           </div>
         </Card>
 
         <div className='next-card-blank'/>
         <SwapElf
+          swapPairInfo={swapPairInfo}
           ethAddress={account.address}
           swapId={SWAP_PAIR}
           receiptIds={receiptIds}

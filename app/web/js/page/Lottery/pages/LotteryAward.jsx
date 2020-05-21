@@ -154,7 +154,7 @@ export default class LotteryAward extends Component {
         rewardInput: {
           period: values.period,
           lotteryId: values.lotteryId,
-          registrationInformation: `Address: ${values.receiving_address}; Telegram: ${values.telegram}`
+          registrationInformation: `Address: ${values.receiving_address}; Telegram / WeChat: ${values.telegram}`
         }
       });
     };
@@ -195,22 +195,22 @@ export default class LotteryAward extends Component {
                 name="receiving_address"
                 rules={[{ required: true, message: 'Please input the receiving address!' }]}
               >
-                <Input />
+                <Input maxLength={256}/>
               </Form.Item>
               <div>If the prizes need to be mailed, you need to enter the shipping address, contact information, name. If the prize is ELF Tokens, you only need to enter the wallet address</div>
             </Form.Item>
 
             <Form.Item
-              label="Telegram"
+              label="Telegram / WeChat"
             >
               <Form.Item
                 name="telegram"
                 noStyle
                 rules={[{ required: true, message: 'Please input the telegram!' }]}
               >
-                <Input />
+                <Input maxLength={128}/>
               </Form.Item>
-              <div>Please enter your user name (Telegram) so that we can contact you</div>
+              <div>Please enter your user name (Telegram / WeChat) so that we can contact you</div>
             </Form.Item>
 
             <Form.Item {...tailLayout}>

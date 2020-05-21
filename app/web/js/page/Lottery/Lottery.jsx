@@ -88,7 +88,7 @@ class Lottery extends Component {
       <div>
         <div className='basic-blank'/>
         <div className='basic-container lottery-container'>
-          <Tabs defaultActiveKey="1" tabBarExtraContent={<a href='#' target='_blank'>Click to get Lottery Tutorial</a>}>
+          <Tabs defaultActiveKey="1" tabBarExtraContent={<a href='#' target='_blank'>Get Lottery Tutorial</a>}>
             <TabPane tab="Lottery Draw" key="1">
               <LotteryDraw
                 swapInfo={swapInfo}

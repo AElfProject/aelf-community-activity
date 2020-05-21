@@ -229,7 +229,7 @@ class DailyMissions extends Component {
 
         <div className='next-card-blank'/>
         <div>Users who participate in the following two tasks need to register with the aelf community staff.</div>
-        <div>Contact information： Wechat: a439714 (big fish) Telegram：Doris Guo (@dorisYG)</div>
+        <div>Contact information： WeChat: a439714 (big fish) Telegram：Doris Guo (@dorisYG)</div>
         <div className='next-card-blank'/>
         <Card
           className='hover-cursor-auto'

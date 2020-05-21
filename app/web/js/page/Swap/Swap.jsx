@@ -204,7 +204,7 @@ class Swap extends Component {
       } else {
         throw new Error('Input is not Array.');
       }
-    }
+    };
 
     const { account } = this.props;
     const { accountInfo } = account;
@@ -271,7 +271,7 @@ class Swap extends Component {
     // });
     const swapHistoryHTML = renderSwapHistory(swapHistory, swapPairInfo);
 
-    // console.log('re render', account);
+    // console.log('re render', swapPairInfo);
     return (
       <div>
         <div className='basic-blank'/>
@@ -284,6 +284,7 @@ class Swap extends Component {
           <TabPane tab="Swap Token" key="1">
 
             <Web3Info
+              swapPairInfo={swapPairInfo}
               web3PluginInstance={web3PluginInstance}
             />
 
