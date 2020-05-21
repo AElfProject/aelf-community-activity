@@ -125,16 +125,21 @@ export default class LotteryAward extends Component {
       ? 'Select a ' + labelInput
       : 'Good Luck!';
 
-    return <Form.Item name={nameInput} label={labelInput} rules={[{ required: true }]}>
-      <Select
-        placeholder={placeholder}
-        onChange={onChange}
-        allowClear
-      >
-        {optionsHTML}
-      </Select>
-      <div>{desc[nameInput]}</div>
-    </Form.Item>;
+    // noStyle
+    return (
+      <Form.Item label={labelInput}>
+        <Form.Item noStyle name={nameInput} label={labelInput} rules={[{ required: true }]}>
+          <Select
+            placeholder={placeholder}
+            onChange={onChange}
+            allowClear
+          >
+            {optionsHTML}
+          </Select>
+        </Form.Item>
+        <div>{desc[nameInput]}</div>
+      </Form.Item>
+    );
   }
 
   render() {
@@ -184,19 +189,27 @@ export default class LotteryAward extends Component {
 
             <Form.Item
               label="Receiving address"
-              name="receiving_address"
-              rules={[{ required: true, message: 'Please input the receiving address!' }]}
             >
-              <Input />
+              <Form.Item
+                noStyle
+                name="receiving_address"
+                rules={[{ required: true, message: 'Please input the receiving address!' }]}
+              >
+                <Input />
+              </Form.Item>
               <div>If the prizes need to be mailed, you need to enter the shipping address, contact information, name. If the prize is ELF Tokens, you only need to enter the wallet address</div>
             </Form.Item>
 
             <Form.Item
               label="Telegram"
-              name="telegram"
-              rules={[{ required: true, message: 'Please input the telegram!' }]}
             >
-              <Input />
+              <Form.Item
+                name="telegram"
+                noStyle
+                rules={[{ required: true, message: 'Please input the telegram!' }]}
+              >
+                <Input />
+              </Form.Item>
               <div>Please enter your user name (Telegram) so that we can contact you</div>
             </Form.Item>
 

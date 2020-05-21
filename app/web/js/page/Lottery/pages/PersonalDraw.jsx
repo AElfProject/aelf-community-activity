@@ -35,7 +35,7 @@ const columns = [
   },
 ];
 
-function renderHistory(dataSource) {
+function renderHistory(dataSource, historyLoading) {
   // const dataSource =  [
   //   {
   //     id: '36',
@@ -45,7 +45,7 @@ function renderHistory(dataSource) {
   //     registrationInformation: ''
   //   },
   // ];
-  return <Table dataSource={dataSource} columns={columns} pagination={false} rowKey='block'/>;
+  return <Table dataSource={dataSource} loading={historyLoading} columns={columns} pagination={false} rowKey='block'/>;
 }
 
 export default class PersonalDraw extends Component{
@@ -54,7 +54,8 @@ export default class PersonalDraw extends Component{
     this.state = {
       tokenBalance: 0,
       tokenAllowance: 0,
-      boughtLotteries: []
+      boughtLotteries: [],
+      historyLoading: false
     };
     this.tokenApproveCount = 0;
     this.buyCount = 0;
@@ -118,8 +119,8 @@ export default class PersonalDraw extends Component{
     });
   }
 
-  async getBoughtLotteries(newPageIndex = 0, clearPre = true) {
-    const {currentPeriodNumber} = this.props;
+  async getBoughtLotteries(startId = -1, clearPre = true) {
+    // const {currentPeriodNumber} = this.props;
     const { address } = this.props;
     const { boughtLotteries: boughtLotteriesPre } = this.state;
     if (!address) {
@@ -128,6 +129,9 @@ export default class PersonalDraw extends Component{
       });
       return;
     }
+    this.setState({
+      historyLoading: true
+    });
 
     const lotteryContract = await NightElfCheck.initContractInstance({
       loginInfo: LOGIN_INFO,
@@ -135,19 +139,22 @@ export default class PersonalDraw extends Component{
     });
 
     const boughtLotteriesResult = await lotteryContract.GetBoughtLotteries.call({
-      period: currentPeriodNumber,
-      startId: newPageIndex,
+      // period: currentPeriodNumber,
+      period: 0,
+      startId,
       owner: address
     });
 
     const boughtLotteries = boughtLotteriesResult.result && boughtLotteriesResult.result.lotteries || [];
 
     this.setState({
-      boughtLotteries: clearPre ? boughtLotteries.reverse() : [...boughtLotteries.reverse(), ...boughtLotteriesPre]
+      boughtLotteries: clearPre ? boughtLotteries.reverse() : [...boughtLotteries.reverse(), ...boughtLotteriesPre],
+      historyLoading: false
     });
 
     if (boughtLotteries.length === 20) {
-      await this.getBoughtLotteries(newPageIndex + 20, false);
+      const newStartId = boughtLotteries[0].id;
+      await this.getBoughtLotteries(newStartId, false);
     }
   }
 
@@ -163,10 +170,11 @@ export default class PersonalDraw extends Component{
       this.setState({
         tokenBalance: tokenBalance - costToken,
         tokenAllowance: tokenAllowance - costToken,
+        historyLoading: true
       });
       setTimeout(() => {
         this.getBoughtLotteries();
-      }, 3000);
+      }, 5000);
     } catch(e) {
       message.error(e.message || 'Failed to buy a lottery.')
     }
@@ -199,12 +207,12 @@ export default class PersonalDraw extends Component{
 
   render() {
     const {address, currentPeriodNumber} = this.props;
-    const {tokenBalance, tokenAllowance, boughtLotteries} = this.state;
+    const {tokenBalance, tokenAllowance, boughtLotteries, historyLoading} = this.state;
 
     const tokenBalanceActual = tokenBalance / 10 ** 8;
     const tokenAllowanceActual = tokenAllowance / 10 ** 8;
 
-    const historyHTML = renderHistory(boughtLotteries);
+    const historyHTML = renderHistory(boughtLotteries, historyLoading);
 
     const noTokenHTML = this.renderNoToken();
 
@@ -224,7 +232,7 @@ export default class PersonalDraw extends Component{
             <div className='basic-blank'/>
             <div>
               Authorized credit limit for lottery application: {tokenAllowance ? tokenAllowanceActual + ' ' + LOTTERY.SYMBOL : 0} &nbsp;&nbsp;&nbsp;
-              <InputNumber min={0} max={tokenBalanceActual} onChange={this.onApproveChange} />
+              <InputNumber min={0} max={tokenBalanceActual - tokenAllowanceActual} onChange={this.onApproveChange} />
               &nbsp;&nbsp;&nbsp;
               <Button type="primary" onClick={() => this.onApproveClick()}>Increase the upper limit</Button>
             </div>
@@ -233,7 +241,7 @@ export default class PersonalDraw extends Component{
               Code Amount ({LOTTERY.RATIO} {LOTTERY.SYMBOL} = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
               <InputNumber
                 min={0}
-                max={Math.min(tokenAllowanceActual, tokenBalanceActual)/LOTTERY.RATIO}
+                max={Math.floor(Math.min(tokenAllowanceActual, tokenBalanceActual)/LOTTERY.RATIO)}
                 defaultValue={1}
                 onChange={this.onExchangeNumberChange} />
               &nbsp;&nbsp;&nbsp;
@@ -242,7 +250,7 @@ export default class PersonalDraw extends Component{
           </div>
 
           <div className='basic-blank'/>
-          <div className='personal-title'>Current Period Lottery Numbers</div>
+          <div className='personal-title'>All Period Lottery Numbers</div>
           <div className='basic-line'/>
           <div className='basic-blank'/>
           {historyHTML}
