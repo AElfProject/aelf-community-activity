@@ -59,7 +59,7 @@ export default class SwapElf extends React.Component{
 
       const {swapPairInfo} = swapInfo;
 
-      if (swapPairInfo.roundCount < (merklePathTreeIndex - 1)) {
+      if (swapPairInfo.roundCount < (merklePathTreeIndex + 1)) {
         message.warning('This receipt ID not ready yet.');
         return;
       }
@@ -242,7 +242,7 @@ export default class SwapElf extends React.Component{
               label="Merkle Tree Index (int)"
             >
               <Input disabled value={swapInfo.swapELFMerklePathInfo[0]}/>
-              <span>Merkle Tree Index can not be greater than  {swapPairInfo.roundCount || ''} now.</span>
+              <span>Merkle Tree Index can not be greater than  {(swapPairInfo.roundCount - 1)  || ''} now.</span>
             </Form.Item>
 
             <Form.Item
