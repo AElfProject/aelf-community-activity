@@ -101,7 +101,7 @@ class Lottery extends Component {
               />
               <div className='next-card-blank'/>
             </TabPane>
-            <TabPane tab="Lottery Award" key="2">
+            <TabPane tab="Draw History" key="2">
               <AwardHistory
                 currentPeriodNumber={currentPeriodNumber}
                 address={address}

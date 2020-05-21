@@ -14,6 +14,12 @@ const layout = {
 const tailLayout = {
   wrapperCol: { offset: 4, span: 20 },
 };
+
+const styles = {
+  cardSubHeader: {
+    fontWeight: 400
+  }
+};
 /* From end */
 // export default function renderSwapElf(props) {
 export default class SwapElf extends React.Component{
@@ -41,6 +47,12 @@ export default class SwapElf extends React.Component{
       const merklePathBytes = swapInfo.swapELFMerklePathInfo[2].join(',');
       const merklePathBool = swapInfo.swapELFMerklePathInfo[3].join(',');
 
+      if (!(swapId && originAmount && uniqueId && receiverAddress
+        && merklePathTreeIndex && merklePathBytes && merklePathBool)) {
+        message.warning('This receipt ID not ready yet.');
+        return;
+      }
+
       const merklePath = getMerklePathFromOtherChain(merklePathBytes.trim(), merklePathBool.trim());
       const swapTokenInput = {
         swapId,
@@ -60,10 +72,19 @@ export default class SwapElf extends React.Component{
         return;
       }
 
-      const chainStatus = await aelf.chain.getChainStatus();
+      // In extension， must get chain status at first.
+      await aelf.chain.getChainStatus();
+      const address = JSON.parse(accountInfo.detail).address;
       const wallet = {
-        address: JSON.parse(accountInfo.detail).address
+        address
       };
+
+      if (address !== receiverAddress) {
+        message.warning(
+          `aelf Receiving Address need to be 「${address}」, or you need login 「${receiverAddress}」`
+        );
+        return;
+      }
       // It is different from the wallet created by Aelf.wallet.getWalletByPrivateKey();
       // There is only one value named address;
       const swapContract = await aelf.chain.contractAt(
@@ -111,6 +132,7 @@ export default class SwapElf extends React.Component{
       <Card
         className='hover-cursor-auto'
         hoverable
+        headStyle={styles.cardSubHeader}
         title='Step3: Swap Test Token'>
         <div className='section-content swap-form-container'>
           <Form
@@ -140,7 +162,12 @@ export default class SwapElf extends React.Component{
                 placeholder="Select a receipt ID"
                 allowClear
                 style={{ width: 300 }}
-                onChange={this.props.onSwapELFReceiptIdChange}
+                onChange={id => {
+                  this.props.onSwapELFReceiptIdChange(id);
+                  this.setState({
+                    swappedLink: null
+                  });
+                }}
               >
                 {/*<Select.Option value={250} key={250}>250 invalid id</Select.Option>*/}
                 {swapInfo.receiptIds.map(receiptId => {
@@ -151,6 +178,7 @@ export default class SwapElf extends React.Component{
                 <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
               </div>
               <div>You may have to wait a day or two to swap token in aelf chain after your step2.</div>
+              <div>If you had swapped this receipt ID, you can submit but get a not existed transaction.</div>
             </Form.Item>
 
             <Form.Item
@@ -189,6 +217,9 @@ export default class SwapElf extends React.Component{
             >
               <Input disabled value={swapInfo.swapELFReceiptInfo[2]}/>
               {/*<Input />*/}
+              <div>
+                aelf Receiving Address must the same as your elf wallet address you.
+              </div>
               <div>
                 These three data are available through the lock receipt ID (index of Ethereum) , which can be verified in the ReadContract-getReceiptInfo of the
                 <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>

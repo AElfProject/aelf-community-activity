@@ -12,6 +12,17 @@ const layout = {
 const tailLayout = {
   wrapperCol: { offset: 4, span: 20 },
 };
+
+const styles = {
+  cardMainHeader: {
+    fontSize: '18px',
+    color: '#5c28a9'
+  },
+  cardSubHeader: {
+    fontWeight: 400
+  }
+};
+
 export default class Web3Info extends Component{
   constructor(props) {
     super(props);
@@ -65,29 +76,46 @@ export default class Web3Info extends Component{
   async componentDidMount() {
   }
 
+  componentWillUnmount() {
+    this.redeemFormRef = {
+      current: {
+        setFieldsValue: () => {}
+      }
+    };
+  }
+
   async componentDidUpdate(prevProps, prevState, snapshot) {
     if (!prevProps.web3PluginInstance.web3 && this.props.web3PluginInstance.web3 !== 'undefined') {
       await this.checkMetaMask();
-      await this.getAccounts();
-      await this.getApproveAndLockedELF();
+      // await this.getAccounts();
+      // await this.getApproveAndLockedELF();
     }
   }
 
   async checkMetaMask(initMetaMask) {
     const {web3PluginInstance} = this.props;
+    const connectOk = web3PluginInstance.checkMetaMask && await web3PluginInstance.checkMetaMask(initMetaMask);
     this.setState({
-      connectOk: web3PluginInstance.checkMetaMask ? await web3PluginInstance.checkMetaMask(initMetaMask) : false
+      connectOk
     });
+    if (connectOk) {
+      await this.getAccounts();
+      await this.getApproveAndLockedELF();
+    }
   }
 
   async connectMetaMask() {
     const {web3PluginInstance} = this.props;
-    web3PluginInstance.connectMetaMask();
+    await web3PluginInstance.connectMetaMask();
     this.checkMetaMask(false);
   }
 
   async onSwapELFReceiptIdChange (id) {
     const {web3PluginInstance} = this.props;
+    this.setState({
+      swapELFReceiptInfo: [],
+      swapELFMerklePathInfo: [[], [], [], []]
+    });
     Promise.all(
       [web3PluginInstance.getReceiptInfo(id), web3PluginInstance.getMerklePathInfo(id)]
     ).then(result => {
@@ -146,22 +174,26 @@ export default class Web3Info extends Component{
       approvedLink: null,
       approvedTxHash: null
     });
-    web3PluginInstance.approve(approveData.value).then(receipt => {
-      this.setState({
-        approvedTxHash: receipt.transactionHash,
-        approvedLink: 'https://' + web3PluginInstance.currentNetwork + '.etherscan.io/tx/' + receipt.transactionHash
+    try {
+      web3PluginInstance.approve(approveData.value).then(receipt => {
+        this.setState({
+          approvedTxHash: receipt.transactionHash,
+          approvedLink: 'https://' + web3PluginInstance.currentNetwork + '.etherscan.io/tx/' + receipt.transactionHash
+        });
+        this.getAccounts();
+        this.getApproveAndLockedELF();
+        console.log('onApproveFinish: ', receipt);
+      }).catch(e => {
+        message.warning(e.message);
+        // console.log('onApproveFinish error: ', e);
+      }).then(() => {
+        this.setState({
+          approveLoading: false
+        });
       });
-      this.getAccounts();
-      this.getApproveAndLockedELF();
-      console.log('onApproveFinish: ', receipt);
-    }).catch(e => {
-      message.warning(e.message);
-      // console.log('onApproveFinish error: ', e);
-    }).then(() => {
-      this.setState({
-        approveLoading: false
-      })
-    });
+    } catch(e) {
+      console.log('onApproveFinish 23333', e);
+    }
   }
 
   onApproveFinishFailed () {
@@ -250,6 +282,7 @@ export default class Web3Info extends Component{
       <>
         <Card
           className='hover-cursor-auto'
+          title='Ethereum Wallet'
           hoverable>
           <div className='section-content'>
             {
@@ -279,6 +312,9 @@ export default class Web3Info extends Component{
 
         <Card
           className='hover-cursor-auto'
+          headStyle={styles.cardMainHeader}
+          title='Swap Token'
+          extra={<span>Available Time: 19 June, 2020 00:00 - 23 June, 2020 16:00</span>}
           hoverable>
           <div className='section-content'>
             <InfoCircleFilled style={{
@@ -291,6 +327,7 @@ export default class Web3Info extends Component{
         <Card
           className='hover-cursor-auto'
           title='Step1: Approve'
+          headStyle={styles.cardSubHeader}
           hoverable>
           <div className='section-content swap-form-container'>
             <Form
@@ -344,6 +381,7 @@ export default class Web3Info extends Component{
         <Card
           className='hover-cursor-auto'
           title='Step2: Mortgage'
+          headStyle={styles.cardSubHeader}
           hoverable>
           <div className='section-content swap-form-container'>
             <Form
@@ -418,7 +456,9 @@ export default class Web3Info extends Component{
         <div className='next-card-blank'/>
         <Card
           className='hover-cursor-auto'
-          title='Step4: Redeem'
+          title='Redeem'
+          headStyle={styles.cardMainHeader}
+          extra={<span>Available Time: July 19, 2020 00:00 - August 19, 2020 00:00</span>}
           hoverable>
           <div className='section-content swap-form-container'>
             <Form
@@ -439,19 +479,23 @@ export default class Web3Info extends Component{
 
               <Form.Item
                 label="Receipt ID"
-                name="receiptId"
-                rules={[{ required: true, message: 'Receipt ID is required.' }]}
               >
-                <Select
-                  placeholder="Select a receipt ID"
-                  allowClear
-                  style={{ width: 300 }}
+                <Form.Item
+                  noStyle
+                  name="receiptId"
+                  rules={[{ required: true, message: 'Receipt ID is required.' }]}
                 >
-                  {/*<Select.Option value={250} key={250}>250 invalid id</Select.Option>*/}
-                  {receiptIds.map(receiptId => {
-                    return <Select.Option value={receiptId.value} key={receiptId.value}>{receiptId.value}</Select.Option>
-                  })}
-                </Select>
+                  <Select
+                    placeholder="Select a receipt ID"
+                    allowClear
+                    style={{ width: 300 }}
+                  >
+                    {/*<Select.Option value={250} key={250}>250 invalid id</Select.Option>*/}
+                    {receiptIds.map(receiptId => {
+                      return <Select.Option value={receiptId.value} key={receiptId.value}>{receiptId.value}</Select.Option>
+                    })}
+                  </Select>
+                </Form.Item>
                 <div>
                   When the event is completed, the ELF can be redeemed by submitting the Lock Receipt ID. According to the time of the lock start, users can redeem ELF after one month. This step is available in the WriteContract-finishReceipt of the
                   <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>

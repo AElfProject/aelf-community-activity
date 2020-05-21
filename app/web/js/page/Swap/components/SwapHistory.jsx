@@ -47,7 +47,7 @@ export default function renderSwapHistory(historyList, swapInfo) {
     });
 
     const format = 'YYYY-MM-DD HH:mm:ss';
-    const timeFormatted = moment(new Date()).format(format);
+    const timeFormatted = moment(tx.time).format(format);
 
     let txStatusHTML;
     const txStatus = tx.tx_status;
@@ -76,7 +76,7 @@ export default function renderSwapHistory(historyList, swapInfo) {
             <a href={`${EXPLORER_URL}/tx/${tx.tx_id}`} target='_blank'>{tx.tx_id}</a>
           </div>
           {/*<div> <b>Origin Amount:</b> {tx.origin_amount}</div>*/}
-          <div> <b>Amount:</b> {tx.origin_amount / ratio / (10 ** TOKEN_DECIMAL)}</div>
+          <div> <b>Amount:</b> {(tx.origin_amount / ratio / (10 ** TOKEN_DECIMAL)).toFixed(8)}</div>
           <div> <b>Time:</b> {timeFormatted}</div>
           <div> <b>Status:</b> {txStatusHTML}</div>
         </div>

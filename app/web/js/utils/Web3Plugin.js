@@ -69,7 +69,7 @@ export class Web3Plugin {
         // message.success('Web3 Wallet Connected.');
       }
     }
-    if (!this.connectOk) {
+    if (!this.connectOk && initMetaMask) {
       message.warning('Web3 Wallet connect failed, please check MetaMask and try again.');
     }
     return this.connectOk;
@@ -83,7 +83,7 @@ export class Web3Plugin {
       await window.ethereum.enable();
       this.connectOk = true;
       message.success('Web3 Wallet Connected.');
-      this.init();
+      await this.init();
     } catch (e) {
       message.warning(e.message);
     }
@@ -108,8 +108,8 @@ export class Web3Plugin {
       this.myAccounts.push(myAccount);
       return this.myAccounts;
     } catch (e) {
-      return
       message.warning(e.message);
+      return;
     }
   }
 
@@ -117,15 +117,19 @@ export class Web3Plugin {
   // 还必须有gas，否则交易gas要么不足要么超出，注意gas的估算写法
   async sendTx (transaction, from, to) {
     return new Promise(async (resolve, reject) => {
-      const gas = await this.web3.eth.estimateGas({from: from, to: to, data: transaction.encodeABI()});
-      const options = {
-        from,
-        to,
-        gas
-      };
+      try {
+        const gas = await this.web3.eth.estimateGas({ from: from, to: to, data: transaction.encodeABI() });
+        const options = {
+          from,
+          to,
+          gas
+        };
       transaction.send(options)
         .on('receipt', receipt => resolve(receipt))
         .on('error', err => reject(err));
+      } catch(e) {
+        reject(e);
+      }
     });
   }
 
