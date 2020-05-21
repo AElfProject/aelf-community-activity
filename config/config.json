@@ -1,8 +1,8 @@
 {
   "APPNAME": "aelf community",
   "COMMON_PRIVATE": "f6e512a3c259e5f9af981d7f99d245aa5bc52fe448495e0b0dd56e8406be6f71",
-  "SWAP_CONTRACT_ADDRESS": "2LUmicHyH4RXrMjG4beDwuDsiWJESyLkgkwPdGTR8kahRzq5XS",
-  "SWAP_PAIR": "fccb3863ef305a4f8761522afdcc3fc00160e3ee8034bb05e86cd33f856f10ad",
+  "SWAP_CONTRACT_ADDRESS": "sr4zX6E7yVVL7HevExVcWv2ru3HSZakhsJMXfzxzfpnXofnZw",
+  "SWAP_PAIR": "0f7be4ebfd6a48565192e012c9ff9a882fbfd4f2696fa283f49895de6383f398",
   "HTTP_PROVIDER": "http://1.119.195.50:11105/chain",
   "HTTP_PROVIDER_INNER": "http://1.119.195.50:11105/chain",
   "TOKEN_CONTRACT_ADDRESS": "JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE",
@@ -22,7 +22,7 @@
       "method": "LOGIN",
       "contracts": [{
         "chainId": "AELF",
-        "contractAddress": "2LUmicHyH4RXrMjG4beDwuDsiWJESyLkgkwPdGTR8kahRzq5XS",
+        "contractAddress": "sr4zX6E7yVVL7HevExVcWv2ru3HSZakhsJMXfzxzfpnXofnZw",
         "contractName": "Token swap contract",
         "description": "Swap token from the other chain. Base on protocol [-]",
         "github": "https://github.com/AElfProject/AElf/blob/token-swap-contract/protobuf/token_swap_contract.proto"
