@@ -7,8 +7,8 @@ import {TOKEN_DECIMAL} from '../../../constant/constant';
 import { getPrizeListInfo } from '../../../constant/prizeList';
 import './LotteryDraw.less';
 
-// const prizeListInfo = getPrizeListInfo();
-const prizeListInfo = getPrizeListInfo(630, 6, 30);
+const prizeListInfo = getPrizeListInfo();
+// const prizeListInfo = getPrizeListInfo(630, 6, 30);
 // const prizeListInfo = getPrizeListInfo(718, 7, 1);
 const {
   prizes,
