@@ -6,6 +6,7 @@
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // 通过 npm 安装
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const {
   ROOT,
   getLessVariables
@@ -21,8 +22,8 @@ module.exports = {
     activity: './app/web/js/index.jsx',
   },
   output: {
-    path: path.resolve('./app', ''), // equal to __diname + '/build'
-    filename: 'public/js/[name].[hash:5].js',
+    path: path.resolve('./app/public', ''), // equal to __diname + '/build'
+    filename: 'js/[name].[hash:5].js',
   },
 
   resolve: {
@@ -76,9 +77,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: [ 'activity' ],
       template: './app/web/page/index.tpl',
-      filename: './view/index.tpl',
+      filename: '../view/index.tpl',
     }),
-    // new CleanWebpackPlugin(pathsToClean, cleanOptions),
+    new CleanWebpackPlugin(),
     // ,
     // new BundleAnalyzerPlugin({
     // 	analyzerMode: 'server',
