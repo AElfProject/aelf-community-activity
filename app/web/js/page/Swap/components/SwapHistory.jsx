@@ -68,6 +68,7 @@ export default function renderSwapHistory(historyList, swapInfo) {
     const swapRatio = swapInfo.swapRatio || {originShare: 1, targetShare: 1};
     const {originShare, targetShare} = swapRatio;
     const ratio = parseInt(originShare, 10) / parseInt(targetShare, 10);
+    const amount = (tx.origin_amount / ratio / (10 ** TOKEN_DECIMAL)).toFixed(8);
 
     return (
       <div key={tx.tx_id} className='swap-tx-container'>
@@ -75,8 +76,7 @@ export default function renderSwapHistory(historyList, swapInfo) {
           <div><b>Tx ID: </b>
             <a href={`${EXPLORER_URL}/tx/${tx.tx_id}`} target='_blank'>{tx.tx_id}</a>
           </div>
-          {/*<div> <b>Origin Amount:</b> {tx.origin_amount}</div>*/}
-          <div> <b>Amount:</b> {(tx.origin_amount / ratio / (10 ** TOKEN_DECIMAL)).toFixed(8)}</div>
+          <div> <b>Amount:</b> {isNaN(amount) ? '-' : amount}</div>
           <div> <b>Time:</b> {timeFormatted}</div>
           <div> <b>Status:</b> {txStatusHTML}</div>
         </div>
