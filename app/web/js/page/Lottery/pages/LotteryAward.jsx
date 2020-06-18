@@ -113,7 +113,7 @@ export default class LotteryAward extends Component {
   renderFromItemSelect(arrayInput, nameInput, labelInput, onChange) {
 
     const desc = {
-      period: 'If you have won the prize, please check your number of period on the lottery draw page and fill in here.',
+      period: 'If you have won a prize, please check your period number on the lottery draw page and specify it here.',
       lotteryId: 'You can check the lottery code in the lottery draw page.'
     };
 
@@ -197,7 +197,7 @@ export default class LotteryAward extends Component {
               >
                 <Input maxLength={256}/>
               </Form.Item>
-              <div>If the prizes need to be mailed, you need to enter the shipping address, contact information, name. If the prize is ELF Tokens, you only need to enter the wallet address</div>
+              <div>If the prize need to be mailed, you need to enter your shipping address, contact information and name. If the prize is ELF Tokens, you only need to enter your wallet address</div>
             </Form.Item>
 
             <Form.Item

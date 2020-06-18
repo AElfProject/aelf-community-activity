@@ -145,7 +145,7 @@ export default class SwapElf extends React.Component{
         hoverable
         headStyle={styles.cardMainHeader}
         extra={<span>Available Time: 24 June, 2020 12:00 - 16 July, 2020 17:00</span>}
-        title='Swap Test Token'>
+        title='Swap Test Tokens'>
         <div className='section-content swap-form-container'>
           <Form
             {...layout}
@@ -186,11 +186,11 @@ export default class SwapElf extends React.Component{
                   return <Select.Option value={receiptId.value} key={receiptId.value}>{receiptId.value}</Select.Option>
                 })}
               </Select>
-              <div>Once you do a lock, you get a lock receipt ID, which is verified by the ReadContract-getMyReceipts of the
+              <div>Once you do a lock, you will get a lock receipt ID verified by the ReadContract-getMyReceipts of the
                 <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
               </div>
-              <div>You may have to wait a day or two to swap token in aelf chain after your step2.</div>
-              <div>If you had swapped this receipt ID, you can submit but get a not existed transaction.</div>
+              <div>You may have to wait a day or two to swap tokens in the aelf chain after your step 2.</div>
+              <div>If you have swapped this receipt ID already, you can submit it but will not see an existing transaction.</div>
             </Form.Item>
 
             <Form.Item
@@ -206,7 +206,7 @@ export default class SwapElf extends React.Component{
             <div className='border-top border-top-blank'/>
 
             <Form.Item
-              label="Origin Amount"
+              label="Original Amount"
               // name="originAmount"
               // rules={[{ required: true, message: 'Please input the origin amount!' }]}
             >
@@ -231,7 +231,7 @@ export default class SwapElf extends React.Component{
               <Input disabled value={swapInfo.swapELFReceiptInfo[0]}/>
               {/*<Input />*/}
               <div>
-                These three data are available through the lock receipt ID (index of Ethereum) , which can be verified in the ReadContract-getReceiptInfo of the
+                This data is available through the lock receipt ID (index of Ethereum) which can be verified in the ReadContract-getReceiptInfo of the
                 <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
               </div>
             </Form.Item>
@@ -242,7 +242,7 @@ export default class SwapElf extends React.Component{
               label="Merkle Tree Index (int)"
             >
               <Input disabled value={swapInfo.swapELFMerklePathInfo[0]}/>
-              <span>Merkle Tree Index can not be greater than  {(swapPairInfo.roundCount - 1)  || ''} now.</span>
+              <span>Merkle Tree Index can not be greater than  {(swapPairInfo.roundCount - 1)  || ''}.</span>
             </Form.Item>
 
             <Form.Item
@@ -258,7 +258,7 @@ export default class SwapElf extends React.Component{
             >
               <Input disabled value={swapInfo.swapELFMerklePathInfo[3].join(',')}/>
               <div>
-                These three data are available through the lock receipt ID (index of the Ether House) , which can be verified in the ReadContract-GenerateMerklePath of the
+                This data is available through the lock receipt ID (index of the Ether House) which can be verified in the ReadContract-GenerateMerklePath of the
                 <a href={web3PluginInstance.merkleContractLink} target='_blank'> Ethereum MerkleTreeContract page</a>
               </div>
             </Form.Item>

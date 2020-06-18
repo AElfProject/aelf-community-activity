@@ -319,7 +319,7 @@ export default class Web3Info extends Component{
           <div className='section-content'>
             <InfoCircleFilled style={{
               color: 'orange'
-            }} /> During the process of swap token, we adopt the open-source contract of Ethereum, and users can check the data on the chain
+            }} /> During the token swap process, we adopt the Ethereum open-source contract, users can check the on-chain data.
           </div>
         </Card>
 
@@ -346,7 +346,7 @@ export default class Web3Info extends Component{
                   rules={[{ required: true, message: 'Please input the Spender(address)!' }]}>
                   <Input disabled defaultValue={LOCK_ADDRESS} value={LOCK_ADDRESS}/>
                 </Form.Item>
-                <div>Authorize the lock in contract and input the authorized amount (the authorized token will be used for mortgage);
+                <div>Authorize the lock in contract and input the authorized amount (these tokens will be used for the mortgage);
                   this step can be performed in the writecontract - approve operation on the
                   <a href={web3PluginInstance.tokenContractLink} target='_blank'> Ethereum Token Contract Page</a>
                 </div>
@@ -409,7 +409,7 @@ export default class Web3Info extends Component{
                 >
                   <Input/>
                 </Form.Item>
-                <div>After completing the authorization, please provide the amount of the staked ELF (the amount should be no more than the authorized quantity) and the address for receiving aelf in the aelf testnet. After staked your ELF, your ELF will be locked and can only be redeemed from this page after one month. This step can be executed in the writecontract-createreceipt of the
+                <div>After completing the authorization, please provide the amount of ELF to stake (the amount should be no more than the authorized quantity) and the address for receiving aelf in the aelf testnet. After staking your ELF, the tokens will be locked and can only be redeemed from this page after one month. This step can be executed in the writecontract-createreceipt section of the
                   <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
                 </div>
               </Form.Item>
@@ -438,7 +438,7 @@ export default class Web3Info extends Component{
           <div className='section-content'>
             <InfoCircleFilled style={{
               color: 'orange'
-            }} /> After staked ELF tokens, you can get the data used to swap tokens (LOT and ELF). You need to wait 5 days to get the data. You can check the data status in "Swap Test Token".
+            }} /> After staking your ELF tokens, you can get the data used to swap tokens (LOT and ELF). You will need to wait 5 days to get the data, but can check the data status in "Swap Test Token".
           </div>
         </Card>
 

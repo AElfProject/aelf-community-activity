@@ -277,11 +277,11 @@ class Swap extends Component {
         <div className='basic-blank'/>
         <Tabs defaultActiveKey="1" tabBarExtraContent={
           <div>
-            <a href='/#' target='_blank'>Swap Token Rules</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-            <a href='/#' target='_blank'>Swap Token Tutorial</a>
+            <a href='/#' target='_blank'>Token Swap Rules</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href='/#' target='_blank'>Token Swap Tutorial</a>
           </div>
         }>
-          <TabPane tab="Swap Token" key="1">
+          <TabPane tab="Token Swap" key="1">
 
             <Web3Info
               swapPairInfo={swapPairInfo}
