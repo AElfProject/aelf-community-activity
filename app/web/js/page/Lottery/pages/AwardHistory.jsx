@@ -13,23 +13,23 @@ const awardHistoryColumns = [
     width: 50,
   },
   {
-    title: 'level',
-    dataIndex: 'level',
-    key: 'level',
-    width: 72,
-  },
-  {
     title: 'Owner',
     dataIndex: 'owner',
     key: 'owner',
     render: text => <div>{addressFormat(text)}</div>,
-    width: 550
+    width: 520
   },
   {
     title: 'Block',
     dataIndex: 'block',
     key: 'block',
     width: 100
+  },
+  {
+    title: 'Reward Name',
+    dataIndex: 'rewardName',
+    key: 'rewardName',
+    width: 150,
   },
   {
     title: 'Registration Information',

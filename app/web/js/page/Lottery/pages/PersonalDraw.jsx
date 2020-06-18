@@ -14,7 +14,7 @@ const columns = [
     title: 'ID',
     dataIndex: 'id',
     key: 'id',
-    width: '180px'
+    width: 180,
   },
   // {
   //   title: 'Random Hash',
@@ -24,14 +24,22 @@ const columns = [
   //   // render: text => <a>{text}</a>,
   // },
   {
-    title: 'level',
-    dataIndex: 'level',
-    key: 'level',
-  },
-  {
     title: 'block',
     dataIndex: 'block',
     key: 'block',
+    width: 150
+  },
+  {
+    title: 'Reward Name',
+    dataIndex: 'rewardName',
+    key: 'rewardName',
+    width: 200
+  },
+  {
+    title: 'Registration Information (After Draw)',
+    dataIndex: 'registrationInformation',
+    key: 'registrationInformation',
+    width: 300
   },
 ];
 

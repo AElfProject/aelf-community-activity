@@ -5,6 +5,7 @@ import { StarFilled } from '@ant-design/icons';
 const { Step } = Steps;
 import {TOKEN_DECIMAL} from '../../../constant/constant';
 import { getPrizeListInfo } from '../../../constant/prizeList';
+import isMobile  from '../../../utils/isMobile';
 import './LotteryDraw.less';
 
 const prizeListInfo = getPrizeListInfo();
@@ -39,7 +40,7 @@ function renderPrizeSteps(props) {
   });
 
   return (
-    <Steps current={currentStep} progressDot={customDot}>
+    <Steps current={currentStep} progressDot={customDot} direction={isMobile() ? 'vertical' : 'horizontal' }>
       {stepsHTML}
     </Steps>
   );
