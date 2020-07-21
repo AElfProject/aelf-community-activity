@@ -319,14 +319,14 @@ export default class Web3Info extends Component{
           <div className='section-content'>
             <InfoCircleFilled style={{
               color: 'orange'
-            }} /> During the token swap process, we adopt the Ethereum open-source contract, users can check the on-chain data.
+            }} /> During the token swap process, we adopt the Ethereum open-source contract and users can check the on-chain data.
           </div>
         </Card>
 
         <div className='next-card-blank'/>
         <Card
           className='hover-cursor-auto'
-          title='Step1: Approve'
+          title='Step 1: Approve'
           headStyle={styles.cardSubHeader}
           hoverable>
           <div className='section-content swap-form-container'>
@@ -346,8 +346,7 @@ export default class Web3Info extends Component{
                   rules={[{ required: true, message: 'Please input the Spender(address)!' }]}>
                   <Input disabled defaultValue={LOCK_ADDRESS} value={LOCK_ADDRESS}/>
                 </Form.Item>
-                <div>Authorize the lock in contract and input the authorized amount (these tokens will be used for the mortgage);
-                  this step can be performed in the writecontract - approve operation on the
+                <div>Authorize the lock-in contract and input the authorized amount (these tokens will be used for the mortgage); this step can be performed in the writecontract - approve operation on the
                   <a href={web3PluginInstance.tokenContractLink} target='_blank'> Ethereum Token Contract Page</a>
                 </div>
               </Form.Item>
@@ -380,7 +379,7 @@ export default class Web3Info extends Component{
         <div className='next-card-blank'/>
         <Card
           className='hover-cursor-auto'
-          title='Step2: Mortgage'
+          title='Step 2: Mortgage'
           headStyle={styles.cardSubHeader}
           hoverable>
           <div className='section-content swap-form-container'>
@@ -498,7 +497,7 @@ export default class Web3Info extends Component{
                   </Select>
                 </Form.Item>
                 <div>
-                  When the event is completed, the ELF can be redeemed by submitting the Lock Receipt ID. According to the time of the lock start, users can redeem ELF after one month. This step is available in the WriteContract-finishReceipt of the
+                  Once the event is completed, ELF tokens can be redeemed by submitting the Lock Receipt ID. Users can only redeem ELF tokens after one month based on the time when the lock started. This step is available in the WriteContract-finishReceipt of the
                   <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
                 </div>
               </Form.Item>

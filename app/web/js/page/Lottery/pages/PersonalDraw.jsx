@@ -270,7 +270,7 @@ export default class PersonalDraw extends Component{
 
 async function buyLottery (buyCount) {
   if (!buyCount) {
-    throw Error('Please input the amount to buy.');
+    throw Error('Please input the amount of lottery code to be switched.');
   }
 
   const lotteryContract = await NightElfCheck.initContractInstance({
@@ -293,7 +293,7 @@ async function buyLottery (buyCount) {
 
 async function approveVote(tokenApproveCount) {
   if (!tokenApproveCount) {
-    throw Error('Please input the amount to approve.');
+    throw Error('Please input the amount of LOT to be switched.');
   }
 
   const tokenContract = await NightElfCheck.initContractInstance({

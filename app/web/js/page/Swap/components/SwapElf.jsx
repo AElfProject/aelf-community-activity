@@ -186,11 +186,11 @@ export default class SwapElf extends React.Component{
                   return <Select.Option value={receiptId.value} key={receiptId.value}>{receiptId.value}</Select.Option>
                 })}
               </Select>
-              <div>Once you do a lock, you will get a lock receipt ID verified by the ReadContract-getMyReceipts of the
+              <div>After completing the “lock in”, you will receive a Lock Receipt ID verified by the “ReadContract-getMyReceipts of the
                 <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
               </div>
-              <div>You may have to wait a day or two to swap tokens in the aelf chain after your step 2.</div>
-              <div>If you have swapped this receipt ID already, you can submit it but will not see an existing transaction.</div>
+              <div>You may have to wait for 1-2 days to proceed token swap after completing step 2.</div>
+              <div>If the receipt ID has been swapped, you can still submit it but will not be able to see an existing transaction.</div>
             </Form.Item>
 
             <Form.Item
@@ -220,7 +220,7 @@ export default class SwapElf extends React.Component{
             >
               <Input disabled value={swapInfo.swapELFReceiptInfo[1]}/>
               {/*<Input />*/}
-              <span>aelf Receiving Address must the same as your elf wallet address you.</span>
+              <span>aelf Receiving Address must be the same as your ELF wallet address.</span>
             </Form.Item>
 
             <Form.Item
@@ -258,7 +258,7 @@ export default class SwapElf extends React.Component{
             >
               <Input disabled value={swapInfo.swapELFMerklePathInfo[3].join(',')}/>
               <div>
-                This data is available through the lock receipt ID (index of the Ether House) which can be verified in the ReadContract-GenerateMerklePath of the
+                This data is available in the lock receipt ID (index of the Ethereum) which can be verified in the ReadContract-GenerateMerklePath of the
                 <a href={web3PluginInstance.merkleContractLink} target='_blank'> Ethereum MerkleTreeContract page</a>
               </div>
             </Form.Item>

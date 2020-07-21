@@ -91,7 +91,7 @@ export default function renderSwapHistory(historyList, swapInfo) {
     <Card
       className='hover-cursor-auto'
       hoverable
-      title='Address History (last 30 txs)'>
+      title='Address History (last 30 transactions)'>
       <div className='section-content swap-flex-wrap'>
         {swapListHTML}
       </div>

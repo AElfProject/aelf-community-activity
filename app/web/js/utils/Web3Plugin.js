@@ -204,7 +204,7 @@ export class Web3Plugin {
       throw Error('Invalid receipt ID');
     }
     if (res.finished) {
-      throw Error('Already redeemed.');
+      throw Error('Your ELF tokens has already been redeemed.');
     }
     console.log('res.endTime, ', res);
     if (res.endTime * 1000 > Date.parse(new Date())) {

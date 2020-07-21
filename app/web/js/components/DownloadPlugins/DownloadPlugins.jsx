@@ -15,9 +15,8 @@ export default class DownloadPlugins extends PureComponent {
       <div className='DownloadPlugins' style={style}>
         {/* <div className='Tips'>为避免每次操作时填写私钥信息，你可以通过插件来使用这些工具（安装插件后仍然显示这些信息，请尝试刷新操作）</div> */}
         <div className='Tips'>
-          <div>Please download and install NightElf browser extension.
-            Please don’t forget to refresh the page : )</div>
-          <div>Please use chrome or the explore which support chrome extension.</div>
+          <div>Before you start, make sure you have downloaded and installed the NightELF explorer extension, and don't forget to refresh the page:) </div>
+          <div>Please use Chrome or the explorer that supports Chrome extensions.</div>
         </div>
         <div className='step'>
           <Row>

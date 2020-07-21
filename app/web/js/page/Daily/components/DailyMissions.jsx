@@ -114,7 +114,7 @@ class DailyMissions extends Component {
 
   async getAward(txId, type) {
     if (!txId) {
-      message.warning('There are no effective transaction.');
+      message.warning('There are no valid transactions.');
       return;
     }
     const {address} = this.props.account.accountInfo;
