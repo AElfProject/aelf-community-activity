@@ -6,6 +6,7 @@ import TokenContract from '../../utils/tokenContract';
 
 import AwardHistory from './pages/AwardHistory';
 import LotteryDraw from './pages/LotteryDraw';
+import GrandPrize from './pages/GrandPrize';
 import PersonalDraw from './pages/PersonalDraw';
 import './Lottery.less';
 
@@ -94,6 +95,8 @@ class Lottery extends Component {
                 swapInfo={swapInfo}
                 currentPeriodNumber={currentPeriodNumber}
               />
+              {LOTTERY.SHOW_GRAND_CHECK && <div className='next-card-blank'/>}
+              {LOTTERY.SHOW_GRAND_CHECK && <GrandPrize/>}
               <div className='next-card-blank'/>
               <PersonalDraw
                 address={address}

@@ -3,11 +3,13 @@ const GET_EFFECTIVE_TX = '/api/daily/effective-tx';
 const GET_SWAP_HISTORY = '/api/swap/history';
 const GET_AWARD_HISTORY = '/api/daily/award-history';
 const GET_AWARD = '/api/daily/award-id';
+const GET_BOUGHT_LOTTERIES = '/api/lottery/bought-lotteries';
 
 export {
   GET_COUNTDOWN,
   GET_EFFECTIVE_TX,
   GET_SWAP_HISTORY,
   GET_AWARD_HISTORY,
-  GET_AWARD
+  GET_AWARD,
+  GET_BOUGHT_LOTTERIES
 };

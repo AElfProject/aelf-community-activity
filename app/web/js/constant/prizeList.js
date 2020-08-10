@@ -4,6 +4,7 @@ export const prizeList = [
   {
     time: 'June 24',
     heavyweight: true,
+    limit: '0ELF',
     description: 'airpods  * 1, Media Robot Vacuum Cleaner * 1'
   },
   {
@@ -125,9 +126,9 @@ export const getPrizeListInfo = (todayTagInput, monthInput, dateInput) => {
   let date = dateInput || today.getDate();
   date = date < 10 ? '0' + date : date;
   const todayTag = todayTagInput || parseInt(month + '' + date, 10);
-  let startIndex = todayTag === 624 ? 0 : todayTag - startDate - 1;
-  if (month === 7) {
-    startIndex = startIndex - (700 - 630);
+  let startIndex = todayTag === 810 ? 0 : todayTag - startDate - 1;
+  if (month === 9) {
+    startIndex = startIndex - (900 - 831);
   }
   return {
     prizes: prizeList.slice(startIndex, startIndex + 4),

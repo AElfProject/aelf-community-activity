@@ -12,4 +12,6 @@ module.exports = app => {
   router.get('/api/daily/award-id', controller.daily.getAward);
   router.get('/api/daily/effective-tx', controller.daily.getEffectiveTx);
   router.get('/api/daily/award-history', controller.daily.getAwardHistory);
+
+  router.get('/api/lottery/bought-lotteries', controller.lottery.getBoughtLotteries);
 };
