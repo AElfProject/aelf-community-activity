@@ -35,10 +35,10 @@ export function asyncLogin() {
           dispatch(login(detail));
         }
       }).catch(error => {
-        message.error(error.message || 'Extension error');
+        message.error(error.message || 'Explorer extension error');
       });
     }).catch(error => {
-      message.error(error.message || 'Extension error');
+      message.error(`Explorer extension load failed: ${error.message}`);
       console.log('error: ', error);
     });
   }

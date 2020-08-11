@@ -16,6 +16,8 @@ import * as ActionsAccount from '../../actions/account';
 import {getSwapPair} from '../../utils/getSwapInfo';
 import Contract from '../../utils/Contract';
 import { LOTTERY } from '../../constant/constant';
+import axios from '../../service/axios';
+import { GET_CMS_PRIZE_LIST } from '../../constant/apis';
 
 function mapStateToProps(state) {
   return {
@@ -33,6 +35,15 @@ class Lottery extends Component {
     super();
     this.state = {
       currentPeriodNumber: 0,
+      prizeInfo: [{
+        prizeList: {
+          list: []
+        },
+        start: 0,
+        next: 0,
+        grandPrize: false,
+        grandPrizeAmount: 0
+      }],
       swapInfo: {
         swapRatio: {
           originShare: 1,
@@ -48,23 +59,33 @@ class Lottery extends Component {
   }
 
   componentDidMount() {
-    getSwapPair().then(result => {
-      if (result) {
-        console.log('swapInfo: ', result);
+    this.getSwapPair();
+    this.getCurrentPeriodNumber();
+    this.getPrizeList();
+  }
+
+  async getPrizeList() {
+    const prizeInfo = (await axios.get(`${GET_CMS_PRIZE_LIST}`)).data;
+    console.log('prizeList: ', prizeInfo);
+    this.setState({
+      prizeInfo
+    })
+  }
+
+  async getSwapPair() {
+    try {
+      const swapInfo = await getSwapPair();
+      console.log('swapInfo: ', swapInfo);
+      if (swapInfo) {
         this.setState({
-          swapInfo: result,
+          swapInfo,
         });
       } else {
         message.warning('Can not get the swap information.');
       }
-    }).catch(error => {
-      if (error.Error && error.Error.Message) {
-        message.error(error.Error.Message);
-      } else {
-        message.error(error.message);
-      }
-    });
-    this.getCurrentPeriodNumber();
+    } catch(error) {
+        message.error(error.Error && error.Error.Message ? error.Error.Message : error.message);
+    }
   }
 
   async getCurrentPeriodNumber() {
@@ -76,14 +97,14 @@ class Lottery extends Component {
     });
   }
 
-
   render() {
 
     const { account } = this.props;
     const {accountInfo} = account;
     const {address} = accountInfo;
 
-    const {swapInfo, currentPeriodNumber} = this.state;
+    const {swapInfo, currentPeriodNumber, prizeInfo} = this.state;
+    const { grandPrize, grandPrizeAmount } = prizeInfo[0];
 
     return (
       <div>
@@ -92,11 +113,12 @@ class Lottery extends Component {
           <Tabs defaultActiveKey="1" tabBarExtraContent={<a href='#' target='_blank'>Lottery Tutorial</a>}>
             <TabPane tab="Lottery Draw" key="1">
               <LotteryDraw
+                prizeInfo={prizeInfo}
                 swapInfo={swapInfo}
                 currentPeriodNumber={currentPeriodNumber}
               />
-              {LOTTERY.SHOW_GRAND_CHECK && <div className='next-card-blank'/>}
-              {LOTTERY.SHOW_GRAND_CHECK && <GrandPrize/>}
+              {grandPrize && <div className='next-card-blank'/>}
+              {grandPrize && <GrandPrize grandPrizeAmount={grandPrizeAmount}/>}
               <div className='next-card-blank'/>
               <PersonalDraw
                 address={address}

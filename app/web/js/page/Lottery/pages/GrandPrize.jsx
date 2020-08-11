@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Button, Card, Input } from 'antd';
 import { GET_BOUGHT_LOTTERIES } from '../../../constant/apis';
-import {LOTTERY} from '../../../constant/constant';
 import axios from '../../../service/axios';
 
 export default class GrandPrize extends Component{
@@ -39,7 +38,7 @@ export default class GrandPrize extends Component{
     console.log('boughtInfo: ', boughtInfo);
 
     const percent = boughtInfo.currentAddress / boughtInfo.total;
-    const prizeAmount = percent * LOTTERY.GRAND_PRIZE;
+    const prizeAmount = percent * this.props.grandPrizeAmount;
     this.setState({
       prizeErrorShow: false,
       prizeInfoShow: true,

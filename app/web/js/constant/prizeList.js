@@ -1,5 +1,3 @@
-const startDate = 624;
-
 export const prizeList = [
   {
     time: 'June 24',
@@ -120,16 +118,29 @@ export const prizeList = [
   }
 ];
 
-export const getPrizeListInfo = (todayTagInput, monthInput, dateInput) => {
+// export const getPrizeListInfo = (todayTagInput, startDate = 810, monthInput, dateInput = 0) => {
+export const getPrizeListInfo = (options) => {
+  const {
+    todayTagInput,
+    prizeList,
+    startDate,
+    monthInput,
+    dateInput = 0,
+    next
+  } = options;
+
   const today = new Date();
   const month = monthInput || today.getMonth() + 1;
   let date = dateInput || today.getDate();
   date = date < 10 ? '0' + date : date;
   const todayTag = todayTagInput || parseInt(month + '' + date, 10);
-  let startIndex = todayTag === 810 ? 0 : todayTag - startDate - 1;
-  if (month === 9) {
-    startIndex = startIndex - (900 - 831);
+  let startIndex = todayTag === startDate ? 0 : todayTag - startDate;
+  if ((todayTag - startDate) > 60) {
+    const temp = Math.floor(todayTag / 100) * 100;
+    startIndex = startIndex - (temp - next);
   }
+
+  console.log('todayTag: ', todayTag);
   return {
     prizes: prizeList.slice(startIndex, startIndex + 4),
     gameStart: startIndex >= 0

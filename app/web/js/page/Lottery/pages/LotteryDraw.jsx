@@ -3,18 +3,9 @@ import React from 'react';
 import { Steps, Popover, Card } from 'antd';
 import { StarFilled } from '@ant-design/icons';
 const { Step } = Steps;
-import {TOKEN_DECIMAL} from '../../../constant/constant';
 import { getPrizeListInfo } from '../../../constant/prizeList';
 import isMobile  from '../../../utils/isMobile';
 import './LotteryDraw.less';
-
-const prizeListInfo = getPrizeListInfo();
-// const prizeListInfo = getPrizeListInfo(630, 6, 30);
-// const prizeListInfo = getPrizeListInfo(718, 7, 1);
-const {
-  prizes,
-  gameStart
-} = prizeListInfo;
 
 const customDot = (dot, { status, index }) => (
   <Popover
@@ -28,10 +19,9 @@ const customDot = (dot, { status, index }) => (
   </Popover>
 );
 
-// TODO: 【Low priority】 get prize from api
 function renderPrizeSteps(props) {
 
-  const {currentStep} = props;
+  const {currentStep, prizes} = props;
 
   const stepsHTML = prizes.map((prize, index) => {
     const title = prize.heavyweight ? [<StarFilled key={1}/>, ' ' + prize.time]: prize.time;
@@ -46,14 +36,31 @@ function renderPrizeSteps(props) {
   );
 }
 
-export default function renderLotteryDraw() {
+export default function renderLotteryDraw(props) {
+
+  const {
+    prizeInfo
+  } = props;
+
+  const {prizeList, start, next, conclusion, prolog} = prizeInfo[0];
+  const prizesAll = prizeList.list;
+  const {
+    prizes,
+    gameStart
+  } = getPrizeListInfo({
+    // todayTagInput: 903,
+    prizeList: prizesAll,
+    startDate: Number.parseInt(start, 10),
+    next
+  });
 
   const currentStep = 0;
   const prizeStepsHTML = renderPrizeSteps({
-    currentStep
+    currentStep,
+    prizes
   });
-  let currentDesc = prizes[currentStep] ? prizes[currentStep].description : 'Game Over~';
-  currentDesc = gameStart ? currentDesc : 'Coming soon~';
+  let currentDesc = prizes[currentStep] ? prizes[currentStep].description : (conclusion || 'Game Over~');
+  currentDesc = gameStart ? currentDesc : (prolog || 'Coming soon~');
 
   return (
     <Card
