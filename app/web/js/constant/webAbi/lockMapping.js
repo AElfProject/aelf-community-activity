@@ -1,24 +1,5 @@
-// https://ropsten.etherscan.io/address/0x1cE0B847aB903510AE132646091B796DFfFF2b80#code
+// https://ropsten.etherscan.io/address/0x75312DA37A2Aff614CE3E04278702e5792EeDa5A#code
 export const lockMapping = [
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "receiptToOwner",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
   {
     "constant": true,
     "inputs": [
@@ -173,29 +154,6 @@ export const lockMapping = [
     "constant": true,
     "inputs": [
       {
-        "name": "",
-        "type": "address"
-      },
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "ownerToReceipts",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
         "name": "_address",
         "type": "address"
       }
@@ -254,20 +212,6 @@ export const lockMapping = [
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_address",
-        "type": "address"
-      }
-    ],
-    "name": "fixAssetAddress",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

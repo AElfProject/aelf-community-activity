@@ -97,29 +97,6 @@ export const merkleTreeGenerator = [
     "type": "function"
   },
   {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "index",
-        "type": "uint256"
-      }
-    ],
-    "name": "GetReceipt",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes"
-      },
-      {
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "constant": false,
     "inputs": [],
     "name": "GenerateMerkleTree",
