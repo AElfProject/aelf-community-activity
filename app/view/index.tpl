@@ -21,7 +21,7 @@
 <!--    </div>-->
 
     <div id="root"></div>
-<script type="text/javascript" src="../public/js/activity.145a5.js"></script></body>
+<script type="text/javascript" src="../public/js/activity.fdda6.js"></script></body>
 <script>
     // function isIE() {
     if (!!window.ActiveXObject || "ActiveXObject" in window) {

@@ -1,0 +1,27 @@
+.tutorial-list {
+  &-item {
+    a {
+      margin: 0 10px;
+    }
+
+    &::after {
+      content: '|';
+    }
+
+    &:first-child {
+      a {
+        margin-left: 0;
+      }
+    }
+
+    &:last-child {
+      a {
+        margin-right: 0;
+      }
+
+      &::after {
+        content: '';
+      }
+    }
+  }
+}

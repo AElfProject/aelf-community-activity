@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { Component } from 'react';
 import moment from 'moment';
 
 import axios from '../../../service/axios';
@@ -7,12 +7,15 @@ import { GET_AWARD, GET_COUNTDOWN, GET_EFFECTIVE_TX } from '../../../constant/ap
 import CountDown from '../../../components/Countdown/Countdown';
 
 import { connect } from 'react-redux';
-import { bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 import * as ActionsAccount from '../../../actions/account';
 import { Button, Card, message } from 'antd';
 import { EXPLORER_URL, WALLET_WEB_URL, WALLET_IOS_URL, WALLET_ANDROID_URL, CHAIN } from '../../../constant/constant';
 import addressFormat from '../../../utils/addressFormat';
 import { add } from '../../../actions/counter';
+
+import { getLinkByType } from '../../../utils/cmsUtils';
+import TutorialList from '../../../components/TutorialList';
 
 function mapStateToProps(state) {
   return {
@@ -31,7 +34,8 @@ class DailyMissions extends Component {
     this.state = {
       countdown: 0,
       effectiveTokenTx: [],
-      effectiveResourceTx: []
+      effectiveResourceTx: [],
+      appData: []
     };
     this.getCountdown = this.getCountdown.bind(this);
     this.hasAward = this.hasAward.bind(this);
@@ -44,6 +48,11 @@ class DailyMissions extends Component {
   async componentDidMount() {
     this.getCountdown();
     this.getEffectiveTxs();
+    const { data: appData } = await getLinkByType('wallet');
+    console.log(appData)
+    this.setState({
+      appData
+    })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -86,8 +95,8 @@ class DailyMissions extends Component {
 
   async getEffectiveTxs() {
     const { account } = this.props;
-    const {accountInfo} = account;
-    const {address} = accountInfo;
+    const { accountInfo } = account;
+    const { address } = accountInfo;
 
     if (!address) {
       this.setState({
@@ -117,7 +126,7 @@ class DailyMissions extends Component {
       message.warning('There are no valid transactions.');
       return;
     }
-    const {address} = this.props.account.accountInfo;
+    const { address } = this.props.account.accountInfo;
 
     const awardId = await axios.get(`${GET_AWARD}`, {
       params: {
@@ -128,12 +137,12 @@ class DailyMissions extends Component {
       }
     });
 
-    const {TransactionId} = awardId.data;
+    const { TransactionId } = awardId.data;
 
     const explorerHref = `${EXPLORER_URL}/tx/${TransactionId}`;
     const txIdHTML = <div>
       <span>Award ID: {TransactionId}</span>
-      <br/>
+      <br />
       <a target='_blank' href={explorerHref}>Turn to aelf explorer to get the information of this transaction</a>
     </div>;
 
@@ -152,7 +161,7 @@ class DailyMissions extends Component {
     }
   }
 
-  renderMission (effectiveTx, type) {
+  renderMission(effectiveTx, type) {
     const effectiveTxId = effectiveTx.length ? effectiveTx[0].tx_id : null;
     const effectiveTxChainId = effectiveTx.length ? effectiveTx[0].chain_id : null;
     const hasAward = this.hasAward(type);
@@ -178,10 +187,10 @@ class DailyMissions extends Component {
   render() {
 
     const { account, dailyAwardHistory } = this.props;
-    const { effectiveTokenTx, effectiveResourceTx, countdown } = this.state;
+    const { effectiveTokenTx, effectiveResourceTx, countdown, appData } = this.state;
 
-    const {accountInfo} = account;
-    const {address} = accountInfo;
+    const { accountInfo } = account;
+    const { address } = accountInfo;
 
     // console.log('dailyAwardHistory: ', dailyAwardHistory);
     return (
@@ -191,15 +200,15 @@ class DailyMissions extends Component {
           className='hover-cursor-auto'
           hoverable
           title={[
-              <span key='1'>Countdown (UTC +0 23:59:59)：</span>,
-              <CountDown key='2' countdown={countdown} />
-            ]}>
+            <span key='1'>Countdown (UTC +0 23:59:59)：</span>,
+            <CountDown key='2' countdown={countdown} />
+          ]}>
           <div className='section-title'>
             Current Address: {address ? addressFormat(address) : 'Please login'}
           </div>
         </Card>
 
-        <div className='next-card-blank'/>
+        <div className='next-card-blank' />
         <Card
           className='hover-cursor-auto'
           hoverable
@@ -213,7 +222,7 @@ class DailyMissions extends Component {
           </div>
         </Card>
 
-        <div className='next-card-blank'/>
+        <div className='next-card-blank' />
         <Card
           className='hover-cursor-auto'
           hoverable
@@ -225,15 +234,14 @@ class DailyMissions extends Component {
               <a href={WALLET_ANDROID_URL} target='_blank'>Android wallet, </a>
               <a href={WALLET_IOS_URL} target='_blank'>iOS wallet</a>
             </div>
-
             {this.renderMission(effectiveTokenTx, 'token')}
           </div>
         </Card>
 
-        <div className='next-card-blank'/>
+        <div className='next-card-blank' />
         <div>Users who participate in the following two tasks need to register with the aelf community staff.</div>
         <div>Contact information： WeChat: a439714 (big fish) Telegram：Doris Guo (@dorisYG)</div>
-        <div className='next-card-blank'/>
+        <div className='next-card-blank' />
         <Card
           className='hover-cursor-auto'
           hoverable
@@ -244,7 +252,7 @@ class DailyMissions extends Component {
             <div>Bug Bonus Levels: Minor = 1,000 test tokens, Major = 3,000 test tokens, Critical = 5,000 test tokens.</div>
           </div>
         </Card>
-        <div className='next-card-blank'/>
+        <div className='next-card-blank' />
 
         <Card
           className='hover-cursor-auto'

@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import { Button, Card, Form, Input, Spin, message, Select } from 'antd';
+import moment from 'moment';
 import { InfoCircleFilled } from '@ant-design/icons';
 import SwapElf from './SwapElf';
 import { WEB3, SWAP_PAIR } from '../../../constant/constant';
+import { getAvailableTime } from '../../../utils/cmsUtils';
 const {LOCK_ADDRESS} = WEB3;
 
 const layout = {
@@ -59,7 +61,15 @@ export default class Web3Info extends Component{
       redeemedTxHash: null,
       receiptIds: [],
       swapELFReceiptInfo: [],
-      swapELFMerklePathInfo: [[], [], [], []]
+      swapELFMerklePathInfo: [[], [], [], []],
+      mortgageDate: {
+        start: '',
+        end: ''
+      },
+      redeemDate: {
+        start: '',
+        end: ''
+      }
     };
 
     this.redeemFormRef = React.createRef();
@@ -74,6 +84,18 @@ export default class Web3Info extends Component{
   }
 
   async componentDidMount() {
+    getAvailableTime()
+      .then(res => {
+        const { data } = res;
+
+        const mortgageDate = data.find(item => item.type === 'mortgage') || {};
+        const redeemDate = data.find(item => item.type === 'redeem') || {};
+
+        this.setState({
+          mortgageDate,
+          redeemDate
+        });
+      })
   }
 
   componentWillUnmount() {
@@ -261,7 +283,8 @@ export default class Web3Info extends Component{
       mortgage, mortgageLoading, mortgagedLink, mortgagedTxHash,
       redeem, redeemLoading, redeemedLink, redeemedTxHash,
       receiptIds,
-      swapELFReceiptInfo, swapELFMerklePathInfo
+      swapELFReceiptInfo, swapELFMerklePathInfo,
+      mortgageDate, redeemDate
     } = this.state;
 
     const {address: accountAddress} = account;
@@ -314,7 +337,7 @@ export default class Web3Info extends Component{
           className='hover-cursor-auto'
           headStyle={styles.cardMainHeader}
           title='Mortgage Token'
-          extra={<span>Available Time: 19 June, 2020 00:00 - 23 June, 2020 16:00</span>}
+          extra={<span>Available Time: {moment(mortgageDate.start).format('YYYY-MM-DD HH:mm')} - {moment(mortgageDate.end).format('YYYY-MM-DD HH:mm')}</span>}
           hoverable>
           <div className='section-content'>
             <InfoCircleFilled style={{
@@ -458,7 +481,7 @@ export default class Web3Info extends Component{
           className='hover-cursor-auto'
           title='Redeem'
           headStyle={styles.cardMainHeader}
-          extra={<span>Available Time: July 19, 2020 00:00 - August 19, 2020 00:00</span>}
+          extra={<span>Available Time: {moment(redeemDate.start).format('YYYY-MM-DD HH:mm')} - {moment(redeemDate.end).format('YYYY-MM-DD HH:mm')}</span>}
           hoverable>
           <div className='section-content swap-form-container'>
             <Form

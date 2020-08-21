@@ -19,6 +19,9 @@ import { LOTTERY } from '../../constant/constant';
 import axios from '../../service/axios';
 import { GET_CMS_PRIZE_LIST } from '../../constant/apis';
 
+import TutorialList from '../../components/TutorialList';
+import { getLinkByType } from '../../utils/cmsUtils';
+
 function mapStateToProps(state) {
   return {
     account: state.account.toJS()
@@ -53,12 +56,20 @@ class Lottery extends Component {
           swappedAmount: 0,
         }
       },
+      tutorial: []
     };
     this.tokenContract = new TokenContract();
     this.getCurrentPeriodNumber = this.getCurrentPeriodNumber.bind(this);
   }
 
   componentDidMount() {
+    getLinkByType('lottery')
+      .then((res) => {
+        this.setState({
+          tutorial: res.data
+        })
+      })
+
     this.getSwapPair();
     this.getCurrentPeriodNumber();
     this.getPrizeList();
@@ -103,14 +114,16 @@ class Lottery extends Component {
     const {accountInfo} = account;
     const {address} = accountInfo;
 
-    const {swapInfo, currentPeriodNumber, prizeInfo} = this.state;
+    const {swapInfo, currentPeriodNumber, prizeInfo, tutorial} = this.state;
     const { grandPrize, grandPrizeAmount } = prizeInfo[0];
 
     return (
       <div>
         <div className='basic-blank'/>
         <div className='basic-container lottery-container'>
-          <Tabs defaultActiveKey="1" tabBarExtraContent={<a href='#' target='_blank'>Lottery Tutorial</a>}>
+          <Tabs defaultActiveKey="1" tabBarExtraContent={
+            <TutorialList list={tutorial} />
+          }>
             <TabPane tab="Lottery Draw" key="1">
               <LotteryDraw
                 prizeInfo={prizeInfo}

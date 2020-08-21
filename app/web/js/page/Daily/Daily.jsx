@@ -15,6 +15,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux';
 import * as ActionsAccount from '../../actions/account';
 
+import TutorialList from '../../components/TutorialList';
+import { getLinkByType } from '../../utils/cmsUtils';
+
 function mapStateToProps(state) {
   return {
     account: state.account.toJS()
@@ -30,12 +33,18 @@ class Daily extends Component {
   constructor() {
     super();
     this.state = {
-      dailyAwardHistory: []
+      dailyAwardHistory: [],
+      tutorial: []
     };
     this.getDailyAwardHistory = this.getDailyAwardHistory.bind(this);
   }
 
   async componentDidMount() {
+    const { data: tutorial } = await getLinkByType('tasks');
+    this.setState({
+      tutorial
+    });
+
     this.getDailyAwardHistory();
   }
 
@@ -65,7 +74,7 @@ class Daily extends Component {
   render() {
 
     const { account } = this.props;
-    const { dailyAwardHistory } = this.state;
+    const { dailyAwardHistory, tutorial } = this.state;
 
     const {accountInfo} = account;
     const {address} = accountInfo;
@@ -73,7 +82,9 @@ class Daily extends Component {
     return (
       <div>
         <div className='basic-blank'/>
-        <Tabs defaultActiveKey="1" tabBarExtraContent={<a href='#' target='_blank'>Daily Tasks Tutorial</a>}>
+        <Tabs defaultActiveKey="1" tabBarExtraContent={
+           <TutorialList list={tutorial}/>
+        }>
           <TabPane tab="Daily Tasks" key="1">
             <DailyMissions dailyAwardHistory={dailyAwardHistory} getDailyAwardHistory={this.getDailyAwardHistory}/>
             <div className='next-card-blank'/>

@@ -28,17 +28,21 @@ module.exports = appInfo => {
   config.mysql = {
     clients: {
       aelf0: {
-        host: '127.0.0.1',
+        host: '192.168.197.43',
+        // host: '127.0.0.1',
         port: '3306',
         user: 'root',
-        password: null,
+        password: 'root',
+        // password: null,
         database: 'aelf_main_chain'
       },
       aelf1: {
-        host: '127.0.0.1',
+        host: '192.168.197.52',
+        // host: '127.0.0.1',
         port: '3306',
         user: 'root',
-        password: null,
+        password: 'root',
+        // password: null,
         database: 'aelf_side2_chain'
       }
     },
@@ -48,9 +52,11 @@ module.exports = appInfo => {
 
   config.sequelize = {
     dialect: 'mysql',
-    host: '127.0.0.1',
+    // host: '127.0.0.1',
+    host: '192.168.197.43',
     user: 'root',
-    password: null,
+    // password: null,
+    password: 'root',
     port: 3306,
     database: 'egg_sequelize_community_dev'
   };

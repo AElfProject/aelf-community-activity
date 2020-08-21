@@ -73,6 +73,7 @@ export default class NightElfCheck {
         const address = JSON.parse(accountInfo.detail).address;
 
         await aelf.chain.getChainStatus();
+        console.log('getContractInstance; ', 11111);
 
         if (contractInstances[contractAddress + address]) {
             return contractInstances[contractAddress + address];
@@ -93,6 +94,7 @@ export default class NightElfCheck {
         const address = JSON.parse(accountInfo.detail).address;
 
         await aelf.chain.getChainStatus();
+        console.log('getContractInstance; ', 22222);
 
         const wallet = {
             address
