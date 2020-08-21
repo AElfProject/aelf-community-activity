@@ -31,7 +31,7 @@ export default function renderDailyHistory(props) {
     {
       title: 'Award',
       width: 100,
-      render: () => <div>100 ELF</div>,
+      render: () => <div>100 LOT</div>,
     },
     {
       title: 'Award Time',

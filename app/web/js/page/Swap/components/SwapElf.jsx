@@ -1,11 +1,14 @@
 /* From start */
 import React from 'react';
 import { Button, Form, Input, message, Card, Select } from 'antd';
+import moment from 'moment';
 import { Link } from 'react-router';
 import {getMerklePathFromOtherChain} from '../../../utils/getMerklePath';
 
 import {NightElfCheck} from '../../../utils/NightElf/NightElf';
 import { LOGIN_INFO, SWAP_CONTRACT_ADDRESS, EXPLORER_URL } from '../../../constant/constant';
+
+import { getAvailableTime } from '../../../utils/cmsUtils';
 
 const layout = {
   labelCol: { span: 4 },
@@ -31,10 +34,24 @@ export default class SwapElf extends React.Component{
     super(props);
     this.state = {
       swappedLink: null,
-      swappedTxHash: null
+      swappedTxHash: null,
+      swapTest: {}
     };
     this.onFinish = this.onFinish.bind(this);
     this.onFinishFailed = this.onFinishFailed.bind(this);
+  }
+
+  componentDidMount() {
+    getAvailableTime()
+      .then(res => {
+        const { data } = res;
+
+        const swapTest = data.find(item => item.type === 'swapTest');
+
+        this.setState({
+          swapTest
+        })
+      })
   }
 
   async onFinish () {
@@ -135,7 +152,7 @@ export default class SwapElf extends React.Component{
 
     const swapInfo = this.props;
     const {web3PluginInstance, swapPairInfo} = swapInfo;
-    const {swappedLink, swappedTxHash} = this.state;
+    const {swappedLink, swappedTxHash, swapTest} = this.state;
 
     // console.log('swapInfo.swapId: ', swapInfo.swapId, swapInfo.swapELFReceiptInfo);
 
@@ -144,7 +161,7 @@ export default class SwapElf extends React.Component{
         className='hover-cursor-auto'
         hoverable
         headStyle={styles.cardMainHeader}
-        extra={<span>Available Time: 24 June, 2020 12:00 - 16 July, 2020 17:00</span>}
+        extra={<span>Available Time: {moment(swapTest.start).format('YYYY-MM-DD HH:mm')} - {moment(swapTest.end).format('YYYY-MM-DD HH:mm')}</span>}
         title='Swap Test Tokens'>
         <div className='section-content swap-form-container'>
           <Form

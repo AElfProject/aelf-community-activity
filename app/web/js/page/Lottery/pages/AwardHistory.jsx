@@ -30,12 +30,7 @@ const awardHistoryColumns = [
     dataIndex: 'rewardName',
     key: 'rewardName',
     width: 150,
-  },
-  {
-    title: 'Registration Information',
-    dataIndex: 'registrationInformation',
-    key: 'registrationInformation'
-  },
+  }
 ];
 
 export default class AwardHistory extends Component{
