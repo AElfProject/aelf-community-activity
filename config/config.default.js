@@ -34,6 +34,14 @@ module.exports = appInfo => {
         password: null,
         database: 'aelf_main_chain',
         charset: 'utf8mb4'
+      },
+      aelf1: {
+        host: '127.0.0.1',
+        port: '3306',
+        user: 'root',
+        password: null,
+        database: 'aelf_side2_chain',
+        charset: 'utf8mb4'
       }
     },
     // default config for the all database

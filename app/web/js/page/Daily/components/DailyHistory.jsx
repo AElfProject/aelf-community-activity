@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Card, Table } from 'antd';
-import { EXPLORER_URL } from '../../../constant/constant';
+import { EXPLORER_URL, DAILY } from '../../../constant/constant';
 
 export default function renderDailyHistory(props) {
 
@@ -31,7 +31,7 @@ export default function renderDailyHistory(props) {
     {
       title: 'Award',
       width: 100,
-      render: () => <div>100 LOT</div>,
+      render: () => <div>{DAILY.AMOUNT / (10 ** DAILY.DECIMAL)} {DAILY.SYMBOL}</div>,
     },
     {
       title: 'Award Time',
