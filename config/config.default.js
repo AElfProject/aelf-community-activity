@@ -32,8 +32,14 @@ module.exports = appInfo => {
         port: '3306',
         user: 'root',
         password: null,
-        database: 'aelf_main_chain',
-        charset: 'utf8mb4'
+        database: 'aelf_main_chain'
+      },
+      aelf1: {
+        host: '127.0.0.1',
+        port: '3306',
+        user: 'root',
+        password: null,
+        database: 'aelf_side2_chain'
       }
     },
     // default config for the all database
@@ -46,8 +52,7 @@ module.exports = appInfo => {
     user: 'root',
     password: null,
     port: 3306,
-    database: 'egg_sequelize_community_dev',
-    charset: 'utf8mb4'
+    database: 'egg_sequelize_community_dev'
   };
 
   // add your user config here

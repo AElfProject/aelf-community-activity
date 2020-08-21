@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux';
 import * as ActionsAccount from '../../../actions/account';
 import { Button, Card, message } from 'antd';
-import { EXPLORER_URL, WALLET_WEB_URL, WALLET_IOS_URL, WALLET_ANDROID_URL } from '../../../constant/constant';
+import { EXPLORER_URL, WALLET_WEB_URL, WALLET_IOS_URL, WALLET_ANDROID_URL, CHAIN } from '../../../constant/constant';
 import addressFormat from '../../../utils/addressFormat';
 import { add } from '../../../actions/counter';
 
@@ -112,7 +112,7 @@ class DailyMissions extends Component {
     }
   }
 
-  async getAward(txId, type) {
+  async getAward(txId, type, chainId) {
     if (!txId) {
       message.warning('There are no valid transactions.');
       return;
@@ -123,7 +123,8 @@ class DailyMissions extends Component {
       params: {
         address,
         tx_id: txId,
-        type
+        type,
+        chain_id: chainId
       }
     });
 
@@ -136,15 +137,15 @@ class DailyMissions extends Component {
       <a target='_blank' href={explorerHref}>Turn to aelf explorer to get the information of this transaction</a>
     </div>;
 
-    message.success(txIdHTML);
+    message.success(txIdHTML, 6);
     setTimeout(() => {
       this.props.getDailyAwardHistory();
     });
   }
 
-  async onGetAward(txId, type) {
+  async onGetAward(txId, type, chainId) {
     try {
-      await this.getAward(txId, type);
+      await this.getAward(txId, type, chainId);
     } catch {
       // do nothing
       // console.log('onGetAward', e);
@@ -153,16 +154,18 @@ class DailyMissions extends Component {
 
   renderMission (effectiveTx, type) {
     const effectiveTxId = effectiveTx.length ? effectiveTx[0].tx_id : null;
+    const effectiveTxChainId = effectiveTx.length ? effectiveTx[0].chain_id : null;
     const hasAward = this.hasAward(type);
     const awardedButton =  <Button type="primary" disabled>Had awarded</Button>;
-    const awardButton = <Button type="primary" onClick={() => this.onGetAward(effectiveTxId, type)}>Collect</Button>;
+    const awardButton = <Button type="primary"
+                                onClick={() => this.onGetAward(effectiveTxId, type, effectiveTxChainId)}>Collect</Button>;
     const buttonShow = hasAward ? awardedButton : awardButton;
     return (
       <div>
         {effectiveTx.length
           ? <div>Effective transaction ID:&nbsp;&nbsp;&nbsp;
               <a target='_blank'
-                 href={`${EXPLORER_URL}/tx/${effectiveTxId}`}>
+                 href={`${CHAIN[effectiveTx[0].chain_id].EXPLORER_URL}/tx/${effectiveTxId}`}>
                 {effectiveTxId}
               </a>
             </div>
@@ -203,7 +206,7 @@ class DailyMissions extends Component {
           title='Task 1 Resource'>
           <div className='section-content'>
             <div>
-              During the event, you can collect 100 ELF test tokens each day through the resource token trading function.
+              During the event, you can collect 100 test tokens each day through the resource token trading function.
             </div>
             <a href={EXPLORER_URL + '/resource'} target='_blank'>Turn to aelf explorer</a>
             {this.renderMission(effectiveResourceTx, 'resource')}
@@ -216,7 +219,7 @@ class DailyMissions extends Component {
           hoverable
           title='Task 2 Token'>
           <div className='section-content swap-flex-wrap'>
-            <div>Rule：During the event, you can collect 100 ELF test tokens each day by transferring tokens. </div>
+            <div>Rule：During the event, you can collect 100 test tokens each day by transferring tokens. </div>
             <div>
               <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>
               <a href={WALLET_ANDROID_URL} target='_blank'>Android wallet, </a>

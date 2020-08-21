@@ -47,16 +47,16 @@ module.exports = class DailyController extends Controller {
 
   async getAward() {
     const { ctx } = this;
-    const { address, tx_id, type } = ctx.request.query;
+    const { address, tx_id, type, chain_id } = ctx.request.query;
     try {
-
       const keysRule = {
         address: 'string',
         tx_id: 'string',
         type: 'string',
+        chain_id: 'string'
       };
       const options = {
-        address, tx_id, type
+        address, tx_id, type, chain_id
       };
       ctx.validate(keysRule, options);
 

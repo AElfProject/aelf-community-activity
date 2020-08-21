@@ -50,5 +50,30 @@
     "TOKEN_ADDRESS": "0x730785d79D7f8E31BF0173E8396d92B42f019062",
     "LOCK_ADDRESS": "0x75312DA37A2Aff614CE3E04278702e5792EeDa5A",
     "MERKLE_ADDRESS": "0x460e1744b8F9b575a8b6718a79B4293a5B7AC45a"
+  },
+  "CHAIN": {
+    "AELF": {
+      "HTTP_PROVIDER": "http://1.119.195.50:11105/chain",
+      "HTTP_PROVIDER_INNER": "http://1.119.195.50:11105/chain",
+      "TOKEN_CONTRACT_ADDRESS": "JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE",
+      "CHAIN_ID": "AELF",
+      "TOKEN_DECIMAL": 8,
+      "EXPLORER_URL": "http://1.119.195.50:11104",
+      "WALLET_WEB_URL": "http://1.119.195.50:11105"
+    },
+    "tDVV": {
+      "HTTP_PROVIDER": "http://1.119.195.50:11109/chain",
+      "HTTP_PROVIDER_INNER": "http://1.119.195.50:11109/chain",
+      "TOKEN_CONTRACT_ADDRESS": "7RzVGiuVWkvL4VfVHdZfQF2Tri3sgLe9U991bohHFfSRZXuGX",
+      "CHAIN_ID": "tDVV",
+      "TOKEN_DECIMAL": 8,
+      "EXPLORER_URL": "http://1.119.195.50:11107",
+      "WALLET_WEB_URL": "http://1.119.195.50:11107"
+    }
+  },
+  "DAILY": {
+    "SYMBOL": "LOT",
+    "AMOUNT": 10000000000,
+    "DECIMAL": 8
   }
 }
