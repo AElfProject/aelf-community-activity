@@ -83,10 +83,12 @@ class Swap extends Component {
   }
 
   async componentDidMount() {
-    const { data: tutorial } = await getCommunityLink('swap');
-    this.setState({
-      tutorial
-    })
+    getCommunityLink('swap').then(result => {
+      const { data: tutorial } = result;
+      this.setState({
+        tutorial
+      })
+    });
 
     const {swapPairInformation} = this.state;
     getSwapPair().then(result => {
