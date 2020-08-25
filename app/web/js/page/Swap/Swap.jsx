@@ -20,7 +20,7 @@ import AElf from 'aelf-sdk';
 import { HTTP_PROVIDER, SWAP_PAIR } from '../../constant/constant';
 
 import TutorialList from '../../components/TutorialList';
-import { getLinkByType } from '../../utils/cmsUtils';
+import { getCommunityLink } from '../../utils/cmsUtils';
 
 import './Swap.less';
 
@@ -83,7 +83,7 @@ class Swap extends Component {
   }
 
   async componentDidMount() {
-    const { data: tutorial } = await getLinkByType('swap');
+    const { data: tutorial } = await getCommunityLink('swap');
     this.setState({
       tutorial
     })

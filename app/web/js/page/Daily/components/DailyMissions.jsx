@@ -14,7 +14,7 @@ import { EXPLORER_URL, WALLET_WEB_URL, WALLET_IOS_URL, WALLET_ANDROID_URL, CHAIN
 import addressFormat from '../../../utils/addressFormat';
 import { add } from '../../../actions/counter';
 
-import { getLinkByType } from '../../../utils/cmsUtils';
+import { getCommunityLink } from '../../../utils/cmsUtils';
 import TutorialList from '../../../components/TutorialList';
 
 function mapStateToProps(state) {
@@ -48,7 +48,7 @@ class DailyMissions extends Component {
   async componentDidMount() {
     this.getCountdown();
     this.getEffectiveTxs();
-    const { data: appData } = await getLinkByType('wallet');
+    const { data: appData } = await getCommunityLink('wallet');
     console.log(appData)
     this.setState({
       appData

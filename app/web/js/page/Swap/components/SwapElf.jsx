@@ -46,7 +46,7 @@ export default class SwapElf extends React.Component{
       .then(res => {
         const { data } = res;
 
-        const swapTest = data.find(item => item.type === 'swapTest');
+        const swapTest = data.find(item => item.type === 'swapTest') || {};
 
         this.setState({
           swapTest

@@ -8,6 +8,7 @@ import AwardHistory from './pages/AwardHistory';
 import LotteryDraw from './pages/LotteryDraw';
 import GrandPrize from './pages/GrandPrize';
 import PersonalDraw from './pages/PersonalDraw';
+import Referendum from './pages/Referendum';
 import './Lottery.less';
 
 import { connect } from 'react-redux';
@@ -20,7 +21,7 @@ import axios from '../../service/axios';
 import { GET_CMS_PRIZE_LIST } from '../../constant/apis';
 
 import TutorialList from '../../components/TutorialList';
-import { getLinkByType } from '../../utils/cmsUtils';
+import { getCommunityLink, getLottertReferendumsInfo } from '../../utils/cmsUtils';
 
 function mapStateToProps(state) {
   return {
@@ -56,19 +57,38 @@ class Lottery extends Component {
           swappedAmount: 0,
         }
       },
-      tutorial: []
+      tutorial: [],
+      referendumInfo: {
+        isShow: false,
+        start: '',
+        end: '',
+        communityLink: {
+          instruction: {},
+          proposal_1: {},
+          proposal_2: {}
+        }
+      }
     };
     this.tokenContract = new TokenContract();
     this.getCurrentPeriodNumber = this.getCurrentPeriodNumber.bind(this);
   }
 
   componentDidMount() {
-    getLinkByType('lottery')
+    getCommunityLink('lottery')
       .then((res) => {
         this.setState({
           tutorial: res.data
         })
       })
+
+    getLottertReferendumsInfo()
+      .then(res => {
+        if (res.data[0]) {
+          this.setState({
+            referendumInfo: res.data[0]
+          });
+        }
+      });
 
     this.getSwapPair();
     this.getCurrentPeriodNumber();
@@ -114,7 +134,7 @@ class Lottery extends Component {
     const {accountInfo} = account;
     const {address} = accountInfo;
 
-    const {swapInfo, currentPeriodNumber, prizeInfo, tutorial} = this.state;
+    const {swapInfo, currentPeriodNumber, prizeInfo, tutorial, referendumInfo} = this.state;
     const { grandPrize, grandPrizeAmount } = prizeInfo[0];
 
     return (
@@ -130,6 +150,8 @@ class Lottery extends Component {
                 swapInfo={swapInfo}
                 currentPeriodNumber={currentPeriodNumber}
               />
+              {referendumInfo.isShow && <div className='next-card-blank'/>}
+              {referendumInfo.isShow && <Referendum grandPrizeAmount={parseInt(grandPrizeAmount)} info={referendumInfo}/>}
               {grandPrize && <div className='next-card-blank'/>}
               {grandPrize && <GrandPrize grandPrizeAmount={grandPrizeAmount}/>}
               <div className='next-card-blank'/>

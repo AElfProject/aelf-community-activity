@@ -16,7 +16,7 @@ import { bindActionCreators} from 'redux';
 import * as ActionsAccount from '../../actions/account';
 
 import TutorialList from '../../components/TutorialList';
-import { getLinkByType } from '../../utils/cmsUtils';
+import { getCommunityLink } from '../../utils/cmsUtils';
 
 function mapStateToProps(state) {
   return {
@@ -40,7 +40,7 @@ class Daily extends Component {
   }
 
   async componentDidMount() {
-    const { data: tutorial } = await getLinkByType('tasks');
+    const { data: tutorial } = await getCommunityLink('tasks');
     this.setState({
       tutorial
     });
