@@ -8,6 +8,7 @@ import AwardHistory from './pages/AwardHistory';
 import LotteryDraw from './pages/LotteryDraw';
 import GrandPrize from './pages/GrandPrize';
 import PersonalDraw from './pages/PersonalDraw';
+import Referendum from './pages/Referendum';
 import './Lottery.less';
 
 import { connect } from 'react-redux';
@@ -18,6 +19,9 @@ import Contract from '../../utils/Contract';
 import { LOTTERY } from '../../constant/constant';
 import axios from '../../service/axios';
 import { GET_CMS_PRIZE_LIST } from '../../constant/apis';
+
+import TutorialList from '../../components/TutorialList';
+import { getCommunityLink, getLottertReferendumsInfo } from '../../utils/cmsUtils';
 
 function mapStateToProps(state) {
   return {
@@ -53,12 +57,39 @@ class Lottery extends Component {
           swappedAmount: 0,
         }
       },
+      tutorial: [],
+      referendumInfo: {
+        isShow: false,
+        start: '',
+        end: '',
+        communityLink: {
+          instruction: {},
+          proposal_1: {},
+          proposal_2: {}
+        }
+      }
     };
     this.tokenContract = new TokenContract();
     this.getCurrentPeriodNumber = this.getCurrentPeriodNumber.bind(this);
   }
 
   componentDidMount() {
+    getCommunityLink('lottery')
+      .then((res) => {
+        this.setState({
+          tutorial: res.data
+        })
+      })
+
+    getLottertReferendumsInfo()
+      .then(res => {
+        if (res.data[0]) {
+          this.setState({
+            referendumInfo: res.data[0]
+          });
+        }
+      });
+
     this.getSwapPair();
     this.getCurrentPeriodNumber();
     this.getPrizeList();
@@ -103,20 +134,24 @@ class Lottery extends Component {
     const {accountInfo} = account;
     const {address} = accountInfo;
 
-    const {swapInfo, currentPeriodNumber, prizeInfo} = this.state;
+    const {swapInfo, currentPeriodNumber, prizeInfo, tutorial, referendumInfo} = this.state;
     const { grandPrize, grandPrizeAmount } = prizeInfo[0];
 
     return (
       <div>
         <div className='basic-blank'/>
         <div className='basic-container lottery-container'>
-          <Tabs defaultActiveKey="1" tabBarExtraContent={<a href='#' target='_blank'>Lottery Tutorial</a>}>
+          <Tabs defaultActiveKey="1" tabBarExtraContent={
+            <TutorialList list={tutorial} />
+          }>
             <TabPane tab="Lottery Draw" key="1">
               <LotteryDraw
                 prizeInfo={prizeInfo}
                 swapInfo={swapInfo}
                 currentPeriodNumber={currentPeriodNumber}
               />
+              {referendumInfo.isShow && <div className='next-card-blank'/>}
+              {referendumInfo.isShow && <Referendum grandPrizeAmount={parseInt(grandPrizeAmount)} info={referendumInfo}/>}
               {grandPrize && <div className='next-card-blank'/>}
               {grandPrize && <GrandPrize grandPrizeAmount={grandPrizeAmount}/>}
               <div className='next-card-blank'/>

@@ -4,6 +4,9 @@ import { Button, Form, Input, Select, Modal, message, Card } from 'antd';
 import { NightElfCheck } from '../../../utils/NightElf/NightElf';
 import { LOGIN_INFO, LOTTERY } from '../../../constant/constant';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
+import { GET_CRTOPT_ADDRESS } from '../../../constant/apis';
+import axios from '../../../service/axios';
+
 const { Option } = Select;
 const layout = {
   labelCol: { span: 6 },
@@ -48,6 +51,8 @@ export default class LotteryAward extends Component {
     const {rewardInput} = this.state;
     const {lotteryId, period, registrationInformation} = rewardInput;
 
+    const { data: { address:crytoyRegTrationInfo }} = await axios(`${GET_CRTOPT_ADDRESS}?address=${registrationInformation}`)
+
     const { address } = this.props;
     if (address) {
       try {
@@ -59,7 +64,7 @@ export default class LotteryAward extends Component {
 
         const takeRewardResult = await lotteryContract.TakeReward({
           lotteryId: parseInt(lotteryId, 10),
-          registrationInformation: registrationInformation + '',
+          registrationInformation: crytoyRegTrationInfo + '',
           period: parseInt(period, 10),
         });
 

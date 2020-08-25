@@ -28,7 +28,8 @@
     "redux-immutablejs": "^0.0.8",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "web3": "^1.2.6"
+    "web3": "^1.2.6",
+    "xlsx": "^0.16.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",
@@ -72,8 +73,8 @@
   "scripts": {
     "start": "egg-scripts start --daemon --title=egg-server-aelf-community-activity --port=7100",
     "stop": "egg-scripts stop --title=egg-server-aelf-community-activity",
-    "watch:dev": "npm run clean && webpack --progress --colors --display-chunks --config ./build/webpack.dev.js -w",
-    "build:dev": "npm run clean && webpack --progress --colors --display-chunks --config ./build/webpack.dev.js",
+    "watch:dev": "npm run clean && webpack --progress --colors --display-chunks --config ./build/webpack.dev.js -w  --devtool eval-source-map",
+    "build:dev": "npm run clean && webpack --progress --colors --display-chunks --config ./build/webpack.dev.js  --devtool eval-source-map",
     "build": "npm run clean && webpack --progress --colors --display-chunks --config ./build/webpack.prod.js",
     "clean": "rimraf app/public/*",
     "dev": "egg-bin dev --port=7100",

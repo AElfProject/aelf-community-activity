@@ -19,6 +19,9 @@ import { GET_SWAP_HISTORY } from '../../constant/apis';
 import AElf from 'aelf-sdk';
 import { HTTP_PROVIDER, SWAP_PAIR } from '../../constant/constant';
 
+import TutorialList from '../../components/TutorialList';
+import { getCommunityLink } from '../../utils/cmsUtils';
+
 import './Swap.less';
 
 
@@ -69,7 +72,8 @@ class Swap extends Component {
       },
       swapPairInformation: {}, // swapPairInformation: {ELF: swapPairInfo, LOT: swapPairInfo, ...}
       swapHistory: [],
-      web3PluginInstance: {}
+      web3PluginInstance: {},
+      tutorial: []
     };
 
     this.aelf = new AElf(new AElf.providers.HttpProvider(HTTP_PROVIDER));
@@ -79,6 +83,11 @@ class Swap extends Component {
   }
 
   async componentDidMount() {
+    const { data: tutorial } = await getCommunityLink('swap');
+    this.setState({
+      tutorial
+    })
+
     const {swapPairInformation} = this.state;
     getSwapPair().then(result => {
       if (result) {
@@ -259,7 +268,7 @@ class Swap extends Component {
 
   render() {
 
-    const {swapInfo, swapPairInfo, swapHistory, web3PluginInstance} = this.state;
+    const {swapInfo, swapPairInfo, swapHistory, web3PluginInstance, tutorial} = this.state;
     // const { account } = this.props;
 
     const swapInfoHTML = renderSwapInfo(JSON.parse(JSON.stringify(swapInfo)));
@@ -276,10 +285,7 @@ class Swap extends Component {
       <div>
         <div className='basic-blank'/>
         <Tabs defaultActiveKey="1" tabBarExtraContent={
-          <div>
-            <a href='/#' target='_blank'>Token Swap Rules</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-            <a href='/#' target='_blank'>Token Swap Tutorial</a>
-          </div>
+          <TutorialList list={tutorial}/>
         }>
           <TabPane tab="Token Swap" key="1">
 

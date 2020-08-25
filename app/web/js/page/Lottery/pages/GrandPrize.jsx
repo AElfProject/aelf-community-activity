@@ -42,7 +42,7 @@ export default class GrandPrize extends Component{
     this.setState({
       prizeErrorShow: false,
       prizeInfoShow: true,
-      prizeInfo: `Prize Weight: ${percent * 100}%              Prize Amount: ${prizeAmount} ELF`,
+      prizeInfo: `Prize Weight: ${(percent * 100).toFixed(2)}%              Prize Amount: ${prizeAmount.toFixed(2)} ELF`,
       boughtInfo
     });
   }
