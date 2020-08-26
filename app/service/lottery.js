@@ -7,24 +7,15 @@ const {
   Service
 } = require('egg');
 
-const lotteryContract = require('../utils/lotteryContract');
+const lotteryUtil = require('../utils/lotteryUtil');
 
 module.exports = class LotteryService extends Service {
 
   async getBoughtLotteries(options) {
-    const lotteryContractInstance = await lotteryContract.getLotteryContractInstance();
+    const lotteryUtilInstance = lotteryUtil.getLotteryUtilInstance();
 
-    const lotteries = await lotteryContractInstance.GetBoughtLotteries.call({
-      owner: options.owner,
-      period: 0,
-      startId: -1
-    });
-
-    const allLotteriesCount = await lotteryContractInstance.GetAllLotteriesCount.call();
-    return {
-      currentAddress: lotteries ? lotteries.lotteries.length : 0,
-      total: Number.parseInt(allLotteriesCount.value, 10)
-    };
+    const data = await lotteryUtilInstance.getBoughtLotteriesOfAddress({ owner: options.owner });
+    return data;
 
     // const periodNumber = await lotteryContractInstance.GetCurrentPeriodNumber.call();
     // const currentPeriodNumber = periodNumber.value;
