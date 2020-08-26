@@ -6,6 +6,7 @@
 
 const { Controller } = require('egg');
 const formatOutput = require('../utils/formatOutput.js');
+const { EXPORT_FILE_TOKEN } = require('../../config/config.forserveronly.json');
 
 module.exports = class TxsController extends Controller {
 
@@ -30,6 +31,28 @@ module.exports = class TxsController extends Controller {
       ctx.validate(keysRule, options);
 
       const result = await ctx.service.txs.getSwapHistory(options);
+      formatOutput(ctx, 'get', result);
+
+      
+    } catch (error) {
+      formatOutput(ctx, 'error', error, 422);
+    }
+  }
+
+  async exportPeroidInfoFile() {
+    const { ctx } = this;
+
+    try {
+      const { token } = ctx.request.query;
+      if (token !==  EXPORT_FILE_TOKEN) {
+        throw new Error('Token verification error！')
+      }
+
+      const result = await ctx.service.txs.exportPeroidInfoFile();
+
+      this.ctx.attachment('开奖信息.xlsx');
+      this.ctx.set('Content-Type', 'application/octet-stream');
+
       formatOutput(ctx, 'get', result);
     } catch (error) {
       formatOutput(ctx, 'error', error, 422);

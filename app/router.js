@@ -16,4 +16,6 @@ module.exports = app => {
   router.get('/api/lottery/bought-lotteries', controller.lottery.getBoughtLotteries);
 
   router.get('/api/crypto/cryptoAddress', controller.crypto.getCryproDatafromAddress);
+
+  router.get('/api/txs/exportPeroidInfoFile', controller.txs.exportPeroidInfoFile);
 };
