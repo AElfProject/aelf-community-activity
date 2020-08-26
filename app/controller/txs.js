@@ -5,6 +5,7 @@
  */
 
 const { Controller } = require('egg');
+const XLSX = require('xlsx');
 const formatOutput = require('../utils/formatOutput.js');
 
 module.exports = class TxsController extends Controller {
@@ -30,6 +31,23 @@ module.exports = class TxsController extends Controller {
       ctx.validate(keysRule, options);
 
       const result = await ctx.service.txs.getSwapHistory(options);
+      formatOutput(ctx, 'get', result);
+
+      
+    } catch (error) {
+      formatOutput(ctx, 'error', error, 422);
+    }
+  }
+
+  async exportPeroidInfoFile() {
+    const { ctx } = this;
+
+    try {
+      const result = await ctx.service.txs.exportPeroidInfoFile();
+
+      this.ctx.attachment('fileName.xlsx');
+      this.ctx.set('Content-Type', 'application/octet-stream');
+
       formatOutput(ctx, 'get', result);
     } catch (error) {
       formatOutput(ctx, 'error', error, 422);

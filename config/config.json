@@ -75,5 +75,6 @@
     "SYMBOL": "LOT",
     "AMOUNT": 10000000000,
     "DECIMAL": 8
-  }
+  },
+  "CMS": "https://cms.aelf.io"
 }
