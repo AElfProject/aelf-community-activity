@@ -1,4 +1,7 @@
 {
   "AWARD_PRIVATE": "f6e512a3c259e5f9af981d7f99d245aa5bc52fe448495e0b0dd56e8406be6f71",
-  "AES_KEY": "sdktnm1234asdkadjkiowelsjdjie"
+  "AES_KEY": "sdktnm1234asdkadjkiowelsjdjie",
+  "CMS": "https://cms.aelf.io",
+  "EXPORT_FILE_TOKEN": "f6aef9b2f0e49025e0b1ddec2b320f4c20d21aa5900cbcac6b130429b80594c3",
+  "EXPORT_FILE_FORM_SQL": "aelf0"
 }
