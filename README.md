@@ -27,6 +27,7 @@ config/config.default.js -> config.sequelize
 ```
 
 ```bash
+yarn
 npm run create-db # dev: npm run create-db:dev
 npm run migrate # dev: npm run migrate:dev
 # npm run undo-all

@@ -33,7 +33,6 @@ module.exports = class TxsController extends Controller {
       const result = await ctx.service.txs.getSwapHistory(options);
       formatOutput(ctx, 'get', result);
 
-      
     } catch (error) {
       formatOutput(ctx, 'error', error, 422);
     }

@@ -48,11 +48,11 @@ class DailyMissions extends Component {
   async componentDidMount() {
     this.getCountdown();
     this.getEffectiveTxs();
-    const { data: appData } = await getCommunityLink('wallet');
-    console.log(appData)
-    this.setState({
-      appData
-    })
+    // const { data: appData } = await getCommunityLink('wallet');
+    // console.log(appData)
+    // this.setState({
+    //   appData
+    // })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {

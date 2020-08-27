@@ -1,4 +1,4 @@
-import { GET_CMS_COMMUNITY_LINKS, GET_CMS_AVAILABLE_TIMES, GET_CMS_LOTTERT_REFERENDUM_TIMES } from '../constant/apis';
+import { GET_CMS_COMMUNITY_LINKS, GET_CMS_AVAILABLE_TIMES, GET_CMS_LOTTERY_REFERENDUM_TIMES } from '../constant/apis';
 import axios from '../service/axios';
 
 export const getCommunityLink = type => {
@@ -9,6 +9,6 @@ export const getAvailableTime = type => {
   return axios.get(`${GET_CMS_AVAILABLE_TIMES}?open=true${type ? `&type=${type}` : ''}`);
 }
 
-export const getLottertReferendumsInfo = () => {
-  return axios.get(`${GET_CMS_LOTTERT_REFERENDUM_TIMES}`);
+export const getLotteryReferendumsInfo = () => {
+  return axios.get(`${GET_CMS_LOTTERY_REFERENDUM_TIMES}`);
 };
