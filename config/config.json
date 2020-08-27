@@ -10,7 +10,7 @@
   "TOKEN_DECIMAL": 8,
   "EXPLORER_URL": "http://1.119.195.50:11104",
   "WALLET_WEB_URL": "http://1.119.195.50:11105",
-  "WALLET_IOS_URL": "http://d.firim.info/aelfwalletios",
+  "WALLET_IOS_URL": "https://testflight.apple.com/join/TclFysmO",
   "WALLET_ANDROID_URL": "http://d.alphaqr.com/aelfwalletandroid",
   "ADDRESS_INFO": {
     "prefix": "ELF",

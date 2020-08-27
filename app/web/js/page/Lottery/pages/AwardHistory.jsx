@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Card, Table } from 'antd';
+import moment from 'moment';
 import Contract from '../../../utils/Contract';
 import addressFormat from '../../../utils/addressFormat';
 import { LOTTERY } from '../../../constant/constant';
@@ -32,6 +33,9 @@ const awardHistoryColumns = [
     width: 150,
   }
 ];
+
+let aelfContract = null;
+let lotteryContractInstance = null;
 
 export default class AwardHistory extends Component{
   constructor(props) {
@@ -88,16 +92,24 @@ export default class AwardHistory extends Component{
     const { currentPeriodNumber } = this.props;
 
     const promiseList = [];
+    const { rewardResults } = this.state;
+    // const getPeriodDetailPromiseList = [];
     for (let index = 1; index < currentPeriodNumber; index++) {
       promiseList.push(getRewardResultByPeriod(index).then(rewardResult => {
-        const { rewardResults } = this.state;
+        // const { rewardResults } = this.state;
         const reverseIndex = currentPeriodNumber - 1 - index;
         if (rewardResult) {
           rewardResults[reverseIndex] = rewardResult;
         }
-        // If network is not ok, update every time.
-        this.setState({
+        // console.log('rewardResults', rewardResults);
+
+        getPeriodDetail(index).then(periodInfomation => {
+          if (periodInfomation) {
+            rewardResults[reverseIndex].info = periodInfomation;
+          }
+          this.setState({
             rewardResults: rewardResults.length ? rewardResults : []
+          });
         });
       }).catch(e => {
         message.error(`Get ${index} period reward result failed.`);
@@ -108,21 +120,30 @@ export default class AwardHistory extends Component{
       // console.log('updateRandomHashBelongsToCurrentAddress');
       this.updateRandomHashBelongsToCurrentAddress();
     }).catch(e => {
-      message.error(e.message || 'Update random hash failed.');
+      message.error(e && e.message || 'Update random hash failed.');
       // console.log('updateRandomHashBelongsToCurrentAddress e', e);
     });
   }
 
-  renderHistoryPeriod(rewardResult) {
-    const {rewardLotteries, period, randomHash} = rewardResult;
+  renderHistoryPeriod(rewardResult, theLast = false) {
+    const { rewardLotteries, period, randomHash, info } = rewardResult;
+    const { actualDrawDate, supposedDrawDate } = info || {};
 
     if (!period || !randomHash) {
       return null;
     }
 
+    const timestampInUse = theLast ? supposedDrawDate : actualDrawDate;
+    const prefixInUse = theLast ? 'Supposed draw date: ' : 'Draw date: ';
+    const format = 'YYYY-MM-DD HH:mm:ss';
+    const timeShow = prefixInUse +
+      (!!timestampInUse ? moment.utc(new Date(timestampInUse.seconds * 1000)).local().format(format) : 'Not found');
+
     return (<div key={randomHash}>
       {/*<div className='history-period'>{timeFormatted}</div>*/}
-      <div className='history-period'>Period: {period} &nbsp;&nbsp;&nbsp; Random Hash: {randomHash}</div>
+      <div className='history-period'>Period: {period} &nbsp;&nbsp;&nbsp;
+        {timeShow}  &nbsp;&nbsp;&nbsp;
+        Random Hash: {randomHash}</div>
       <Table
         dataSource={rewardLotteries}
         columns={awardHistoryColumns}
@@ -136,7 +157,7 @@ export default class AwardHistory extends Component{
   renderHistoryPeriods() {
     const {rewardResults} = this.state;
 
-    return rewardResults.map(rewardResult => {
+    return rewardResults.map((rewardResult) => {
       return this.renderHistoryPeriod(rewardResult);
     });
   }
@@ -183,9 +204,29 @@ async function getRewardResultByPeriod(period) {
   //   period: '2',
   //   randomHash: '40479c107111c9966d5c55ff4978875974e2cef572a628438270f164f8779065'
   // }
-  const aelfContract = new Contract();
-  const lotteryContractInstance = await aelfContract.getContractInstance(LOTTERY.CONTRACT_ADDRESS);
+  if (!aelfContract) {
+    aelfContract = new Contract();
+  }
+  if (!lotteryContractInstance) {
+    lotteryContractInstance = await aelfContract.getContractInstance(LOTTERY.CONTRACT_ADDRESS);
+  }
+  // const aelfContract = new Contract();
+  // const lotteryContractInstance = await aelfContract.getContractInstance(LOTTERY.CONTRACT_ADDRESS);
   return lotteryContractInstance.GetRewardResult.call({
     value: period
   });
+}
+
+async function getPeriodDetail(period) {
+  if (!aelfContract) {
+    aelfContract = new Contract();
+  }
+  if (!lotteryContractInstance) {
+    lotteryContractInstance = await aelfContract.getContractInstance(LOTTERY.CONTRACT_ADDRESS);
+  }
+
+  return lotteryContractInstance.GetPeriod.call({
+    value: period
+  });
+
 }

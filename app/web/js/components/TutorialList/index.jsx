@@ -9,10 +9,9 @@ function TutorialList({ list }) {
     <div className={classPreix}>
       {
         list.map(item => (
-          <span className={`${classPreix}-item`}>
+          <span className={`${classPreix}-item`} key={item.link}>
             <a
               href={item.link}
-              key={item.link}
               target="_blank"
             >
               {item.name}

@@ -21,7 +21,7 @@ import axios from '../../service/axios';
 import { GET_CMS_PRIZE_LIST } from '../../constant/apis';
 
 import TutorialList from '../../components/TutorialList';
-import { getCommunityLink, getLottertReferendumsInfo } from '../../utils/cmsUtils';
+import { getCommunityLink, getLotteryReferendumsInfo } from '../../utils/cmsUtils';
 
 function mapStateToProps(state) {
   return {
@@ -81,7 +81,7 @@ class Lottery extends Component {
         })
       })
 
-    getLottertReferendumsInfo()
+    getLotteryReferendumsInfo()
       .then(res => {
         if (res.data[0]) {
           this.setState({
