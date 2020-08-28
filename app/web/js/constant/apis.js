@@ -4,7 +4,8 @@ const GET_SWAP_HISTORY = '/api/swap/history';
 const GET_AWARD_HISTORY = '/api/daily/award-history';
 const GET_AWARD = '/api/daily/award-id';
 const GET_BOUGHT_LOTTERIES = '/api/lottery/bought-lotteries';
-const GET_CRTOPT_ADDRESS = '/api/crypto/cryptoAddress'
+const GET_CRYPTO_ADDRESS = '/api/crypto/crypto-address';
+const POST_DECRYPT_LIST = '/api/crypto/decrypt-list';
 
 const GET_CMS_PRIZE_LIST = '/cms/api/community-lotteries';
 const GET_CMS_COMMUNITY_LINKS = '/cms/api/community-links';
@@ -18,7 +19,9 @@ export {
   GET_AWARD_HISTORY,
   GET_AWARD,
   GET_BOUGHT_LOTTERIES,
-  GET_CRTOPT_ADDRESS,
+  GET_CRYPTO_ADDRESS,
+  POST_DECRYPT_LIST,
+
   GET_CMS_PRIZE_LIST,
   GET_CMS_COMMUNITY_LINKS,
   GET_CMS_AVAILABLE_TIMES,

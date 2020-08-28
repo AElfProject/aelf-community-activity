@@ -38,7 +38,7 @@ module.exports = class TxsController extends Controller {
     }
   }
 
-  async exportPeroidInfoFile() {
+  async exportPeriodInfoFile() {
     const { ctx } = this;
 
     try {
@@ -46,9 +46,7 @@ module.exports = class TxsController extends Controller {
       if (token !==  EXPORT_FILE_TOKEN) {
         throw new Error('Token verification error！')
       }
-
-      const result = await ctx.service.txs.exportPeroidInfoFile();
-
+      const result = await ctx.service.txs.exportPeriodInfoFile();
       this.ctx.attachment('开奖信息.xlsx');
       this.ctx.set('Content-Type', 'application/octet-stream');
 
