@@ -1,6 +1,7 @@
 /* From start */
 import React, { Component } from 'react';
 import { Table, InputNumber, Button, message, Card } from 'antd';
+import axios from '../../../service/axios';
 
 import {NightElfCheck} from '../../../utils/NightElf/NightElf';
 import addressFormat from '../../../utils/addressFormat';
@@ -8,6 +9,7 @@ import { LOGIN_INFO, LOTTERY, TOKEN_CONTRACT_ADDRESS, EXPLORER_URL, TOKEN_DECIMA
 import TokenContract from '../../../utils/tokenContract';
 import Contract from '../../../utils/Contract';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
+import { POST_DECRYPT_LIST } from '../../../constant/apis';
 
 const columns = [
   {
@@ -37,8 +39,10 @@ const columns = [
   },
   {
     title: 'Registration Information (After Draw)',
-    dataIndex: 'registrationInformation',
-    key: 'registrationInformation',
+    // dataIndex: 'registrationInformation',
+    dataIndex: 'decryptInfo',
+    // key: 'registrationInformation',
+    key: 'decryptInfo',
     width: 300
   },
 ];
@@ -127,6 +131,26 @@ export default class PersonalDraw extends Component{
     });
   }
 
+  async decryptBoughtLotteries(boughtLotteriesReversed) {
+    const registrationInformationList = boughtLotteriesReversed.map(item => {
+      return item.registrationInformation;
+    });
+    const decryptedList = (await axios.post(POST_DECRYPT_LIST, {
+      encryptedList: registrationInformationList
+    })).data || [];
+
+    decryptedList.forEach((item, index) => {
+      if (!!item) {
+        boughtLotteriesReversed[index].decryptInfo = item;
+      }
+    });
+
+    this.setState({
+      boughtLotteries: boughtLotteriesReversed,
+      historyLoading: false
+    });
+  }
+
   async getBoughtLotteries(startId = -1, clearPre = true) {
     // const {currentPeriodNumber} = this.props;
     const { address } = this.props;
@@ -154,11 +178,14 @@ export default class PersonalDraw extends Component{
     });
 
     const boughtLotteries = boughtLotteriesResult.result && boughtLotteriesResult.result.lotteries || [];
+    const boughtLotteriesReversed = clearPre ? boughtLotteries.reverse() : [...boughtLotteries.reverse(), ...boughtLotteriesPre];
 
-    this.setState({
-      boughtLotteries: clearPre ? boughtLotteries.reverse() : [...boughtLotteries.reverse(), ...boughtLotteriesPre],
-      historyLoading: false
-    });
+    await this.decryptBoughtLotteries(boughtLotteriesReversed);
+
+    // this.setState({
+    //   boughtLotteries: boughtLotteriesReversed,
+    //   historyLoading: false
+    // });
 
     if (boughtLotteries.length === 20) {
       const newStartId = boughtLotteries[0].id;

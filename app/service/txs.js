@@ -41,20 +41,20 @@ module.exports = class TxsService extends Service {
     return '(￣ε(#￣)☆╰╮(￣▽￣///)';
   }
 
-  async exportPeroidInfoFile() {
+  async exportPeriodInfoFile() {
     const mysql = this.ctx.app.mysql.get(EXPORT_FILE_FORM_SQL);
-    
+
     // Get the addresses of all participating events
     const getPrizeAmountDetailSql = `select distinct address_from from transactions_0 where address_to=? and method='Buy';`
     const addressFormResult = await mysql.query(getPrizeAmountDetailSql, LOTTERY.CONTRACT_ADDRESS);
     const address = addressFormResult.map(item => item.address_from);
-    
+
     const lotteryUtilInstance = lotteryUtil.getLotteryUtilInstance();
     const currentPeriod = await lotteryUtilInstance.getCurrentPeroidNumber();
     // get preoid list from 0 to lastPeriod
     const periodInfoArr = await lotteryUtilInstance.getRewardResultByPeriods(1, parseInt(currentPeriod, 10));
 
-    // grand prize data list 
+    // grand prize data list
     const grandPrizeDataList = [];
     const { grandPrizeAmount } = (await this.ctx.curl(`${CMS}/community-lotteries`, { method: 'GET', dataType: 'json' })).data[0];
     const lotteryDataPromise = [];
@@ -62,7 +62,7 @@ module.exports = class TxsService extends Service {
     for (const item of address)  {
       lotteryDataPromise.push(lotteryUtilInstance.getBoughtLotteriesOfAddress({
         owner: item
-      }))
+      }));
     }
 
     const lotteryData = await Promise.all(lotteryDataPromise);
@@ -72,19 +72,25 @@ module.exports = class TxsService extends Service {
         period: item.period,
         present: (item.currentAddress / item.total * 100).toFixed(2),
         prizeAmount: (item.currentAddress / item.total * grandPrizeAmount).toFixed(2)
-      }
+      };
 
       grandPrizeDataList.push(grandItem);
-    })
+    });
 
     const wb = utils.book_new();
 
     // add grand prize into excel
     const grandPrizeWs = utils.json_to_sheet(grandPrizeDataList);
     utils.book_append_sheet(wb, grandPrizeWs, `终极大奖详情`);
-
     periodInfoArr.forEach(item => {
-      item.registrationInformation_descrypt = Wallet.AESDecrypt(item.registrationInformation, AES_KEY);
+      if (!item) {
+        return;
+      }
+      try {
+        item.registrationInformation_descrypt = Wallet.AESDecrypt(item.registrationInformation, AES_KEY);
+      } catch(e) {
+        item.registrationInformation_descrypt = 'Decrypt data failed.';
+      }
     });
 
     // add every period info into excel

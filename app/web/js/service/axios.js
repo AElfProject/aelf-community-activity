@@ -5,7 +5,7 @@
  */
 import axios from 'axios';
 import {message} from 'antd';
-// import Cookies from 'js-cookie'
+import Cookies from 'js-cookie'
 
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {
@@ -30,4 +30,11 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
-export default axios;
+const instance = axios.create({
+  timeout: 6666,
+  headers: {
+    'x-csrf-token': Cookies.get('csrfToken')
+  }
+});
+// export default axios;
+export default instance;
