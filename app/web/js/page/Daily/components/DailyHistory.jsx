@@ -9,21 +9,24 @@ export default function renderDailyHistory(props) {
 
   const columns = [
     {
+      title: 'Award Id',
+      dataIndex: 'award_id',
+      key: 'award_id',
+      textWrap: 'word-break',
+      fixed: 'left',
+      width: 200,
+      render: text => <a target='_blank' href={`${EXPLORER_URL}/tx/${text}`}>{text}</a>
+    },
+    {
       title: 'Tx Id',
       dataIndex: 'tx_id',
       key: 'tx_id',
-      width: 270,
+      textWrap: 'word-break',
+      width: 200,
       render: (text, record) => {
         let chainId = record.chain_id || 'AELF';
         return <a target='_blank' href={`${CHAIN[chainId].EXPLORER_URL}/tx/${text}`}>{text}</a>
       }
-    },
-    {
-      title: 'Award Id',
-      dataIndex: 'award_id',
-      key: 'award_id',
-      width: 270,
-      render: text => <a target='_blank' href={`${EXPLORER_URL}/tx/${text}`}>{text}</a>
     },
     {
       title: 'type',
@@ -34,7 +37,7 @@ export default function renderDailyHistory(props) {
     {
       title: 'chain',
       dataIndex: 'chain_id',
-      width: 70,
+      width: 64,
       key: 'chain_id',
     },
     {
