@@ -7,8 +7,15 @@ import axios from 'axios';
 import {message} from 'antd';
 import Cookies from 'js-cookie'
 
+const instance = axios.create({
+  timeout: 6666,
+  headers: {
+    'x-csrf-token': Cookies.get('csrfToken')
+  }
+});
+
 // Add a request interceptor
-axios.interceptors.request.use(function (config) {
+instance.interceptors.request.use(function (config) {
   // Do something before request is sent
   return config;
 }, function (error) {
@@ -18,7 +25,7 @@ axios.interceptors.request.use(function (config) {
 });
 
 // Add a response interceptor
-axios.interceptors.response.use(function (response) {
+instance.interceptors.response.use(function (response) {
   // Any status code that lie within the range of 2xx cause this function to trigger
   // Do something with response data
   return response;
@@ -28,13 +35,6 @@ axios.interceptors.response.use(function (response) {
   const errorMsg = error.response.data && error.response.data.message;
   message.error(errorMsg || error.message || 'Response error');
   return Promise.reject(error);
-});
-
-const instance = axios.create({
-  timeout: 6666,
-  headers: {
-    'x-csrf-token': Cookies.get('csrfToken')
-  }
 });
 // export default axios;
 export default instance;
