@@ -31,6 +31,10 @@ yarn
 npm run create-db # dev: npm run create-db:dev
 npm run migrate # dev: npm run migrate:dev
 # npm run undo-all
+
+# if you want add a new column or create new Table.
+# Go to https://sequelize.org/v5/manual/migrations.html
+# Create a new migration and npm run migrate is ok.
 ```
 
 ### Config

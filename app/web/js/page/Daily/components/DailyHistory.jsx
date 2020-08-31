@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Card, Table } from 'antd';
-import { EXPLORER_URL, DAILY } from '../../../constant/constant';
+import { EXPLORER_URL, DAILY, CHAIN } from '../../../constant/constant';
 
 export default function renderDailyHistory(props) {
 
@@ -12,14 +12,17 @@ export default function renderDailyHistory(props) {
       title: 'Tx Id',
       dataIndex: 'tx_id',
       key: 'tx_id',
-      width: 310,
-      render: text => <a target='_blank' href={`${EXPLORER_URL}/tx/${text}`}>{text}</a>
+      width: 270,
+      render: (text, record) => {
+        let chainId = record.chain_id || 'AELF';
+        return <a target='_blank' href={`${CHAIN[chainId].EXPLORER_URL}/tx/${text}`}>{text}</a>
+      }
     },
     {
       title: 'Award Id',
       dataIndex: 'award_id',
       key: 'award_id',
-      width: 310,
+      width: 270,
       render: text => <a target='_blank' href={`${EXPLORER_URL}/tx/${text}`}>{text}</a>
     },
     {
@@ -27,6 +30,12 @@ export default function renderDailyHistory(props) {
       dataIndex: 'type',
       width: 100,
       key: 'type',
+    },
+    {
+      title: 'chain',
+      dataIndex: 'chain_id',
+      width: 70,
+      key: 'chain_id',
     },
     {
       title: 'Award',
