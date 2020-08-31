@@ -217,7 +217,8 @@ class DailyMissions extends Component {
             <div>
               During the event, you can collect 100 test tokens each day through the resource token trading function.
             </div>
-            <a href={EXPLORER_URL + '/resource'} target='_blank'>Turn to aelf explorer</a>
+            {/*<a href={EXPLORER_URL + '/resource'} target='_blank'>Turn to aelf explorer</a>*/}
+            <a href={CHAIN.AELF.EXPLORER_URL + '/resource'} target='_blank'>Turn to aelf explorer</a>
             {this.renderMission(effectiveResourceTx, 'resource')}
           </div>
         </Card>
