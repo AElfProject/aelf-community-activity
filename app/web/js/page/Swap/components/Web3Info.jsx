@@ -198,9 +198,10 @@ export default class Web3Info extends Component{
     });
     try {
       web3PluginInstance.approve(approveData.value).then(receipt => {
+        const etherscanPrefix = web3PluginInstance.currentNetwork === 'ethereum' ? '' : web3PluginInstance.currentNetwork + '.';
         this.setState({
           approvedTxHash: receipt.transactionHash,
-          approvedLink: 'https://' + web3PluginInstance.currentNetwork + '.etherscan.io/tx/' + receipt.transactionHash
+          approvedLink: 'https://' + etherscanPrefix + 'etherscan.io/tx/' + receipt.transactionHash
         });
         this.getAccounts();
         this.getApproveAndLockedELF();
@@ -229,9 +230,10 @@ export default class Web3Info extends Component{
       mortgagedTxHash: null
     });
     web3PluginInstance.createReceipt(mortgageData).then(receipt => {
+      const etherscanPrefix = web3PluginInstance.currentNetwork === 'ethereum' ? '' : web3PluginInstance.currentNetwork + '.';
       this.setState({
         mortgagedTxHash: receipt.transactionHash,
-        mortgagedLink: 'https://' + web3PluginInstance.currentNetwork + '.etherscan.io/tx/' + receipt.transactionHash
+        mortgagedLink: 'https://' + etherscanPrefix + 'etherscan.io/tx/' + receipt.transactionHash
       });
       this.getAccounts();
       this.getApproveAndLockedELF();
@@ -257,9 +259,10 @@ export default class Web3Info extends Component{
       redeemedTxHash: null
     });
     web3PluginInstance.execRedeem(redeemData).then(receipt => {
+      const etherscanPrefix = web3PluginInstance.currentNetwork === 'ethereum' ? '' : web3PluginInstance.currentNetwork + '.';
       this.setState({
         redeemedTxHash: receipt.transactionHash,
-        redeemedLink: 'https://' + web3PluginInstance.currentNetwork + '.etherscan.io/tx/' + receipt.transactionHash
+        redeemedLink: 'https://' + etherscanPrefix + 'etherscan.io/tx/' + receipt.transactionHash
       });
       this.getAccounts();
       this.getApproveAndLockedELF();
