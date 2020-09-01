@@ -34,7 +34,8 @@ export class Web3Plugin {
 
     this.getNetwork();
 
-    const URL_PRE = 'https://' + this.currentNetwork + '.etherscan.io/address/';
+    const etherscanPrefix = this.currentNetwork === 'ethereum' ? '' : this.currentNetwork +'.';
+    const URL_PRE = 'https://' + etherscanPrefix + 'etherscan.io/address/';
 
     this.tokenContract = new this.web3.eth.Contract(tokenAbi, TOKEN_ADDRESS);
     this.tokenContractLink = URL_PRE + TOKEN_ADDRESS + '#writeContract';
