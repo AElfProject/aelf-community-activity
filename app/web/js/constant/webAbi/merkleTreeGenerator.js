@@ -1,196 +1,198 @@
 // https://ropsten.etherscan.io/address/0xf8B1e741f191cEb2477dB0D213635b554ba55f7a#code
 export const merkleTreeGenerator = [
   {
-    "constant": true,
     "inputs": [
       {
-        "name": "treeIndex",
-        "type": "uint256"
+        "internalType": "contract Receipts",
+        "name": "_lock",
+        "type": "address"
       }
     ],
-    "name": "GetMerkleTree",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32"
-      },
-      {
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
-    "constant": true,
-    "inputs": [],
-    "name": "MerkleTreeCount",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
+    "anonymous": false,
     "inputs": [
       {
-        "name": "treeIndex",
-        "type": "uint256"
-      }
-    ],
-    "name": "GetMerkleTreeNodes",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32[]"
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
       },
       {
-        "name": "",
-        "type": "uint256"
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
       }
     ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
+    "name": "OwnershipTransferred",
+    "type": "event"
   },
   {
-    "constant": true,
     "inputs": [],
     "name": "MerkleTreeMaximalLeafCount",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
     ],
-    "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "constant": true,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_receiptId",
+        "type": "uint256"
+      }
+    ],
+    "name": "generateMerklePath",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "bool[]",
+        "name": "",
+        "type": "bool[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_treeIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "getMerkleTree",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "",
+        "type": "bytes32[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "merkleTreeCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "owner",
     "outputs": [
       {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
     ],
-    "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "constant": false,
     "inputs": [],
-    "name": "GenerateMerkleTree",
+    "name": "receiptCountInTree",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "receiptProviderAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "recordReceipts",
     "outputs": [],
-    "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "receiptId",
-        "type": "uint256"
-      }
-    ],
-    "name": "GenerateMerklePath",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "name": "",
-        "type": "bytes32[7]"
-      },
-      {
-        "name": "",
-        "type": "bool[7]"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
     "inputs": [],
-    "name": "ReceiptCountInTree",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "constant": false,
     "inputs": [
       {
+        "internalType": "address",
         "name": "newOwner",
         "type": "address"
       }
     ],
     "name": "transferOwnership",
     "outputs": [],
-    "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "data",
-        "type": "bytes"
-      }
-    ],
-    "name": "Log",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "_from",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "_to",
-        "type": "address"
-      }
-    ],
-    "name": "OwnershipTransferred",
-    "type": "event"
   }
 ];

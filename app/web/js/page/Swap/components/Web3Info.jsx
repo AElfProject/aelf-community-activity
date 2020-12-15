@@ -72,14 +72,14 @@ export default class Web3Info extends Component{
       }
     };
 
-    this.redeemFormRef = React.createRef();
+    // this.redeemFormRef = React.createRef();
 
     this.connectMetaMask = this.connectMetaMask.bind(this);
     this.checkMetaMask = this.checkMetaMask.bind(this);
     this.onApproveFinish = this.onApproveFinish.bind(this);
     this.onMortgageFinish = this.onMortgageFinish.bind(this);
     this.getReceiptIDs = this.getReceiptIDs.bind(this);
-    this.onRedeemFinish = this.onRedeemFinish.bind(this);
+    // this.onRedeemFinish = this.onRedeemFinish.bind(this);
     this.onSwapELFReceiptIdChange = this.onSwapELFReceiptIdChange.bind(this);
   }
 
@@ -98,13 +98,13 @@ export default class Web3Info extends Component{
       })
   }
 
-  componentWillUnmount() {
-    this.redeemFormRef = {
-      current: {
-        setFieldsValue: () => {}
-      }
-    };
-  }
+  // componentWillUnmount() {
+  //   this.redeemFormRef = {
+  //     current: {
+  //       setFieldsValue: () => {}
+  //     }
+  //   };
+  // }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
     if (!prevProps.web3PluginInstance.web3 && this.props.web3PluginInstance.web3 !== 'undefined') {
@@ -164,9 +164,9 @@ export default class Web3Info extends Component{
 
     // TODO
     if (account.address) {
-      this.redeemFormRef.current.setFieldsValue({
-        address: account.address,
-      });
+      // this.redeemFormRef.current.setFieldsValue({
+      //   address: account.address,
+      // });
       this.getReceiptIDs(account.address);
     }
   }
@@ -174,9 +174,8 @@ export default class Web3Info extends Component{
   async getReceiptIDs (address = null) {
     const {web3PluginInstance} = this.props;
     const {account} = this.state;
-    this.setState({
-      receiptIds: await web3PluginInstance.getMyReceiptIds(address || account.address)
-    });
+    const receiptIds = await web3PluginInstance.getMyReceiptIds(address || account.address);
+    this.setState({ receiptIds });
   }
 
   async getApproveAndLockedELF () {
@@ -251,33 +250,33 @@ export default class Web3Info extends Component{
   onMortgageFinishFailed () {
   }
 
-  onRedeemFinish (redeemData) {
-    const {web3PluginInstance} = this.props;
-    this.setState({
-      redeemLoading: true,
-      redeemedLink: null,
-      redeemedTxHash: null
-    });
-    web3PluginInstance.execRedeem(redeemData).then(receipt => {
-      const etherscanPrefix = web3PluginInstance.currentNetwork === 'ethereum' ? '' : web3PluginInstance.currentNetwork + '.';
-      this.setState({
-        redeemedTxHash: receipt.transactionHash,
-        redeemedLink: 'https://' + etherscanPrefix + 'etherscan.io/tx/' + receipt.transactionHash
-      });
-      this.getAccounts();
-      this.getApproveAndLockedELF();
-      console.log('onRedeemFinish: ', receipt);
-    }).catch(e => {
-      message.warning(e.message);
-    }).then(() => {
-      this.setState({
-        redeemLoading: false
-      })
-    });
-  }
-
-  onRedeemFinishFailed () {
-  }
+  // onRedeemFinish (redeemData) {
+  //   const {web3PluginInstance} = this.props;
+  //   this.setState({
+  //     redeemLoading: true,
+  //     redeemedLink: null,
+  //     redeemedTxHash: null
+  //   });
+  //   web3PluginInstance.execRedeem(redeemData).then(receipt => {
+  //     const etherscanPrefix = web3PluginInstance.currentNetwork === 'ethereum' ? '' : web3PluginInstance.currentNetwork + '.';
+  //     this.setState({
+  //       redeemedTxHash: receipt.transactionHash,
+  //       redeemedLink: 'https://' + etherscanPrefix + 'etherscan.io/tx/' + receipt.transactionHash
+  //     });
+  //     this.getAccounts();
+  //     this.getApproveAndLockedELF();
+  //     console.log('onRedeemFinish: ', receipt);
+  //   }).catch(e => {
+  //     message.warning(e.message);
+  //   }).then(() => {
+  //     this.setState({
+  //       redeemLoading: false
+  //     })
+  //   });
+  // }
+  //
+  // onRedeemFinishFailed () {
+  // }
 
   render() {
     const {
@@ -479,71 +478,71 @@ export default class Web3Info extends Component{
           web3PluginInstance={web3PluginInstance}
         />
 
-        <div className='next-card-blank'/>
-        <Card
-          className='hover-cursor-auto'
-          title='Redeem'
-          headStyle={styles.cardMainHeader}
-          extra={<span>Available Time: {moment(redeemDate.start).format('YYYY-MM-DD HH:mm')} - {moment(redeemDate.end).format('YYYY-MM-DD HH:mm')}</span>}
-          hoverable>
-          <div className='section-content swap-form-container'>
-            <Form
-              {...layout}
-              name="redeem"
-              ref={this.redeemFormRef}
-              initialValues={{ address: accountAddress }}
-              onFinish={this.onRedeemFinish}
-              onFinishFailed={this.onRedeemFinishFailed}
-            >
-              <Form.Item
-                label="Ethereum Address"
-                name="address"
-                rules={[{ required: true, message: 'Ethereum Address is required.' }]}
-              >
-                <Input disabled/>
-              </Form.Item>
+        {/*<div className='next-card-blank'/>*/}
+        {/*<Card*/}
+        {/*  className='hover-cursor-auto'*/}
+        {/*  title='Redeem'*/}
+        {/*  headStyle={styles.cardMainHeader}*/}
+        {/*  extra={<span>Available Time: {moment(redeemDate.start).format('YYYY-MM-DD HH:mm')} - {moment(redeemDate.end).format('YYYY-MM-DD HH:mm')}</span>}*/}
+        {/*  hoverable>*/}
+        {/*  <div className='section-content swap-form-container'>*/}
+        {/*    <Form*/}
+        {/*      {...layout}*/}
+        {/*      name="redeem"*/}
+        {/*      ref={this.redeemFormRef}*/}
+        {/*      initialValues={{ address: accountAddress }}*/}
+        {/*      onFinish={this.onRedeemFinish}*/}
+        {/*      onFinishFailed={this.onRedeemFinishFailed}*/}
+        {/*    >*/}
+        {/*      <Form.Item*/}
+        {/*        label="Ethereum Address"*/}
+        {/*        name="address"*/}
+        {/*        rules={[{ required: true, message: 'Ethereum Address is required.' }]}*/}
+        {/*      >*/}
+        {/*        <Input disabled/>*/}
+        {/*      </Form.Item>*/}
 
-              <Form.Item
-                label="Receipt ID"
-              >
-                <Form.Item
-                  noStyle
-                  name="receiptId"
-                  rules={[{ required: true, message: 'Receipt ID is required.' }]}
-                >
-                  <Select
-                    placeholder="Select a receipt ID"
-                    allowClear
-                    style={{ width: 300 }}
-                  >
-                    {/*<Select.Option value={250} key={250}>250 invalid id</Select.Option>*/}
-                    {receiptIds.map(receiptId => {
-                      return <Select.Option value={receiptId.value} key={receiptId.value}>{receiptId.value}</Select.Option>
-                    })}
-                  </Select>
-                </Form.Item>
-                <div>
-                  Once the event is completed, ELF tokens can be redeemed by submitting the Lock Receipt ID. Users can only redeem ELF tokens after one month based on the time when the lock started. This step is available in the WriteContract-finishReceipt of the
-                  <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
-                </div>
-              </Form.Item>
+        {/*      <Form.Item*/}
+        {/*        label="Receipt ID"*/}
+        {/*      >*/}
+        {/*        <Form.Item*/}
+        {/*          noStyle*/}
+        {/*          name="receiptId"*/}
+        {/*          rules={[{ required: true, message: 'Receipt ID is required.' }]}*/}
+        {/*        >*/}
+        {/*          <Select*/}
+        {/*            placeholder="Select a receipt ID"*/}
+        {/*            allowClear*/}
+        {/*            style={{ width: 300 }}*/}
+        {/*          >*/}
+        {/*            /!*<Select.Option value={250} key={250}>250 invalid id</Select.Option>*!/*/}
+        {/*            {receiptIds.map(receiptId => {*/}
+        {/*              return <Select.Option value={receiptId.value} key={receiptId.value}>{receiptId.value}</Select.Option>*/}
+        {/*            })}*/}
+        {/*          </Select>*/}
+        {/*        </Form.Item>*/}
+        {/*        <div>*/}
+        {/*          Once the event is completed, ELF tokens can be redeemed by submitting the Lock Receipt ID. Users can only redeem ELF tokens after one month based on the time when the lock started. This step is available in the WriteContract-finishReceipt of the*/}
+        {/*          <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>*/}
+        {/*        </div>*/}
+        {/*      </Form.Item>*/}
 
-              <Form.Item {...tailLayout}>
-                <Button type="primary" htmlType="submit">
-                  Submit
-                </Button>
-                &nbsp;<Spin spinning={redeemLoading}/>
-              </Form.Item>
-              {redeemedLink &&
-              <Form.Item
-                label="Ethereum Txn Hash:"
-              >
-                <a href={redeemedLink} target='_blank'>{redeemedTxHash}</a>
-              </Form.Item>
-              }
-            </Form>
-          </div>
-        </Card>
+        {/*      <Form.Item {...tailLayout}>*/}
+        {/*        <Button type="primary" htmlType="submit">*/}
+        {/*          Submit*/}
+        {/*        </Button>*/}
+        {/*        &nbsp;<Spin spinning={redeemLoading}/>*/}
+        {/*      </Form.Item>*/}
+        {/*      {redeemedLink &&*/}
+        {/*      <Form.Item*/}
+        {/*        label="Ethereum Txn Hash:"*/}
+        {/*      >*/}
+        {/*        <a href={redeemedLink} target='_blank'>{redeemedTxHash}</a>*/}
+        {/*      </Form.Item>*/}
+        {/*      }*/}
+        {/*    </Form>*/}
+        {/*  </div>*/}
+        {/*</Card>*/}
       </>
     );
   }

@@ -112,26 +112,26 @@ class Swap extends Component {
       }
     });
 
-    getSwapPair('LOT').then(result => {
-      if (result) {
-        console.log('swapPairInfo LOT: ', result);
-        swapPairInformation.LOT = result;
-        this.setState({
-          swapPairInfo: result,
-          swapPairInformation
-        });
-      } else {
-        message.warning('Can not get the swap pair information.');
-      }
-
-    }).catch(error => {
-      // console.log('swapPairInfo error: ', error);
-      if (error.Error && error.Error.Message) {
-        message.error(error.Error.Message);
-      } else {
-        message.error(error.message);
-      }
-    });
+    // getSwapPair('LOT').then(result => {
+    //   if (result) {
+    //     console.log('swapPairInfo LOT: ', result);
+    //     swapPairInformation.LOT = result;
+    //     this.setState({
+    //       swapPairInfo: result,
+    //       swapPairInformation
+    //     });
+    //   } else {
+    //     message.warning('Can not get the swap pair information.');
+    //   }
+    //
+    // }).catch(error => {
+    //   // console.log('swapPairInfo error: ', error);
+    //   if (error.Error && error.Error.Message) {
+    //     message.error(error.Error.Message);
+    //   } else {
+    //     message.error(error.message);
+    //   }
+    // });
 
     getSwapInfo().then(result => {
       if (result) {
