@@ -463,7 +463,9 @@ export default class Web3Info extends Component{
           <div className='section-content'>
             <InfoCircleFilled style={{
               color: 'orange'
-            }} /> After staking your ELF tokens, you can get the data used to swap tokens (LOT and ELF). You will need to wait 5 days to get the data, but can check the data status in "Swap Test Token".
+            }} />
+            After staking your ELF tokens, you can get the data used to swap tokens (ELF). You will need to wait 5 days to get the data, but can check the data status in "Swap Test Token".
+            {/*After staking your ELF tokens, you can get the data used to swap tokens (LOT and ELF). You will need to wait 5 days to get the data, but can check the data status in "Swap Test Token".*/}
           </div>
         </Card>
 
