@@ -42,16 +42,16 @@ export default class SwapElf extends React.Component{
   }
 
   componentDidMount() {
-    getAvailableTime()
-      .then(res => {
-        const { data } = res;
-
-        const swapTest = data.find(item => item.type === 'swapTest') || {};
-
-        this.setState({
-          swapTest
-        })
-      })
+    // getAvailableTime()
+    //   .then(res => {
+    //     const { data } = res;
+    //
+    //     const swapTest = data.find(item => item.type === 'swapTest') || {};
+    //
+    //     this.setState({
+    //       swapTest
+    //     })
+    //   })
   }
 
   async onFinish () {
@@ -161,7 +161,7 @@ export default class SwapElf extends React.Component{
         className='hover-cursor-auto'
         hoverable
         headStyle={styles.cardMainHeader}
-        extra={<span>Available Time: {moment(swapTest.start).format('YYYY-MM-DD HH:mm')} - {moment(swapTest.end).format('YYYY-MM-DD HH:mm')}</span>}
+        // extra={<span>Available Time: {moment(swapTest.start).format('YYYY-MM-DD HH:mm')} - {moment(swapTest.end).format('YYYY-MM-DD HH:mm')}</span>}
         title='Swap Test Tokens'>
         <div className='section-content swap-form-container'>
           <Form

@@ -84,18 +84,18 @@ export default class Web3Info extends Component{
   }
 
   async componentDidMount() {
-    getAvailableTime()
-      .then(res => {
-        const { data } = res;
-
-        const mortgageDate = data.find(item => item.type === 'mortgage') || {};
-        const redeemDate = data.find(item => item.type === 'redeem') || {};
-
-        this.setState({
-          mortgageDate,
-          redeemDate
-        });
-      })
+    // getAvailableTime()
+    //   .then(res => {
+    //     const { data } = res;
+    //
+    //     const mortgageDate = data.find(item => item.type === 'mortgage') || {};
+    //     const redeemDate = data.find(item => item.type === 'redeem') || {};
+    //
+    //     this.setState({
+    //       mortgageDate,
+    //       redeemDate
+    //     });
+    //   })
   }
 
   // componentWillUnmount() {
@@ -339,7 +339,7 @@ export default class Web3Info extends Component{
           className='hover-cursor-auto'
           headStyle={styles.cardMainHeader}
           title='Mortgage Token'
-          extra={<span>Available Time: {moment(mortgageDate.start).format('YYYY-MM-DD HH:mm')} - {moment(mortgageDate.end).format('YYYY-MM-DD HH:mm')}</span>}
+          // extra={<span>Available Time: {moment(mortgageDate.start).format('YYYY-MM-DD HH:mm')} - {moment(mortgageDate.end).format('YYYY-MM-DD HH:mm')}</span>}
           hoverable>
           <div className='section-content'>
             <InfoCircleFilled style={{
