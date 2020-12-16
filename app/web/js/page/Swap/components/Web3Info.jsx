@@ -147,6 +147,7 @@ export default class Web3Info extends Component{
       });
       console.log('swapELFReceiptInfo', result);
     }).catch(e => {
+      message.warning(`Receipt ID: ${id} maybe not ready to swap`);
       message.warning(e.message);
     });
   }
