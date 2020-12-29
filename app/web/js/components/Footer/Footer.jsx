@@ -102,7 +102,7 @@ export default class Footer extends Component {
           <div
             className="footer-logo"
           >
-            <img alt="aelf" src="https://aelf.io/assets/images/logo.jpg" />
+            <img alt="aelf" src="https://aelf.io/assets/images/logo.png" />
             <p>Decentralized Cloud Computing Blockchain Network</p>
           </div>
           {/*<div*/}
