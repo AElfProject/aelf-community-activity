@@ -1,8 +1,9 @@
 import Web3 from 'web3'
 import {message} from 'antd';
+import { BigNumber } from 'bignumber.js';
+// import big from 'bignumber';
 import {merkleAbi, lockAbi, tokenAbi} from '../constant/web3Abi';
 import {WEB3} from '../constant/constant';
-import { add } from '../actions/counter';
 
 const {TOKEN_ADDRESS, LOCK_ADDRESS, MERKLE_ADDRESS} = WEB3;
 
@@ -199,25 +200,38 @@ export class Web3Plugin {
     // this.formRedeem.receiptId = ids[ids.length - 1];
   }
   //
-  // async execRedeem (redeemData) {
-  //   let res = await this.lockContract.methods.receipts(redeemData.receiptId).call();
-  //   if (!res) {
-  //     throw Error('Invalid receipt ID');
-  //   }
-  //   if (res.finished) {
-  //     throw Error('Your ELF tokens has already been redeemed.');
-  //   }
-  //   console.log('res.endTime, ', res);
-  //   if (res.endTime * 1000 > Date.parse(new Date())) {
-  //     throw Error('Not ready to redeem, time of redemption: ' + new Date(res.endTime * 1000).toLocaleString());
-  //   }
-  //
-  //   let from = this.myAccounts[0].address;
-  //   let to = LOCK_ADDRESS;
-  //   let transaction = this.lockContract.methods.finishReceipt(redeemData.receiptId);
-  //
-  //   return this.sendTx(transaction, from, to);
-  // }
+  async checkRedeemReady(receiptId) {
+    if (receiptId === undefined) {
+      return false;
+    }
+    let res = await this.lockContract.methods.receipts(receiptId).call();
+    if (!res) {
+      return false;
+    }
+    if (res.finished) {
+      return false;
+    }
+    return res.endTime * 1000 <= Date.parse(new Date());
+  }
+  async execRedeem (redeemData) {
+    let res = await this.lockContract.methods.receipts(redeemData.receiptId).call();
+    if (!res) {
+      throw Error('Invalid receipt ID');
+    }
+    if (res.finished) {
+      throw Error('Your ELF tokens has already been redeemed.');
+    }
+    console.log('res.endTime, ', res);
+    if (res.endTime * 1000 > Date.parse(new Date())) {
+      throw Error('Not ready to redeem, time of redemption: ' + new Date(res.endTime * 1000).toLocaleString());
+    }
+
+    let from = this.myAccounts[0].address;
+    let to = LOCK_ADDRESS;
+    let transaction = this.lockContract.methods.finishReceipt(redeemData.receiptId);
+
+    return this.sendTx(transaction, from, to);
+  }
 
   async getReceiptInfo (id) {
     return await this.lockContract.methods.getReceiptInfo(id).call();
@@ -243,14 +257,13 @@ export class Web3Plugin {
   }
 
   async getLockTokens () {
-    // try {
-    // const lock = this.lockAmount = await this.lockContract.methods.getLockTokens(this.myAccounts[0].address).call();
-    const lock = this.lockAmount = await this.lockContract.methods.getMyReceiptsAmount(this.myAccounts[0].address).call();
-    this.lockAmount = this.web3.utils.fromWei(lock, 'ether'); // + ' ELF';
-    return this.lockAmount;
-    // } catch (e) {
-    //   console.log(e)
-    // }
+    try {
+      const lock = this.lockAmount = await this.lockContract.methods.getLockTokens(this.myAccounts[0].address).call();
+      this.lockAmount = this.web3.utils.fromWei(lock, 'ether'); // + ' ELF';
+      return this.lockAmount;
+    } catch (e) {
+      console.log('getLockTokens', e);
+    }
   }
 
   getNetwork () {

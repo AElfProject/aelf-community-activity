@@ -54,18 +54,18 @@ export default class BrowserHeader extends Component {
       {
         url: '/swap',
         key: 'swap',
-        title: 'Token Swap'
+        title: 'Claim Token'
       },
-      // {
-      //   url: '/daily',
-      //   key: 'daily',
-      //   title: 'Daily Tasks'
-      // },
-      // {
-      //   url: '/lottery',
-      //   key: 'lottery',
-      //   title: 'Lottery'
-      // },
+      {
+        url: '/daily',
+        key: 'daily',
+        title: 'Daily Tasks'
+      },
+      {
+        url: '/lottery',
+        key: 'lottery',
+        title: 'Lottery'
+      },
     ];
     const menuHTML = this.renderMenu(menuList);
 

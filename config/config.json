@@ -1,10 +1,10 @@
 {
   "APPNAME": "aelf community",
   "COMMON_PRIVATE": "f6e512a3c259e5f9af981d7f99d245aa5bc52fe448495e0b0dd56e8406be6f71",
-  "SWAP_CONTRACT_ADDRESS": "2LUmicHyH4RXrMjG4beDwuDsiWJESyLkgkwPdGTR8kahRzq5XS",
-  "SWAP_PAIR": "687da0ce9598a49cde55d7397ab469640e0e7617094dea05f9c098fa069728ad",
-  "HTTP_PROVIDER": "http://1.119.195.50:11105/chain",
-  "HTTP_PROVIDER_INNER": "http://1.119.195.50:11105/chain",
+  "SWAP_CONTRACT_ADDRESS": "RXcxgSXuagn8RrvhQAV81Z652EEYSwR6JLnqHYJ5UVpEptW8Y",
+  "SWAP_PAIR": "2a782c1282e39004b40a8cdfb179e31e0bc52b93f0288c14ef09b54856383597",
+  "HTTP_PROVIDER": "http://1.119.195.50:11112/chain",
+  "HTTP_PROVIDER_INNER": "http://1.119.195.50:11112/chain",
   "TOKEN_CONTRACT_ADDRESS": "JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE",
   "CHAIN_ID": "AELF",
   "TOKEN_DECIMAL": 8,
@@ -22,13 +22,13 @@
       "method": "LOGIN",
       "contracts": [{
         "chainId": "AELF",
-        "contractAddress": "2LUmicHyH4RXrMjG4beDwuDsiWJESyLkgkwPdGTR8kahRzq5XS",
+        "contractAddress": "RXcxgSXuagn8RrvhQAV81Z652EEYSwR6JLnqHYJ5UVpEptW8Y",
         "contractName": "Token swap contract",
         "description": "Swap token from the other chain. Base on protocol [-]",
         "github": "https://github.com/AElfProject/AElf/blob/token-swap-contract/protobuf/token_swap_contract.proto"
       }, {
         "chainId": "AELF",
-        "contractAddress": "2WHXRoLRjbUTDQsuqR5CntygVfnDb125qdJkudev4kVNbLhTdG",
+        "contractAddress": "RXcxgSXuagn8RrvhQAV81Z652EEYSwR6JLnqHYJ5UVpEptW8Y",
         "contractName": "Lottery contract",
         "description": "Good Luck",
         "github": "https://github.com/AElfProject/aelf-boilerplate/blob/ferrari/chain/contract/AElf.Contracts.LotteryDemoContract/LotteryDemoContract.cs"
@@ -44,17 +44,17 @@
   "LOTTERY": {
     "RATIO": 1000,
     "SYMBOL": "LOT",
-    "CONTRACT_ADDRESS": "2WHXRoLRjbUTDQsuqR5CntygVfnDb125qdJkudev4kVNbLhTdG"
+    "CONTRACT_ADDRESS": "RXcxgSXuagn8RrvhQAV81Z652EEYSwR6JLnqHYJ5UVpEptW8Y"
   },
   "WEB3": {
-    "TOKEN_ADDRESS": "0x730785d79D7f8E31BF0173E8396d92B42f019062",
-    "LOCK_ADDRESS": "0x75312DA37A2Aff614CE3E04278702e5792EeDa5A",
-    "MERKLE_ADDRESS": "0x460e1744b8F9b575a8b6718a79B4293a5B7AC45a"
+    "TOKEN_ADDRESS": "0xb5685232b185cadf7c5f58217722ac40bc4ec45e",
+    "LOCK_ADDRESS": "0xD3b9c07B1Be8B6895A4C4748F04B0902f042cC1D",
+    "MERKLE_ADDRESS": "0xFAfCA2312e2B04ddAA5313Ff83b620deAB457c5d"
   },
   "CHAIN": {
     "AELF": {
-      "HTTP_PROVIDER": "http://1.119.195.50:11105/chain",
-      "HTTP_PROVIDER_INNER": "http://1.119.195.50:11105/chain",
+      "HTTP_PROVIDER": "http://1.119.195.50:11112/chain",
+      "HTTP_PROVIDER_INNER": "http://1.119.195.50:11112/chain",
       "TOKEN_CONTRACT_ADDRESS": "JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE",
       "CHAIN_ID": "AELF",
       "TOKEN_DECIMAL": 8,

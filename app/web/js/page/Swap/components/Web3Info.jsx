@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { Button, Card, Form, Input, Spin, message, Select } from 'antd';
 import moment from 'moment';
 import { InfoCircleFilled } from '@ant-design/icons';
-import SwapElf from './SwapElf';
 import { WEB3, SWAP_PAIR } from '../../../constant/constant';
 import { getAvailableTime } from '../../../utils/cmsUtils';
 const {LOCK_ADDRESS} = WEB3;
@@ -56,6 +55,7 @@ export default class Web3Info extends Component{
         address: null,
         receiptId: null,
       },
+      isRedeemReady: false,
       redeemLoading: false,
       redeemedLink: null,
       redeemedTxHash: null,
@@ -66,45 +66,46 @@ export default class Web3Info extends Component{
         start: '',
         end: ''
       },
+      mainnetTokenRewardPivot: 0,
       redeemDate: {
         start: '',
         end: ''
       }
     };
 
-    // this.redeemFormRef = React.createRef();
+    this.redeemFormRef = React.createRef();
 
     this.connectMetaMask = this.connectMetaMask.bind(this);
     this.checkMetaMask = this.checkMetaMask.bind(this);
     this.onApproveFinish = this.onApproveFinish.bind(this);
     this.onMortgageFinish = this.onMortgageFinish.bind(this);
     this.getReceiptIDs = this.getReceiptIDs.bind(this);
-    // this.onRedeemFinish = this.onRedeemFinish.bind(this);
+    this.onRedeemFinish = this.onRedeemFinish.bind(this);
     this.onSwapELFReceiptIdChange = this.onSwapELFReceiptIdChange.bind(this);
   }
 
   async componentDidMount() {
-    // getAvailableTime()
-    //   .then(res => {
-    //     const { data } = res;
-    //
-    //     const mortgageDate = data.find(item => item.type === 'mortgage') || {};
-    //     const redeemDate = data.find(item => item.type === 'redeem') || {};
-    //
-    //     this.setState({
-    //       mortgageDate,
-    //       redeemDate
-    //     });
-    //   })
+    getAvailableTime()
+      .then(res => {
+        const { data } = res;
+
+        const mortgageDate = data.find(item => item.type === 'mortgage') || {};
+        const redeemDate = data.find(item => item.type === 'redeem') || {};
+
+        this.setState({
+          mortgageDate,
+          redeemDate
+        });
+      })
   }
 
-  // componentWillUnmount() {
-  //   this.redeemFormRef = {
-  //     current: {
-  //       setFieldsValue: () => {}
-  //     }
-  //   };
-  // }
+  componentWillUnmount() {
+    this.redeemFormRef = {
+      current: {
+        setFieldsValue: () => {}
+      }
+    };
+  }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
     if (!prevProps.web3PluginInstance.web3 && this.props.web3PluginInstance.web3 !== 'undefined') {
@@ -165,9 +166,9 @@ export default class Web3Info extends Component{
 
     // TODO
     if (account.address) {
-      // this.redeemFormRef.current.setFieldsValue({
-      //   address: account.address,
-      // });
+      this.redeemFormRef.current.setFieldsValue({
+        address: account.address,
+      });
       this.getReceiptIDs(account.address);
     }
   }
@@ -251,33 +252,33 @@ export default class Web3Info extends Component{
   onMortgageFinishFailed () {
   }
 
-  // onRedeemFinish (redeemData) {
-  //   const {web3PluginInstance} = this.props;
-  //   this.setState({
-  //     redeemLoading: true,
-  //     redeemedLink: null,
-  //     redeemedTxHash: null
-  //   });
-  //   web3PluginInstance.execRedeem(redeemData).then(receipt => {
-  //     const etherscanPrefix = web3PluginInstance.currentNetwork === 'ethereum' ? '' : web3PluginInstance.currentNetwork + '.';
-  //     this.setState({
-  //       redeemedTxHash: receipt.transactionHash,
-  //       redeemedLink: 'https://' + etherscanPrefix + 'etherscan.io/tx/' + receipt.transactionHash
-  //     });
-  //     this.getAccounts();
-  //     this.getApproveAndLockedELF();
-  //     console.log('onRedeemFinish: ', receipt);
-  //   }).catch(e => {
-  //     message.warning(e.message);
-  //   }).then(() => {
-  //     this.setState({
-  //       redeemLoading: false
-  //     })
-  //   });
-  // }
-  //
-  // onRedeemFinishFailed () {
-  // }
+  onRedeemFinish (redeemData) {
+    const {web3PluginInstance} = this.props;
+    this.setState({
+      redeemLoading: true,
+      redeemedLink: null,
+      redeemedTxHash: null
+    });
+    web3PluginInstance.execRedeem(redeemData).then(receipt => {
+      const etherscanPrefix = web3PluginInstance.currentNetwork === 'ethereum' ? '' : web3PluginInstance.currentNetwork + '.';
+      this.setState({
+        redeemedTxHash: receipt.transactionHash,
+        redeemedLink: 'https://' + etherscanPrefix + 'etherscan.io/tx/' + receipt.transactionHash
+      });
+      this.getAccounts();
+      this.getApproveAndLockedELF();
+      console.log('onRedeemFinish: ', receipt);
+    }).catch(e => {
+      message.warning(e.message);
+    }).then(() => {
+      this.setState({
+        redeemLoading: false
+      })
+    });
+  }
+
+  onRedeemFinishFailed () {
+  }
 
   render() {
     const {
@@ -285,25 +286,20 @@ export default class Web3Info extends Component{
       approveLoading, approvedLink, approvedTxHash,
       mortgage, mortgageLoading, mortgagedLink, mortgagedTxHash,
       redeem, redeemLoading, redeemedLink, redeemedTxHash,
-      receiptIds,
-      swapELFReceiptInfo, swapELFMerklePathInfo,
-      mortgageDate, redeemDate
+      receiptIds, // mainnetTokenRewardPivot, mortgageDate
+      mainnetTokenRewardPivot, mortgageDate, redeemDate,
+      isRedeemReady
     } = this.state;
 
     const {address: accountAddress} = account;
 
-    // const swapElfHTML = SwapElf({
-    //   ethAddress: account.address,
-    //   swapId: SWAP_PAIR,
-    //   receiptIds,
-    //   onSwapELFReceiptIdChange: this.onSwapELFReceiptIdChange,
-    //   swapELFReceiptInfo,
-    //   swapELFMerklePathInfo
-    // });
+    const timeNow = moment().unix();
+    const submitDisable = moment(mortgageDate.end).unix() < timeNow || moment(mortgageDate.start).unix() > timeNow;
+    console.log('submitDisable', submitDisable, timeNow, moment(mortgageDate.end).unix(), moment(mortgageDate.start).unix());
 
-    const {web3PluginInstance, swapPairInfo} = this.props;
+    const {web3PluginInstance} = this.props;
     window.web3PluginInstance2 = web3PluginInstance;
-    console.log('web3PluginInstance', web3PluginInstance, account.address, receiptIds);
+    console.log('web3PluginInstance', web3PluginInstance, account.address, mortgageDate);
     return (
       <>
         <Card
@@ -339,13 +335,13 @@ export default class Web3Info extends Component{
         <Card
           className='hover-cursor-auto'
           headStyle={styles.cardMainHeader}
-          title='Mortgage Token'
-          // extra={<span>Available Time: {moment(mortgageDate.start).format('YYYY-MM-DD HH:mm')} - {moment(mortgageDate.end).format('YYYY-MM-DD HH:mm')}</span>}
+          title='Staking Token'
+          extra={<span>Available Time: {moment(mortgageDate.start).format('YYYY-MM-DD HH:mm')} - {moment(mortgageDate.end).format('YYYY-MM-DD HH:mm')}</span>}
           hoverable>
           <div className='section-content'>
             <InfoCircleFilled style={{
               color: 'orange'
-            }} /> During the token swap process, we adopt the Ethereum open-source contract and users can check the on-chain data.
+            }} /> During the claiming token, we adopt the Ethereum open-source contract and users can check the on-chain data.
           </div>
         </Card>
 
@@ -365,16 +361,21 @@ export default class Web3Info extends Component{
             >
               <Form.Item
                 label="Spender (address)"
+                help={
+                  <>
+                    <div>Authorize the lock-in contract and input the authorized amount (these tokens will be used for the mortgage); this step can be performed in the writecontract - approve operation on the
+                      <a href={web3PluginInstance.tokenContractLink} target='_blank'> Ethereum Token Contract Page</a>
+                    </div>
+                  </>
+                }
               >
                 <Form.Item
                   name="spenderAddress"
                   noStyle
-                  rules={[{ required: true, message: 'Please input the Spender(address)!' }]}>
+                  rules={[{ required: true, message: 'Please input the Spender(address)!' }]}
+                >
                   <Input disabled defaultValue={LOCK_ADDRESS} value={LOCK_ADDRESS}/>
                 </Form.Item>
-                <div>Authorize the lock-in contract and input the authorized amount (these tokens will be used for the mortgage); this step can be performed in the writecontract - approve operation on the
-                  <a href={web3PluginInstance.tokenContractLink} target='_blank'> Ethereum Token Contract Page</a>
-                </div>
               </Form.Item>
 
               <Form.Item
@@ -386,7 +387,7 @@ export default class Web3Info extends Component{
               </Form.Item>
 
               <Form.Item {...tailLayout}>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" disabled={submitDisable}>
                   Submit
                 </Button>
                 &nbsp;<Spin spinning={approveLoading}/>
@@ -405,7 +406,7 @@ export default class Web3Info extends Component{
         <div className='next-card-blank'/>
         <Card
           className='hover-cursor-auto'
-          title='Step 2: Mortgage'
+          title='Step 2: Staking'
           headStyle={styles.cardSubHeader}
           hoverable>
           <div className='section-content swap-form-container'>
@@ -415,17 +416,35 @@ export default class Web3Info extends Component{
               initialValues={{spenderAddress: LOCK_ADDRESS}}
               onFinish={this.onMortgageFinish}
               onFinishFailed={this.onMortgageFinishFailed}
+              onValuesChange={(changedValues, allValues) => {
+                // console.log('changedValues, allValues', changedValues, allValues);
+                this.setState({
+                  mainnetTokenRewardPivot: changedValues.amount || 0
+                });
+              }}
             >
               <Form.Item
                 label="Amount"
                 name="amount"
                 rules={[{ required: true, message: 'Amount is required.' }]}
+                help={
+                  <>
+                    <div>You will receive aelf Mainnet Token Reward: {mainnetTokenRewardPivot / 400 || '-'} ELF, {mainnetTokenRewardPivot || '-'} LOT</div>
+                  </>
+                }
               >
                 <Input/>
               </Form.Item>
 
               <Form.Item
-                label="aelf Receiver Address"
+                label="aelf Receiving Address "
+                help={
+                  <>
+                    <div>After completing the authorization, please provide the amount of ELF to stake (the amount should be no more than the authorized quantity) and the address for receiving ELF in the aelf mainnet. The staking bonus will be automatically sent to your aelf wallet after we verify it. Please check it after 2 hours.This step can be executed in the writecontract-createreceipt section of the
+                      <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
+                    </div>
+                  </>
+                }
               >
                 <Form.Item
                   name="address"
@@ -434,13 +453,10 @@ export default class Web3Info extends Component{
                 >
                   <Input/>
                 </Form.Item>
-                <div>After completing the authorization, please provide the amount of ELF to stake (the amount should be no more than the authorized quantity) and the address for receiving aelf in the aelf testnet. After staking your ELF, the tokens will be locked and can only be redeemed from this page after one month. This step can be executed in the writecontract-createreceipt section of the
-                  <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
-                </div>
               </Form.Item>
 
               <Form.Item {...tailLayout}>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" disabled={submitDisable}>
                   Submit
                 </Button>
                 &nbsp;<Spin spinning={mortgageLoading}/>
@@ -459,93 +475,82 @@ export default class Web3Info extends Component{
         <div className='next-card-blank'/>
         <Card
           className='hover-cursor-auto'
+          title='Redeem'
+          headStyle={styles.cardMainHeader}
+          // extra={<span>Available Time: {moment(redeemDate.start).format('YYYY-MM-DD HH:mm')} - {moment(redeemDate.end).format('YYYY-MM-DD HH:mm')}</span>}
           hoverable>
-          <div className='section-content'>
-            <InfoCircleFilled style={{
-              color: 'orange'
-            }} />
-            After staking your ELF tokens, you can get the data used to swap tokens (ELF). You will need to wait 5 days to get the data, but can check the data status in "Swap Test Token".
-            {/*After staking your ELF tokens, you can get the data used to swap tokens (LOT and ELF). You will need to wait 5 days to get the data, but can check the data status in "Swap Test Token".*/}
+          <div className='section-content swap-form-container'>
+            <Form
+              {...layout}
+              name="redeem"
+              ref={this.redeemFormRef}
+              initialValues={{ address: accountAddress }}
+              onFinish={this.onRedeemFinish}
+              onFinishFailed={this.onRedeemFinishFailed}
+            >
+              <Form.Item
+                label="Ethereum Address"
+                name="address"
+                rules={[{ required: true, message: 'Ethereum Address is required.' }]}
+              >
+                <Input disabled/>
+              </Form.Item>
+
+              <Form.Item
+                label="Receipt ID"
+                help={
+                  <>
+                    <div>
+                      Once the event is completed, ELF tokens can be redeemed by submitting the Lock Receipt ID. Users can only redeem ELF tokens after 45 days based on the time when the lock started. This step is available in the WriteContract-finishReceipt of the
+                      <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
+                    </div>
+                  </>
+                }
+              >
+                <Form.Item
+                  noStyle
+                  name="receiptId"
+                  rules={[{ required: true, message: 'Receipt ID is required.' }]}
+                >
+                  <Select
+                    placeholder="Select a receipt ID"
+                    allowClear
+                    style={{ width: 300 }}
+                    onChange={async (value) => {
+                      this.setState({
+                        isRedeemReady: false
+                      });
+                      const redeemReady = await web3PluginInstance.checkRedeemReady(value);
+                      this.setState({
+                        isRedeemReady: redeemReady
+                      });
+                      console.log('receiptId: ', value);
+                    }}
+                  >
+                    {/*<Select.Option value={250} key={250}>250 invalid id</Select.Option>*/}
+                    {receiptIds.map(receiptId => {
+                      return <Select.Option value={receiptId.value} key={receiptId.value}>{receiptId.value}</Select.Option>
+                    })}
+                  </Select>
+                </Form.Item>
+              </Form.Item>
+
+              <Form.Item {...tailLayout}>
+                <Button type="primary" htmlType="submit" disabled={!accountAddress || !isRedeemReady}>
+                  Submit
+                </Button>
+                &nbsp;<Spin spinning={redeemLoading}/>
+              </Form.Item>
+              {redeemedLink &&
+              <Form.Item
+                label="Ethereum Txn Hash:"
+              >
+                <a href={redeemedLink} target='_blank'>{redeemedTxHash}</a>
+              </Form.Item>
+              }
+            </Form>
           </div>
         </Card>
-
-        <div className='next-card-blank'/>
-        <SwapElf
-          swapPairInfo={swapPairInfo}
-          ethAddress={account.address}
-          swapId={SWAP_PAIR}
-          receiptIds={receiptIds}
-          onSwapELFReceiptIdChange={this.onSwapELFReceiptIdChange}
-          swapELFReceiptInfo={swapELFReceiptInfo}
-          swapELFMerklePathInfo={swapELFMerklePathInfo}
-          web3PluginInstance={web3PluginInstance}
-        />
-
-        {/*<div className='next-card-blank'/>*/}
-        {/*<Card*/}
-        {/*  className='hover-cursor-auto'*/}
-        {/*  title='Redeem'*/}
-        {/*  headStyle={styles.cardMainHeader}*/}
-        {/*  extra={<span>Available Time: {moment(redeemDate.start).format('YYYY-MM-DD HH:mm')} - {moment(redeemDate.end).format('YYYY-MM-DD HH:mm')}</span>}*/}
-        {/*  hoverable>*/}
-        {/*  <div className='section-content swap-form-container'>*/}
-        {/*    <Form*/}
-        {/*      {...layout}*/}
-        {/*      name="redeem"*/}
-        {/*      ref={this.redeemFormRef}*/}
-        {/*      initialValues={{ address: accountAddress }}*/}
-        {/*      onFinish={this.onRedeemFinish}*/}
-        {/*      onFinishFailed={this.onRedeemFinishFailed}*/}
-        {/*    >*/}
-        {/*      <Form.Item*/}
-        {/*        label="Ethereum Address"*/}
-        {/*        name="address"*/}
-        {/*        rules={[{ required: true, message: 'Ethereum Address is required.' }]}*/}
-        {/*      >*/}
-        {/*        <Input disabled/>*/}
-        {/*      </Form.Item>*/}
-
-        {/*      <Form.Item*/}
-        {/*        label="Receipt ID"*/}
-        {/*      >*/}
-        {/*        <Form.Item*/}
-        {/*          noStyle*/}
-        {/*          name="receiptId"*/}
-        {/*          rules={[{ required: true, message: 'Receipt ID is required.' }]}*/}
-        {/*        >*/}
-        {/*          <Select*/}
-        {/*            placeholder="Select a receipt ID"*/}
-        {/*            allowClear*/}
-        {/*            style={{ width: 300 }}*/}
-        {/*          >*/}
-        {/*            /!*<Select.Option value={250} key={250}>250 invalid id</Select.Option>*!/*/}
-        {/*            {receiptIds.map(receiptId => {*/}
-        {/*              return <Select.Option value={receiptId.value} key={receiptId.value}>{receiptId.value}</Select.Option>*/}
-        {/*            })}*/}
-        {/*          </Select>*/}
-        {/*        </Form.Item>*/}
-        {/*        <div>*/}
-        {/*          Once the event is completed, ELF tokens can be redeemed by submitting the Lock Receipt ID. Users can only redeem ELF tokens after one month based on the time when the lock started. This step is available in the WriteContract-finishReceipt of the*/}
-        {/*          <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>*/}
-        {/*        </div>*/}
-        {/*      </Form.Item>*/}
-
-        {/*      <Form.Item {...tailLayout}>*/}
-        {/*        <Button type="primary" htmlType="submit">*/}
-        {/*          Submit*/}
-        {/*        </Button>*/}
-        {/*        &nbsp;<Spin spinning={redeemLoading}/>*/}
-        {/*      </Form.Item>*/}
-        {/*      {redeemedLink &&*/}
-        {/*      <Form.Item*/}
-        {/*        label="Ethereum Txn Hash:"*/}
-        {/*      >*/}
-        {/*        <a href={redeemedLink} target='_blank'>{redeemedTxHash}</a>*/}
-        {/*      </Form.Item>*/}
-        {/*      }*/}
-        {/*    </Form>*/}
-        {/*  </div>*/}
-        {/*</Card>*/}
       </>
     );
   }
