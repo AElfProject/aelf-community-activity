@@ -10,11 +10,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ActionsAccount from '../../../actions/account';
 import { Button, Card, message } from 'antd';
-import { EXPLORER_URL, WALLET_WEB_URL, WALLET_IOS_URL, WALLET_ANDROID_URL, CHAIN } from '../../../constant/constant';
+import { EXPLORER_URL, WALLET_WEB_URL, WALLET_IOS_URL, WALLET_ANDROID_URL, CHAIN, DAILY_TASK } from '../../../constant/constant';
 import addressFormat from '../../../utils/addressFormat';
 import { add } from '../../../actions/counter';
 
-import { getCommunityLink } from '../../../utils/cmsUtils';
+import { checkTimeAvailable, getAvailableTime, renderAvailableTime, getCommunityLink } from '../../../utils/cmsUtils';
 import TutorialList from '../../../components/TutorialList';
 
 function mapStateToProps(state) {
@@ -34,8 +34,13 @@ class DailyMissions extends Component {
     this.state = {
       countdown: 0,
       effectiveTokenTx: [],
+      effectiveCrossTransferTx: [],
       effectiveResourceTx: [],
-      appData: []
+      appData: [],
+      dailyTaskDate: {
+        start: '',
+        end: ''
+      }
     };
     this.getCountdown = this.getCountdown.bind(this);
     this.hasAward = this.hasAward.bind(this);
@@ -53,6 +58,14 @@ class DailyMissions extends Component {
     // this.setState({
     //   appData
     // })
+
+    getAvailableTime().then(res => {
+      const { data } = res;
+      const dailyTaskDate = data.find(item => item.type === 'dailyTask') || {};
+      this.setState({
+        dailyTaskDate,
+      });
+    });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -105,12 +118,21 @@ class DailyMissions extends Component {
       return;
     }
 
-    const effectiveTokenTx = await axios.get(`${GET_EFFECTIVE_TX}?address=${address}&type=token`);
-    const effectiveResourceTx = await axios.get(`${GET_EFFECTIVE_TX}?address=${address}&type=resource`);
+    const [effectiveTokenTx, effectiveCrossTransferTx, effectiveResourceTx] = await Promise.all([
+      axios.get(`${GET_EFFECTIVE_TX}?address=${address}&type=normalTransfer`),
+      axios.get(`${GET_EFFECTIVE_TX}?address=${address}&type=crossTransfer`),
+      axios.get(`${GET_EFFECTIVE_TX}?address=${address}&type=resource`)
+    ]);
 
     if (effectiveTokenTx.data.length) {
       this.setState({
         effectiveTokenTx: effectiveTokenTx.data
+      });
+    }
+
+    if (effectiveCrossTransferTx.data.length) {
+      this.setState({
+        effectiveCrossTransferTx: effectiveCrossTransferTx.data
       });
     }
 
@@ -128,6 +150,10 @@ class DailyMissions extends Component {
     }
     const { address } = this.props.account.accountInfo;
 
+    if (this.getAwardLock) {
+      return;
+    }
+    this.getAwardLock = true;
     const awardId = await axios.get(`${GET_AWARD}`, {
       params: {
         address,
@@ -135,6 +161,8 @@ class DailyMissions extends Component {
         type,
         chain_id: chainId
       }
+    }).finally(() => {
+      this.getAwardLock = false;
     });
 
     const { TransactionId } = awardId.data;
@@ -162,11 +190,19 @@ class DailyMissions extends Component {
   }
 
   renderMission(effectiveTx, type) {
+    const { dailyTaskDate } = this.state;
+    const taskAvailable = checkTimeAvailable(dailyTaskDate);
+
+    const { account } = this.props;
+    const { accountInfo } = account;
+    const { address } = accountInfo;
+
     const effectiveTxId = effectiveTx.length ? effectiveTx[0].tx_id : null;
     const effectiveTxChainId = effectiveTx.length ? effectiveTx[0].chain_id : null;
     const hasAward = this.hasAward(type);
     const awardedButton =  <Button type="primary" disabled>Had awarded</Button>;
     const awardButton = <Button type="primary"
+                                disabled={!taskAvailable || !address}
                                 onClick={() => this.onGetAward(effectiveTxId, type, effectiveTxChainId)}>Collect</Button>;
     const buttonShow = hasAward ? awardedButton : awardButton;
     return (
@@ -178,7 +214,7 @@ class DailyMissions extends Component {
                 {effectiveTxId}
               </a>
             </div>
-          : <div>If you have completed the task, you can click 'collect' to receive your test token reward.</div>}
+          : <div>If you have completed the task, you can click 'collect' to receive your LOT token reward.</div>}
         {buttonShow}
       </div>
     );
@@ -187,7 +223,7 @@ class DailyMissions extends Component {
   render() {
 
     const { account, dailyAwardHistory } = this.props;
-    const { effectiveTokenTx, effectiveResourceTx, countdown, appData } = this.state;
+    const { effectiveTokenTx, effectiveResourceTx, effectiveCrossTransferTx, countdown, appData, dailyTaskDate } = this.state;
 
     const { accountInfo } = account;
     const { address } = accountInfo;
@@ -195,14 +231,16 @@ class DailyMissions extends Component {
     // console.log('dailyAwardHistory: ', dailyAwardHistory);
     return (
       <div>
-        <p>During the event, you can get test tokens by completing daily tasks. </p>
+        <p>During the event, you can get LOT tokens by completing daily tasks.</p>
         <Card
           className='hover-cursor-auto'
           hoverable
           title={[
             <span key='1'>Countdown (UTC +0 23:59:59)：</span>,
             <CountDown key='2' countdown={countdown} />
-          ]}>
+          ]}
+          extra={renderAvailableTime(dailyTaskDate)}
+        >
           <div className='section-title'>
             Current Address: {address ? addressFormat(address) : 'Please login'}
           </div>
@@ -212,10 +250,10 @@ class DailyMissions extends Component {
         <Card
           className='hover-cursor-auto'
           hoverable
-          title='Task 1 Resource'>
+          title='Task 1 Resource Trading'>
           <div className='section-content'>
             <div>
-              During the event, you can collect 100 test tokens each day through the resource token trading function.
+              During the event, you can collect 100 LOT tokens each day through the resource token trading function.
             </div>
             {/*<a href={EXPLORER_URL + '/resource'} target='_blank'>Turn to aelf explorer</a>*/}
             <a href={CHAIN.AELF.EXPLORER_URL + '/resource'} target='_blank'>Turn to aelf explorer</a>
@@ -227,15 +265,31 @@ class DailyMissions extends Component {
         <Card
           className='hover-cursor-auto'
           hoverable
-          title='Task 2 Token'>
+          title='Task 2 Same-chain transfer'>
           <div className='section-content swap-flex-wrap'>
-            <div>Rule：During the event, you can collect 100 test tokens each day by transferring tokens. </div>
+            <div>During the event, you can collect 100 LOT tokens each day by Same-chain transfer. </div>
             <div>
               <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>
               <a href={WALLET_ANDROID_URL} target='_blank'>Android wallet, </a>
               <a href={WALLET_IOS_URL} target='_blank'>iOS wallet</a>
             </div>
-            {this.renderMission(effectiveTokenTx, 'token')}
+            {this.renderMission(effectiveTokenTx, 'normalTransfer')}
+          </div>
+        </Card>
+
+        <div className='next-card-blank' />
+        <Card
+          className='hover-cursor-auto'
+          hoverable
+          title='Task 3 Cross-Chain Transfer'>
+          <div className='section-content swap-flex-wrap'>
+            <div>During the event, you can collect 100 LOT tokens each day by Cross-Chain Transfer。</div>
+            <div>
+              <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>
+              <a href={WALLET_ANDROID_URL} target='_blank'>Android wallet, </a>
+              <a href={WALLET_IOS_URL} target='_blank'>iOS wallet</a>
+            </div>
+            {this.renderMission(effectiveCrossTransferTx, 'crossTransfer')}
           </div>
         </Card>
 
@@ -246,11 +300,15 @@ class DailyMissions extends Component {
         <Card
           className='hover-cursor-auto'
           hoverable
-          title='Task 3 Bug Bounty'>
+          title='Task 4 Bug Bounty'>
           <div className='section-content swap-flex-wrap'>
-            <div>Complete a bug submission on the aelf chain to collect test token rewards:</div>
-            <div>Reward Range: 1,000-5,000 Test Tokens,</div>
-            <div>Bug Bonus Levels: Minor = 1,000 test tokens, Major = 3,000 test tokens, Critical = 5,000 test tokens.</div>
+            <div>Complete a bug submission on the aelf chain to collect LOT token rewards.</div>
+            <div>Reward Range: 100-500 LOT Tokens,</div>
+            <div>Bug Bonus Levels: Minor = 100 LOT tokens, Major = 250 LOT tokens, Critical = 500 LOT tokens.</div>
+            <div>
+              You can submit Bug information to a form:
+              <a href={DAILY_TASK.FROM_LINK} target='_blank'> Bug Solicitation</a>
+            </div>
           </div>
         </Card>
         <div className='next-card-blank' />
@@ -258,9 +316,14 @@ class DailyMissions extends Component {
         <Card
           className='hover-cursor-auto'
           hoverable
-          title='Task 4 DApp Develop'>
+          title='Task 5 Suggestion Solicitation'>
           <div className='section-content swap-flex-wrap'>
-            <div>Develop a DApp on the aelf Enterprise Blockchain and collect a large reward: 20,000 test tokens for each DAPP.</div>
+            <div>Reward Range: 100-1,000 LOT Tokens.</div>
+            <div>Bug Bonus Levels: Minor = 100 LOT tokens, Major = 500 LOT tokens, Critical = 1,000 LOT tokens.</div>
+            <div>
+              You can submit suggestion information to a form:
+              <a href={DAILY_TASK.SUGGESTION_LINK} target='_blank'> Suggestion Solicitation</a>
+            </div>
           </div>
         </Card>
       </div>

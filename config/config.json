@@ -5,16 +5,16 @@
   "SWAP_PAIR": "2a782c1282e39004b40a8cdfb179e31e0bc52b93f0288c14ef09b54856383597",
   "HTTP_PROVIDER": "http://1.119.195.50:11112/chain",
   "HTTP_PROVIDER_INNER": "http://1.119.195.50:11112/chain",
-  "TOKEN_CONTRACT_ADDRESS": "JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE",
-  "CHAIN_ID": "AELF",
+  "TOKEN_CONTRACT_ADDRESS": "7RzVGiuVWkvL4VfVHdZfQF2Tri3sgLe9U991bohHFfSRZXuGX",
+  "CHAIN_ID": "tDVV",
   "TOKEN_DECIMAL": 8,
-  "EXPLORER_URL": "http://1.119.195.50:11104",
-  "WALLET_WEB_URL": "http://1.119.195.50:11105",
+  "EXPLORER_URL": "http://1.119.195.50:11107",
+  "WALLET_WEB_URL": "http://1.119.195.50:11109",
   "WALLET_IOS_URL": "https://testflight.apple.com/join/TclFysmO",
   "WALLET_ANDROID_URL": "http://d.alphaqr.com/aelfwalletandroid",
   "ADDRESS_INFO": {
     "prefix": "ELF",
-    "suffix": "AELF"
+    "suffix": "tDVV"
   },
   "LOGIN_INFO": {
     "chainId": "AELF",
@@ -75,5 +75,9 @@
     "SYMBOL": "LOT",
     "AMOUNT": 10000000000,
     "DECIMAL": 8
+  },
+  "DAILY_TASK": {
+    "FROM_LINK": "https://docs.google.com/forms/d/e/1FAIpQLSehxAHKfxTr7QZF30cfGXnR6eAt75IReEEoIH-M8WoPc3yAhw/viewform?usp=sf_link",
+    "SUGGESTION_LINK": "https://docs.google.com/forms/d/e/1FAIpQLScd0NFtHVx-l6CevlZ4LguUK9nKi62Cii1PNnqAjC73Wj5yqQ/viewform?usp=sf_link"
   }
 }

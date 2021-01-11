@@ -26,8 +26,8 @@ ReactDOM.render(
       <Route path="/" component={App}>
         <IndexRoute component={Swap}/>
         <Route path="/swap" component={Swap}/>
-        {/*<Route path="/lottery" component={Lottery}/>*/}
-        {/*<Route path="/daily" component={Daily}/>*/}
+        <Route path="/lottery" component={Lottery}/>
+        <Route path="/daily" component={Daily}/>
       </Route>
     </Router>
   </Provider>,

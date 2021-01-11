@@ -19,7 +19,7 @@ function formatOutput(ctx, type, result, errcode) {
     case 'error':
       ctx.status = parseInt(errcode, 10);
       result = {
-        message: result.message
+        message: result.message || result
       };
       break;
     default:

@@ -8,7 +8,7 @@ const {
 } = require('egg');
 const AElf = require('aelf-sdk');
 const moment = require('moment');
-const {HTTP_PROVIDER_INNER, CHAIN, DAILY} = require('../../config/config.json');
+const {CHAIN, DAILY} = require('../../config/config.json');
 
 const tokenContract = require('../utils/tokenContract');
 
@@ -18,7 +18,7 @@ Object.keys(CHAIN).forEach(chainID => {
   aelfList[keyName] = new AElf(new AElf.providers.HttpProvider(CHAIN[chainID].HTTP_PROVIDER_INNER));
 });
 
-const whiteListType = ['token', 'resource'];
+const whiteListType = ['normalTransfer', 'crossTransfer', 'resource'];
 
 function checkTimeIsEffective(time) {
   const startTime = moment.utc().startOf('day');
@@ -35,14 +35,20 @@ module.exports = class TxsService extends Service {
     } = options;
 
     const sqlValue = [ address, 'Mined' ];
-    const getTokenTxSql = 'select * from transactions_token where address_from=? and tx_status=? order by id DESC limit 1';
-    const getResourceTxSql = 'select * from resource_0 where address=? and tx_status=? order by id DESC limit 1';
 
-    const getSql = type === 'resource' ? getResourceTxSql : getTokenTxSql;
+    const sqlList = {
+      resource: 'select * from resource_0 where address=? and tx_status=? order by id DESC limit 1',
+      normalTransfer: 'select * from transactions_token where address_from=? and tx_status=? and method!="CrossChainTransfer" order by id DESC limit 1',
+      crossTransfer: 'select * from transactions_token where address_from=? and tx_status=? and method="CrossChainTransfer" order by id DESC limit 1',
+    };
+    const sql = sqlList[type];
+    if (!sql) {
+      return []
+    }
 
     const queryList = [];
     this.ctx.app.mysql.clients.forEach(client => {
-      queryList.push(client.query(getSql, sqlValue))
+      queryList.push(client.query(sql, sqlValue))
     });
     const txResults = await Promise.all(queryList);
     // console.log('keys:', this.ctx.app.mysql.clients.keys(), Array.from(this.ctx.app.mysql.clients.keys()));
