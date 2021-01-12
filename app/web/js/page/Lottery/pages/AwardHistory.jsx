@@ -133,11 +133,14 @@ export default class AwardHistory extends Component{
       return null;
     }
 
-    const timestampInUse = theLast ? supposedDrawDate : actualDrawDate;
+    // const timestampInUse = theLast ? supposedDrawDate : actualDrawDate;
+    // const prefixInUse = theLast ? 'Supposed draw date: ' : 'Draw date: ';
+    const timestampInUse = supposedDrawDate || actualDrawDate;
     const prefixInUse = theLast ? 'Supposed draw date: ' : 'Draw date: ';
-    const format = 'YYYY-MM-DD HH:mm:ss';
+    // const format = 'YYYY-MM-DD HH:mm:ss';
+    const format = 'YYYY-MM-DD HH:mm';
     const timeShow = prefixInUse +
-      (!!timestampInUse ? moment.utc(new Date(timestampInUse.seconds * 1000)).local().format(format) : 'Not found');
+      (!!timestampInUse ? moment.utc(new Date(timestampInUse.seconds * 1000)).local().format(format) : '-');
 
     return (<div key={randomHash}>
       {/*<div className='history-period'>{timeFormatted}</div>*/}

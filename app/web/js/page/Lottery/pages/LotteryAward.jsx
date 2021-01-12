@@ -29,6 +29,8 @@ export default class LotteryAward extends Component {
         registrationInformation: ''
       },
       lotteryIdArray: [],
+      // lotteryIdRemovedTemp: {[period: string | number]: number[]}
+      lotteryIdRemovedTemp: {},
       takeAwardDate: {
         start: '',
         end: ''
@@ -40,6 +42,8 @@ export default class LotteryAward extends Component {
     this.renderFromItemSelect = this.renderFromItemSelect.bind(this);
     this.onPeriodChange = this.onPeriodChange.bind(this);
     this.removeLotteryIdArray = this.removeLotteryIdArray.bind(this);
+
+    this.formRef = React.createRef();
   }
 
   async componentDidMount() {
@@ -52,14 +56,23 @@ export default class LotteryAward extends Component {
     });
   }
 
-  async removeLotteryIdArray(index) {
-    let {lotteryIdArray} = this.state;
+  async removeLotteryIdArray(index, period) {
+    let {lotteryIdArray, lotteryIdRemovedTemp} = this.state;
     lotteryIdArray = lotteryIdArray.filter(item => {
       return parseInt(item) !== index;
     });
+
+    if (lotteryIdRemovedTemp[period]) {
+      lotteryIdRemovedTemp[period] = [...lotteryIdRemovedTemp[period], index.toString()];
+    } else {
+      lotteryIdRemovedTemp[period] = [index.toString()];
+    }
+
     this.setState({
-      lotteryIdArray
+      lotteryIdArray,
+      lotteryIdRemovedTemp
     });
+    this.formRef.current.resetFields();
   }
 
   async handleOk() {
@@ -91,8 +104,7 @@ export default class LotteryAward extends Component {
         const {TransactionId} = takeRewardResult.result || takeRewardResult;
         MessageTxToExplore(TransactionId);
 
-        this.removeLotteryIdArray(parseInt(lotteryId, 10));
-
+        this.removeLotteryIdArray(parseInt(lotteryId, 10), period);
       } catch(e) {
         message.warning(e.message || 'Take reward failed.');
       }
@@ -110,12 +122,17 @@ export default class LotteryAward extends Component {
   }
 
   onPeriodChange(value) {
+    const { lotteryIdRemovedTemp } = this.state;
     const {rewardListBelongsToCurrentAddress, address} = this.props;
     const rewardListThisPeriod = rewardListBelongsToCurrentAddress.filter(item => {
       return parseInt(item.period, 10) === parseInt(value, 10);
     });
     const rewardLotteriesTemp = rewardListThisPeriod[0].rewardLotteries.filter(item => {
-      return !item.registrationInformation && item.owner === address;
+      const validCheck = !item.registrationInformation && item.owner === address;
+      if (lotteryIdRemovedTemp[value]) {
+        return validCheck && !lotteryIdRemovedTemp[value].includes(item.id);
+      }
+      return validCheck;
     });
 
     const lotteryIdArray = rewardLotteriesTemp.map(item => {
@@ -198,6 +215,7 @@ export default class LotteryAward extends Component {
         <div className='section-content lottery-form-container'>
           <div className='basic-blank'/>
           <Form
+            ref={this.formRef}
             {...layout}
             name="basic"
             initialValues={{ remember: true }}
