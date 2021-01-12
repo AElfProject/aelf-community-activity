@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { message, Tabs } from 'antd';
+import { Card, message, Tabs } from 'antd';
 const { TabPane } = Tabs;
 
 import TokenContract from '../../utils/tokenContract';
@@ -21,6 +21,7 @@ import { GET_CMS_PRIZE_LIST } from '../../constant/apis';
 
 import TutorialList from '../../components/TutorialList';
 import { getCommunityLink, getLotteryReferendumsInfo } from '../../utils/cmsUtils';
+import {RewardSharing} from './pages/RewardSharing';
 
 function mapStateToProps(state) {
   return {
@@ -126,6 +127,11 @@ class Lottery extends Component {
               {grandPrize && <div className='next-card-blank'/>}
               {grandPrize && <GrandPrize grandPrizeAmount={grandPrizeAmount}/>}
               <div className='next-card-blank'/>
+
+              <RewardSharing
+                aelfAddress={address}
+              />
+
               <PersonalDraw
                 address={address}
                 currentPeriodNumber={currentPeriodNumber}

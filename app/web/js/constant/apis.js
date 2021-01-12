@@ -11,6 +11,7 @@ const GET_CMS_PRIZE_LIST = '/cms/api/community-lotteries';
 const GET_CMS_COMMUNITY_LINKS = '/cms/api/community-links';
 const GET_CMS_AVAILABLE_TIMES = '/cms/api/community-available-times';
 const GET_CMS_LOTTERY_REFERENDUM_TIMES = '/cms/api/community-lottery-referendums';
+const GET_CMS_LOTTERY_SHARING = '/cms/api/community-lottery-sharings';
 
 export {
   GET_COUNTDOWN,
@@ -25,5 +26,6 @@ export {
   GET_CMS_PRIZE_LIST,
   GET_CMS_COMMUNITY_LINKS,
   GET_CMS_AVAILABLE_TIMES,
-  GET_CMS_LOTTERY_REFERENDUM_TIMES
+  GET_CMS_LOTTERY_REFERENDUM_TIMES,
+  GET_CMS_LOTTERY_SHARING,
 };

@@ -1,4 +1,9 @@
-import { GET_CMS_AVAILABLE_TIMES, GET_CMS_COMMUNITY_LINKS, GET_CMS_LOTTERY_REFERENDUM_TIMES } from '../constant/apis';
+import {
+  GET_CMS_AVAILABLE_TIMES,
+  GET_CMS_COMMUNITY_LINKS,
+  GET_CMS_LOTTERY_REFERENDUM_TIMES,
+  GET_CMS_LOTTERY_SHARING
+} from '../constant/apis';
 import axios from '../service/axios';
 import moment from 'moment';
 import React from 'react';
@@ -25,4 +30,8 @@ export const renderAvailableTime = dataInfo => {
 
 export const getLotteryReferendumsInfo = () => {
   return axios.get(`${GET_CMS_LOTTERY_REFERENDUM_TIMES}`);
+};
+
+export const getLotterySharing = () => {
+  return axios.get(`${GET_CMS_LOTTERY_SHARING}?_limit=1`);
 };

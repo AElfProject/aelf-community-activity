@@ -59,7 +59,7 @@ function renderHistory(dataSource, historyLoading) {
   //     registrationInformation: ''
   //   },
   // ];
-  return <Table dataSource={dataSource} loading={historyLoading} columns={columns} pagination={false} rowKey='block'/>;
+  return <Table dataSource={dataSource} loading={historyLoading} columns={columns} pagination={false} rowKey='id'/>;
 }
 
 export default class PersonalDraw extends Component{
