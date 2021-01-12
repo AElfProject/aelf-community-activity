@@ -9,7 +9,7 @@ export const useAllLotteriesCount = (lotteryContract) => {
     }
     async function getAllLotteriesCount() {
       const allLotteriesCount = await lotteryContract.GetAllLotteriesCount.call();
-      setAllLotteriesCount(allLotteriesCount);
+      setAllLotteriesCount(allLotteriesCount || {value: '1'});
     }
     getAllLotteriesCount();
   }, [lotteryContract]);
@@ -26,7 +26,7 @@ export const useBoughtLotteriesCount = (aelfAddress, lotteryContract) => {
     async function getBoughtLotteriesCount() {
       const boughtLotteriesCount = await lotteryContract.GetBoughtLotteriesCount.call(aelfAddress);
       console.log('boughtLotteriesCount: ', boughtLotteriesCount);
-      setBoughtLotteriesCount(boughtLotteriesCount);
+      setBoughtLotteriesCount(boughtLotteriesCount || {value: '0'});
     }
     getBoughtLotteriesCount();
   }, [lotteryContract, aelfAddress]);
