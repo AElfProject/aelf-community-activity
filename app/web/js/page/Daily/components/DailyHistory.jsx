@@ -33,6 +33,16 @@ export default function renderDailyHistory(props) {
       dataIndex: 'type',
       width: 100,
       key: 'type',
+      render: (text) => {
+
+        const whiteListType = {
+          normalTransfer: 'Same-chain transfer',
+          crossTransfer: 'Cross-Chain Transfer',
+          resource: 'Resource Trading',
+        };
+
+        return <span>{whiteListType[text]}</span>
+      }
     },
     {
       title: 'chain',
