@@ -6,6 +6,7 @@ import { LOGIN_INFO, LOTTERY } from '../../../constant/constant';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
 import { GET_CRYPTO_ADDRESS } from '../../../constant/apis';
 import axios from '../../../service/axios';
+import { checkTimeAvailable, getAvailableTime, renderAvailableTime } from '../../../utils/cmsUtils';
 
 const { Option } = Select;
 const layout = {
@@ -27,7 +28,11 @@ export default class LotteryAward extends Component {
         period: '',
         registrationInformation: ''
       },
-      lotteryIdArray: []
+      lotteryIdArray: [],
+      takeAwardDate: {
+        start: '',
+        end: ''
+      }
     };
     this.handleOk = this.handleOk.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
@@ -35,6 +40,16 @@ export default class LotteryAward extends Component {
     this.renderFromItemSelect = this.renderFromItemSelect.bind(this);
     this.onPeriodChange = this.onPeriodChange.bind(this);
     this.removeLotteryIdArray = this.removeLotteryIdArray.bind(this);
+  }
+
+  async componentDidMount() {
+    getAvailableTime().then(res => {
+      const { data } = res;
+      const takeAwardDate = data.find(item => item.type === 'lotteryTakeAward') || {};
+      this.setState({
+        takeAwardDate,
+      });
+    });
   }
 
   async removeLotteryIdArray(index) {
@@ -148,9 +163,8 @@ export default class LotteryAward extends Component {
   }
 
   render() {
-
     const {currentPeriodNumber, rewardListBelongsToCurrentAddress} = this.props;
-    const {rewardInput, lotteryIdArray} = this.state;
+    const {rewardInput, lotteryIdArray, takeAwardDate} = this.state;
     const {lotteryId, period, registrationInformation} = rewardInput;
 
     const onFinish = values => {
@@ -178,7 +192,9 @@ export default class LotteryAward extends Component {
       <Card
         className='hover-cursor-auto'
         hoverable
-        title={'Take Award (Latest Award Period: ' + (currentPeriodNumber ? currentPeriodNumber - 1 : 0) + ')'}>
+        title={'Take Award (Latest Award Period: ' + (currentPeriodNumber ? currentPeriodNumber - 1 : 0) + ')'}
+        extra={renderAvailableTime(takeAwardDate)}
+      >
         <div className='section-content lottery-form-container'>
           <div className='basic-blank'/>
           <Form
@@ -219,7 +235,10 @@ export default class LotteryAward extends Component {
             </Form.Item>
 
             <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit">
+              <Button
+                disabled={!checkTimeAvailable(takeAwardDate)}
+                type="primary" htmlType="submit"
+              >
                 Submit
               </Button>
             </Form.Item>

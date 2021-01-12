@@ -10,6 +10,8 @@ import TokenContract from '../../../utils/tokenContract';
 import Contract from '../../../utils/Contract';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
 import { POST_DECRYPT_LIST } from '../../../constant/apis';
+import { checkTimeAvailable, getAvailableTime } from '../../../utils/cmsUtils';
+import moment from 'moment';
 
 const columns = [
   {
@@ -67,7 +69,11 @@ export default class PersonalDraw extends Component{
       tokenBalance: 0,
       tokenAllowance: 0,
       boughtLotteries: [],
-      historyLoading: false
+      historyLoading: false,
+      switchCodeDate: {
+        start: '',
+        end: ''
+      }
     };
     this.tokenApproveCount = 0;
     this.buyCount = 0;
@@ -83,6 +89,14 @@ export default class PersonalDraw extends Component{
     await this.getVoteToken();
     await this.getVoteAllowance();
     await this.getBoughtLotteries();
+
+    getAvailableTime().then(res => {
+      const { data } = res;
+      const switchCodeDate = data.find(item => item.type === 'lotterySwitchCode') || {};
+      this.setState({
+        switchCodeDate,
+      });
+    });
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -242,7 +256,9 @@ export default class PersonalDraw extends Component{
 
   render() {
     const {address, currentPeriodNumber} = this.props;
-    const {tokenBalance, tokenAllowance, boughtLotteries, historyLoading} = this.state;
+    const {tokenBalance, tokenAllowance, boughtLotteries, historyLoading, switchCodeDate} = this.state;
+
+    const switchDisabled = !checkTimeAvailable(switchCodeDate);
 
     const tokenBalanceActual = tokenBalance / 10 ** 8;
     const tokenAllowanceActual = tokenAllowance / 10 ** 8;
@@ -269,7 +285,9 @@ export default class PersonalDraw extends Component{
               Authorized credit limit for lottery application: {tokenAllowance ? tokenAllowanceActual + ' ' + LOTTERY.SYMBOL : 0} &nbsp;&nbsp;&nbsp;
               <InputNumber min={0} max={tokenBalanceActual - tokenAllowanceActual} onChange={this.onApproveChange} />
               &nbsp;&nbsp;&nbsp;
-              <Button type="primary" onClick={() => this.onApproveClick()}>Increase the upper limit</Button>
+              <Button
+                disabled={switchDisabled}
+                type="primary" onClick={() => this.onApproveClick()}>Increase the upper limit</Button>
             </div>
             <div className='basic-blank'/>
             <div className='personal-exchange'>
@@ -280,7 +298,12 @@ export default class PersonalDraw extends Component{
                 defaultValue={1}
                 onChange={this.onExchangeNumberChange} />
               &nbsp;&nbsp;&nbsp;
-              <Button type="primary" onClick={() => this.onBuyClick()}>Switch</Button>
+              <Button
+                disabled={switchDisabled}
+                type="primary" onClick={() => this.onBuyClick()}>Switch</Button>
+            </div>
+            <div className="text-grey">
+              The Lucky Draw Function will be closed after {moment(switchCodeDate.end).format('YYYY-MM-DD HH:mm')}. Please switch it in time to avoid loss.
             </div>
           </div>
 

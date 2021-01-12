@@ -3,7 +3,7 @@ import { Button, Card, Form, Input, Spin, message, Select } from 'antd';
 import moment from 'moment';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { WEB3, SWAP_PAIR } from '../../../constant/constant';
-import { getAvailableTime } from '../../../utils/cmsUtils';
+import { getAvailableTime, renderAvailableTime } from '../../../utils/cmsUtils';
 const {LOCK_ADDRESS} = WEB3;
 
 const layout = {
@@ -336,7 +336,7 @@ export default class Web3Info extends Component{
           className='hover-cursor-auto'
           headStyle={styles.cardMainHeader}
           title='Staking Token'
-          extra={<span>Available Time: {moment(mortgageDate.start).format('YYYY-MM-DD HH:mm')} - {moment(mortgageDate.end).format('YYYY-MM-DD HH:mm')}</span>}
+          extra={renderAvailableTime(mortgageDate)}
           hoverable>
           <div className='section-content'>
             <InfoCircleFilled style={{

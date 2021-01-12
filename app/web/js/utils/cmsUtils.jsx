@@ -17,6 +17,9 @@ export const checkTimeAvailable = dateInfo => {
 };
 
 export const renderAvailableTime = dataInfo => {
+  if (dataInfo.start === '') {
+    return <span>Available Time: - </span>;
+  }
   return <span>Available Time: {moment(dataInfo.start).format('YYYY-MM-DD HH:mm')} - {moment(dataInfo.end).format('YYYY-MM-DD HH:mm')}</span>;
 };
 
