@@ -14,7 +14,6 @@ import './Lottery.less';
 import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux';
 import * as ActionsAccount from '../../actions/account';
-import {getSwapPair} from '../../utils/getSwapInfo';
 import Contract from '../../utils/Contract';
 import { LOTTERY } from '../../constant/constant';
 import axios from '../../service/axios';
@@ -48,15 +47,6 @@ class Lottery extends Component {
         grandPrize: false,
         grandPrizeAmount: 0
       }],
-      swapInfo: {
-        swapRatio: {
-          originShare: 1,
-          targetShare: 1
-        },
-        currentRound: {
-          swappedAmount: 0,
-        }
-      },
       tutorial: [],
       referendumInfo: {
         isShow: false,
@@ -79,7 +69,7 @@ class Lottery extends Component {
         this.setState({
           tutorial: res.data
         })
-      })
+      });
 
     getLotteryReferendumsInfo()
       .then(res => {
@@ -90,7 +80,6 @@ class Lottery extends Component {
         }
       });
 
-    this.getSwapPair();
     this.getCurrentPeriodNumber();
     this.getPrizeList();
   }
@@ -101,22 +90,6 @@ class Lottery extends Component {
     this.setState({
       prizeInfo
     })
-  }
-
-  async getSwapPair() {
-    try {
-      const swapInfo = await getSwapPair();
-      console.log('swapInfo: ', swapInfo);
-      if (swapInfo) {
-        this.setState({
-          swapInfo,
-        });
-      } else {
-        message.warning('Can not get the swap information.');
-      }
-    } catch(error) {
-        message.error(error.Error && error.Error.Message ? error.Error.Message : error.message);
-    }
   }
 
   async getCurrentPeriodNumber() {
@@ -134,7 +107,7 @@ class Lottery extends Component {
     const {accountInfo} = account;
     const {address} = accountInfo;
 
-    const {swapInfo, currentPeriodNumber, prizeInfo, tutorial, referendumInfo} = this.state;
+    const {currentPeriodNumber, prizeInfo, tutorial, referendumInfo} = this.state;
     const { grandPrize, grandPrizeAmount } = prizeInfo[0];
 
     return (
@@ -147,8 +120,6 @@ class Lottery extends Component {
             <TabPane tab="Lottery Draw" key="1">
               <LotteryDraw
                 prizeInfo={prizeInfo}
-                swapInfo={swapInfo}
-                currentPeriodNumber={currentPeriodNumber}
               />
               {referendumInfo.isShow && <div className='next-card-blank'/>}
               {referendumInfo.isShow && <Referendum grandPrizeAmount={parseInt(grandPrizeAmount)} info={referendumInfo}/>}
