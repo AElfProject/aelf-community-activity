@@ -9,6 +9,8 @@ import { Link } from 'react-router';
 import { Menu } from 'antd';
 
 import Account from '../Account/Account';
+import { MenuUnfoldOutlined } from '@ant-design/icons';
+import isMobile from 'ismobilejs';
 
 import Svg from '../Svg/Svg';
 import './header.styles.less';
@@ -33,6 +35,27 @@ export default class BrowserHeader extends Component {
     });
   };
 
+  renderMobileMenu(menuListTemp) {
+    const menuList = menuListTemp.filter(item => !item.pcOnly);
+    const listHTML = menuList.map(item => {
+      return <Menu.Item key={item.key}>
+        <Link to={item.url} key={item.key}>{item.title}</Link>
+      </Menu.Item>
+    });
+
+    return (
+      <div className="header-mobile-menu">
+        <Menu
+          onClick={this.handleClick}
+          selectedKeys={[ this.state.current ]}
+          mode="horizontal"
+          overflowedIndicator={<MenuUnfoldOutlined style={{ fontSize: '24px'}}/>}
+        >
+            {listHTML}
+        </Menu>
+      </div>);
+  }
+
   renderMenu(menuList) {
 
     const listHTML = menuList.map(item => {
@@ -54,7 +77,8 @@ export default class BrowserHeader extends Component {
       {
         url: '/swap',
         key: 'swap',
-        title: 'Claim Token'
+        title: 'Claim Token',
+        pcOnly: true,
       },
       {
         url: '/daily',
@@ -68,6 +92,9 @@ export default class BrowserHeader extends Component {
       },
     ];
     const menuHTML = this.renderMenu(menuList);
+    const mobileMenuHTML = this.renderMobileMenu(menuList);
+
+    const isPhone = isMobile(window.navigator).phone;
 
     return (
       <div className='header-fixed-container'>
@@ -79,8 +106,9 @@ export default class BrowserHeader extends Component {
             />
           </Link>
           <div className='header-right'>
-            {menuHTML}
+            {!isPhone && menuHTML}
             <Account/>
+            {isPhone && mobileMenuHTML}
           </div>
         </div>
       </div>);
