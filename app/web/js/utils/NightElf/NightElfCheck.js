@@ -10,6 +10,7 @@ import {
 let nightElfInstance = null;
 let aelfInstanceByExtension = null;
 let contractInstances = {};
+
 export default class NightElfCheck {
     constructor() {
         let resovleTemp = null;

@@ -1,5 +1,7 @@
-import NightElfCheck from './NightElfCheck';
+import NightElfCheckTemp from './NightElfCheck';
+import AelfBridgeCheck from '../aelfBridge/AelfBridgeCheck';
+import isMobile from 'ismobilejs';
 
-export {
-  NightElfCheck
-};
+const isPhone = isMobile(window.navigator).phone;
+
+export const NightElfCheck = isPhone ? AelfBridgeCheck : NightElfCheckTemp;
