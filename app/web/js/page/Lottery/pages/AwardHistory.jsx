@@ -133,10 +133,10 @@ export default class AwardHistory extends Component{
       return null;
     }
 
-    // const timestampInUse = theLast ? supposedDrawDate : actualDrawDate;
-    // const prefixInUse = theLast ? 'Supposed draw date: ' : 'Draw date: ';
-    const timestampInUse = supposedDrawDate || actualDrawDate;
+    const timestampInUse = theLast ? supposedDrawDate : actualDrawDate;
     const prefixInUse = theLast ? 'Supposed draw date: ' : 'Draw date: ';
+    // const timestampInUse = supposedDrawDate || actualDrawDate;
+    // const prefixInUse = theLast ? 'Supposed draw date: ' : 'Draw date: ';
     // const format = 'YYYY-MM-DD HH:mm:ss';
     const format = 'YYYY-MM-DD HH:mm';
     const timeShow = prefixInUse +

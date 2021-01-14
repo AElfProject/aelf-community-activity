@@ -12,6 +12,7 @@ import MessageTxToExplore from '../../../components/Message/TxToExplore';
 import BigNumber from 'bignumber.js';
 import { checkTimeAvailable, renderAvailableTime } from '../../../utils/cmsUtils';
 import moment from 'moment';
+import './RewardSharing.less'
 
 export const RewardSharing = ({aelfAddress}) => {
 
@@ -72,7 +73,6 @@ export const RewardSharing = ({aelfAddress}) => {
         aelf Tx Hash (Chain: tDVV): <a target='_blank' href={explorerHref}>{TransactionId}</a>
       </span>
     });
-    // lotteryContract.
   };
   const onFinishFailed = () => {};
 
@@ -95,7 +95,7 @@ export const RewardSharing = ({aelfAddress}) => {
       title='Reward sharing'
       extra={renderAvailableTime(rewardTime)}
     >
-      <div className='section-content swap-flex-wrap'>
+      <div className='section-content swap-flex-wrap reward-sharing'>
         <div>
           Total Estimated Bonus: {estimatedBonus}ELF &nbsp;&nbsp;&nbsp;
           Estimated Available Bonus: {estimatedAvailableBonus} ELF({percentBN.toFormat(2)}%)</div>
@@ -106,6 +106,7 @@ export const RewardSharing = ({aelfAddress}) => {
             <Form
               layout="inline"
               name="basic"
+              className="reward-sharing-form"
               initialValues={{ remember: true }}
               onFinish={onFinish}
               onFinishFailed={onFinishFailed}

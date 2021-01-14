@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Table, InputNumber, Button, message, Card } from 'antd';
 import axios from '../../../service/axios';
 
-import {NightElfCheck} from '../../../utils/NightElf/NightElf';
+import {NightElfCheck, getViewResult} from '../../../utils/NightElf/NightElf';
 import addressFormat from '../../../utils/addressFormat';
 import { LOGIN_INFO, LOTTERY, TOKEN_CONTRACT_ADDRESS, EXPLORER_URL, TOKEN_DECIMAL } from '../../../constant/constant';
 import TokenContract from '../../../utils/tokenContract';
@@ -59,7 +59,14 @@ function renderHistory(dataSource, historyLoading) {
   //     registrationInformation: ''
   //   },
   // ];
-  return <Table dataSource={dataSource} loading={historyLoading} columns={columns} pagination={false} rowKey='id'/>;
+  return <Table
+    dataSource={dataSource}
+    loading={historyLoading}
+    columns={columns}
+    pagination={false}
+    rowKey='id'
+    scroll={{x: 512}}
+  />;
 }
 
 export default class PersonalDraw extends Component{
@@ -191,7 +198,7 @@ export default class PersonalDraw extends Component{
       owner: address
     });
 
-    const boughtLotteries = boughtLotteriesResult.result && boughtLotteriesResult.result.lotteries || [];
+    const boughtLotteries = getViewResult('lotteries', boughtLotteriesResult) || [];// boughtLotteriesResult.result && boughtLotteriesResult.result.lotteries || [];
     const boughtLotteriesReversed = clearPre ? boughtLotteries.reverse() : [...boughtLotteries.reverse(), ...boughtLotteriesPre];
 
     await this.decryptBoughtLotteries(boughtLotteriesReversed);

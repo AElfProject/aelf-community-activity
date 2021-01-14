@@ -8,8 +8,9 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
+    "aelf-bridge": "^0.0.9",
     "aelf-sdk": "^3.2.29",
-    "antd": "^4.0.0",
+    "antd": "^4.10.2",
     "axios": "^0.19.2",
     "bignumber.js": "^9.0.1",
     "buffer": "^5.5.0",
@@ -20,6 +21,7 @@
     "egg-validate": "^2.0.2",
     "egg-view-nunjucks": "^2.2.0",
     "immutable": "^4.0.0-rc.12",
+    "ismobilejs": "^1.1.1",
     "js-cookie": "^2.2.1",
     "moment": "^2.24.0",
     "react": "^16.13.0",
