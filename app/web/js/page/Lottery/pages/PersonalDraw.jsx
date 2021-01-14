@@ -198,7 +198,7 @@ export default class PersonalDraw extends Component{
       owner: address
     });
 
-    const boughtLotteries = getViewResult('lotteries', boughtLotteriesResult) || [];// boughtLotteriesResult.result && boughtLotteriesResult.result.lotteries || [];
+    const boughtLotteries = getViewResult('lotteries', boughtLotteriesResult) || [];
     const boughtLotteriesReversed = clearPre ? boughtLotteries.reverse() : [...boughtLotteries.reverse(), ...boughtLotteriesPre];
 
     await this.decryptBoughtLotteries(boughtLotteriesReversed);
