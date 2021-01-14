@@ -142,7 +142,7 @@ export default class AwardHistory extends Component{
     const timeShow = prefixInUse +
       (!!timestampInUse ? moment.utc(new Date(timestampInUse.seconds * 1000)).local().format(format) : '-');
 
-    return (<div key={randomHash}>
+    return (<div className="history-container" key={randomHash}>
       {/*<div className='history-period'>{timeFormatted}</div>*/}
       <div className='history-period'>Period: {period} &nbsp;&nbsp;&nbsp;
         {timeShow}  &nbsp;&nbsp;&nbsp;
