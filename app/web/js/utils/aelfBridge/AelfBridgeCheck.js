@@ -40,7 +40,7 @@ export default class AelfBridgeCheck {
     if (!aelfInstanceByBridge) {
       AelfBridgeCheck.resetContractInstances();
       // AelfBridgeCheck.initAelfInstanceByExtension();
-      AelfBridgeCheck.initAelfInstanceByBridge();
+      AelfBridgeCheck.initAelfInstanceByExtension();
     }
     return aelfInstanceByBridge;
   }
@@ -77,49 +77,31 @@ export default class AelfBridgeCheck {
     contractInstances = {};
   }
 
-  // static async getContractInstance(inputInitParams) {
-  //   const {loginInfo, contractAddress} = inputInitParams;
-  //   await NightElfCheck.getInstance().check;
-  //   const aelf = NightElfCheck.getAelfInstanceByExtension();
-  //
-  //   const accountInfo = await aelf.login(loginInfo);
-  //   if (accountInfo.error) {
-  //     throw Error(accountInfo.errorMessage.message || accountInfo.errorMessage);
-  //   }
-  //   const address = JSON.parse(accountInfo.detail).address;
-  //
-  //   await aelf.chain.getChainStatus();
-  //
-  //   if (contractInstances[contractAddress + address]) {
-  //     return contractInstances[contractAddress + address];
-  //   }
-  //   return await NightElfCheck.initContractInstance(inputInitParams);
-  // }
+  static async getContractInstance(inputInitParams) {
+    const {contractAddress} = inputInitParams;
+
+    if (!accountInfo) {
+      throw Error('Please login');
+    }
+    const address = JSON.parse(accountInfo.detail).address;
+
+    if (contractInstances[contractAddress + address]) {
+      return contractInstances[contractAddress + address];
+    }
+    return await NightElfCheck.initContractInstance(inputInitParams);
+  }
 
   // singleton to get, new to init
-  // static async initContractInstance(inputInitParams) {
-  //   const {loginInfo, contractAddress} = inputInitParams;
-  //   await NightElfCheck.getInstance().check;
-  //   const aelf = NightElfCheck.getAelfInstanceByExtension();
-  //
-  //   const accountInfo = await aelf.login(loginInfo);
-  //   if (accountInfo.error) {
-  //     throw Error(accountInfo.errorMessage.message || accountInfo.errorMessage);
-  //   }
-  //   const address = JSON.parse(accountInfo.detail).address;
-  //
-  //   await aelf.chain.getChainStatus();
-  //
-  //   const wallet = {
-  //     address
-  //   };
-  //   // It is different from the wallet created by Aelf.wallet.getWalletByPrivateKey();
-  //   // There is only one value named address;
-  //   const contractInstance = await aelf.chain.contractAt(
-  //     contractAddress,
-  //     wallet
-  //   );
-  //   contractInstances[contractAddress + address] = contractInstance;
-  //   return contractInstance;
-  // }
+  static async initContractInstance(inputInitParams) {
+    const {contractAddress} = inputInitParams;
+    const aelf = AelfBridgeCheck.getAelfInstanceByExtension();
+    if (!accountInfo) {
+      throw Error('Please login');
+    }
+    const address = JSON.parse(accountInfo.detail).address;
+
+    const contractInstance = await aelf.chain.contractAt(contractAddress);
+    contractInstances[contractAddress + address] = contractInstance;
+    return contractInstance;
+  }
 }

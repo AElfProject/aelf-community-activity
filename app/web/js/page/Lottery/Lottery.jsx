@@ -132,19 +132,19 @@ class Lottery extends Component {
                 aelfAddress={address}
               />
 
-              <PersonalDraw
-                address={address}
-                currentPeriodNumber={currentPeriodNumber}
-              />
+              {/*<PersonalDraw*/}
+              {/*  address={address}*/}
+              {/*  currentPeriodNumber={currentPeriodNumber}*/}
+              {/*/>*/}
               <div className='next-card-blank'/>
             </TabPane>
-            <TabPane tab="Draw History" key="2">
-              <AwardHistory
-                currentPeriodNumber={currentPeriodNumber}
-                address={address}
-              />
-              <div className='next-card-blank'/>
-            </TabPane>
+            {/*<TabPane tab="Draw History" key="2">*/}
+            {/*  <AwardHistory*/}
+            {/*    currentPeriodNumber={currentPeriodNumber}*/}
+            {/*    address={address}*/}
+            {/*  />*/}
+            {/*  <div className='next-card-blank'/>*/}
+            {/*</TabPane>*/}
           </Tabs>
         </div>
       </div>
