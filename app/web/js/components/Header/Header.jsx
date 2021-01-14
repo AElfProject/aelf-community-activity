@@ -9,7 +9,7 @@ import { Link } from 'react-router';
 import { Menu } from 'antd';
 
 import Account from '../Account/Account';
-import { MenuUnfoldOutlined } from '@ant-design/icons';
+import { MenuUnfoldOutlined, ReloadOutlined } from '@ant-design/icons';
 import isMobile from 'ismobilejs';
 
 import Svg from '../Svg/Svg';
@@ -107,6 +107,14 @@ export default class BrowserHeader extends Component {
           </Link>
           <div className='header-right'>
             {!isPhone && menuHTML}
+            {/* Please do not refresh page in AELF Wallet 1.0.x. It will crash. */}
+            {/*{isPhone && <span className="header-reload"><ReloadOutlined onClick={() => {*/}
+            {/*  if (window.reloadLock) {*/}
+            {/*    return;*/}
+            {/*  }*/}
+            {/*  window.reloadLock = true;*/}
+            {/*  window.location.reload();*/}
+            {/*}}/></span>}*/}
             <Account/>
             {isPhone && mobileMenuHTML}
           </div>

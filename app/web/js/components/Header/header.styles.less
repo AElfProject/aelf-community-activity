@@ -54,3 +54,24 @@
   margin-top: 16px;
   overflow: hidden;
 }
+
+.header-reload {
+  font-size: 24px;
+  line-height: 68px;
+  margin-right: 8px;
+  color: @purple;
+  &:active {
+    transform: rotate(720deg);
+    -webkit-transition: transform .5s linear;
+    -moz-transition: transform .5s linear;
+    -o-transition: transform .5s linear;
+    transition: transform .5s linear;
+  }
+  &:hover {
+    transform: rotate(180deg);
+    -webkit-transition: transform .5s linear;
+    -moz-transition: transform .5s linear;
+    -o-transition: transform .5s linear;
+    transition: transform .5s linear;
+  }
+}
