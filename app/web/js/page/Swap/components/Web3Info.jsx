@@ -137,11 +137,14 @@ export default class Web3Info extends Component{
   }
 
   async onSwapELFReceiptIdChange (id) {
-    const {web3PluginInstance} = this.props;
     this.setState({
       swapELFReceiptInfo: [],
       swapELFMerklePathInfo: [[], [], [], []]
     });
+    if (id === undefined) {
+      return;
+    }
+    const {web3PluginInstance} = this.props;
     Promise.all(
       [web3PluginInstance.getReceiptInfo(id), web3PluginInstance.getMerklePathInfo(id)]
     ).then(result => {
@@ -499,17 +502,6 @@ export default class Web3Info extends Component{
         </Card>
 
         <div className='next-card-blank'/>
-        <Card
-          className='hover-cursor-auto'
-          hoverable>
-          <div className='section-content'>
-            <InfoCircleFilled style={{
-              color: 'orange'
-            }} /> After staking your ELF tokens, you can get the data used to swap tokens (LOT and ELF). You will need to wait 5 days to get the data, but can check the data status in "Swap Test Token".
-          </div>
-        </Card>
-
-        <div className='next-card-blank'/>
         <SwapElf
           swapPairInfo={swapPairInfo}
           ethAddress={account.address}
@@ -550,7 +542,7 @@ export default class Web3Info extends Component{
                 help={
                   <>
                     <div>
-                      Once the event is completed, ELF tokens can be redeemed by submitting the Lock Receipt ID. Users can only redeem ELF tokens after 45 days based on the time when the lock started. This step is available in the WriteContract-finishReceipt of the
+                      Once the event is completed, ELF tokens can be redeemed by submitting the Lock Receipt ID. Users can only redeem ELF tokens after 30 days based on the time when the lock started. This step is available in the WriteContract-finishReceipt of the
                       <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
                     </div>
                   </>

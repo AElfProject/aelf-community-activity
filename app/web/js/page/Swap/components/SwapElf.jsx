@@ -163,7 +163,7 @@ export default class SwapElf extends React.Component{
         hoverable
         headStyle={styles.cardMainHeader}
         // extra={<span>Available Time: {moment(swapTest.start).format('YYYY-MM-DD HH:mm')} - {moment(swapTest.end).format('YYYY-MM-DD HH:mm')}</span>}
-        title='Swap Test Tokens'>
+        title='Claim Token'>
         <div className='section-content swap-form-container'>
           <Form
             {...layout}
@@ -204,10 +204,10 @@ export default class SwapElf extends React.Component{
                   return <Select.Option value={receiptId.value} key={receiptId.value}>{receiptId.value}</Select.Option>
                 })}
               </Select>
-              <div>After completing the “lock in”, you will receive a Lock Receipt ID verified by the “ReadContract-getMyReceipts of the
+              <div>After completing the'staking', you will receive a Lock Receipt ID verified by the ‘ReadContract-getMyReceipts’ of the
                 <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
               </div>
-              <div>You may have to wait for 1-2 days to proceed token swap after completing step 2.</div>
+              <div>After 2 hours of staking, you can click ‘Submit’ tab to claim bonus. </div>
               <div>If the receipt ID has been swapped, you can still submit it but will not be able to see an existing transaction.</div>
             </Form.Item>
 
@@ -225,10 +225,17 @@ export default class SwapElf extends React.Component{
 
             <Form.Item
               label="Original Amount"
+              help={
+                <>
+                  <div>
+                    You will receive aelf Mainnet Token Reward: {swapInfo.swapELFReceiptInfo[2] / 400 / (10**18) || '-'} ELF,&nbsp;
+                    {swapInfo.swapELFReceiptInfo[2] / (10**18) || '-'} LOT</div>
+                </>
+              }
               // name="originAmount"
               // rules={[{ required: true, message: 'Please input the origin amount!' }]}
             >
-              <Input disabled value={swapInfo.swapELFReceiptInfo[2]}/>
+              <Input disabled value={swapInfo.swapELFReceiptInfo[2] / (10**18) || ''}/>
             </Form.Item>
 
             <Form.Item
