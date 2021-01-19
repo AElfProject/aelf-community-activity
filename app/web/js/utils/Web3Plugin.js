@@ -162,13 +162,14 @@ export class Web3Plugin {
   }
 
   async createReceipt (mortgageData) {
-    const {amount, address} = mortgageData;
+    const {amount, address, referralCode} = mortgageData;
 
     let from = this.myAccounts[0].address;
     let to = LOCK_ADDRESS;
     let transaction = this.lockContract.methods.createReceipt(
       this.web3.utils.toWei(amount.toString(), 'ether'),
-      address // target address
+      address, // target address
+      referralCode || ''
     );
 
     // let sucessFn = function (receipt) {
@@ -206,9 +207,11 @@ export class Web3Plugin {
     }
     let res = await this.lockContract.methods.receipts(receiptId).call();
     if (!res) {
+      message.warning(`Receipt ID ${receiptId} is not ready to redeem`);
       return false;
     }
     if (res.finished) {
+      message.warning(`Receipt ID ${receiptId} had been redeemed`);
       return false;
     }
     return res.endTime * 1000 <= Date.parse(new Date());

@@ -4,6 +4,9 @@ import moment from 'moment';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { WEB3, SWAP_PAIR } from '../../../constant/constant';
 import { getAvailableTime, renderAvailableTime } from '../../../utils/cmsUtils';
+
+import SwapElf from './SwapElf';
+
 const {LOCK_ADDRESS} = WEB3;
 
 const layout = {
@@ -230,6 +233,18 @@ export default class Web3Info extends Component{
       mortgagedLink: null,
       mortgagedTxHash: null
     });
+    if (!mortgageData.address) {
+      message.error('Please input address');
+      this.setState({ mortgageLoading: false });
+      return;
+    }
+    const length = mortgageData.address.length;
+    if (!(length <= 51 && length >= 47)) {
+      message.error('Invalid aelf Wallet Address');
+      this.setState({ mortgageLoading: false });
+      return;
+    }
+
     web3PluginInstance.createReceipt(mortgageData).then(receipt => {
       const etherscanPrefix = web3PluginInstance.currentNetwork === 'ethereum' ? '' : web3PluginInstance.currentNetwork + '.';
       this.setState({
@@ -288,6 +303,7 @@ export default class Web3Info extends Component{
       redeem, redeemLoading, redeemedLink, redeemedTxHash,
       receiptIds, // mainnetTokenRewardPivot, mortgageDate
       mainnetTokenRewardPivot, mortgageDate, redeemDate,
+      swapELFReceiptInfo, swapELFMerklePathInfo,
       isRedeemReady
     } = this.state;
 
@@ -297,7 +313,7 @@ export default class Web3Info extends Component{
     const submitDisable = moment(mortgageDate.end).unix() < timeNow || moment(mortgageDate.start).unix() > timeNow;
     console.log('submitDisable', submitDisable, timeNow, moment(mortgageDate.end).unix(), moment(mortgageDate.start).unix());
 
-    const {web3PluginInstance} = this.props;
+    const {web3PluginInstance, swapPairInfo} = this.props;
     window.web3PluginInstance2 = web3PluginInstance;
     console.log('web3PluginInstance', web3PluginInstance, account.address, mortgageDate);
     return (
@@ -363,7 +379,7 @@ export default class Web3Info extends Component{
                 label="Spender (address)"
                 help={
                   <>
-                    <div>Authorize the lock-in contract and input the authorized amount (these tokens will be used for the mortgage); this step can be performed in the writecontract - approve operation on the
+                    <div>Authorize the lock-in contract and input the authorized amount (these tokens will be used for the staking); this step can be performed in the writecontract - approve operation on the
                       <a href={web3PluginInstance.tokenContractLink} target='_blank'> Ethereum Token Contract Page</a>
                     </div>
                   </>
@@ -418,9 +434,11 @@ export default class Web3Info extends Component{
               onFinishFailed={this.onMortgageFinishFailed}
               onValuesChange={(changedValues, allValues) => {
                 // console.log('changedValues, allValues', changedValues, allValues);
-                this.setState({
-                  mainnetTokenRewardPivot: changedValues.amount || 0
-                });
+                if ('amount' in changedValues) {
+                  this.setState({
+                    mainnetTokenRewardPivot: changedValues.amount || 0
+                  });
+                }
               }}
             >
               <Form.Item
@@ -436,8 +454,14 @@ export default class Web3Info extends Component{
                 <Input/>
               </Form.Item>
 
+              {/*<Form.Item*/}
+              {/*  label="aelf Receiving Address "*/}
+              {/*  rules={[{ required: true, message: 'aelf Receiver Address is required.' }]}*/}
+              {/*>*/}
               <Form.Item
-                label="aelf Receiving Address "
+                label="aelf Wallet Address "
+                name="address"
+                rules={[{ required: true, message: 'aelf Receiver Address is required.' }]}
                 help={
                   <>
                     <div>After completing the authorization, please provide the amount of ELF to stake (the amount should be no more than the authorized quantity) and the address for receiving ELF in the aelf mainnet. The staking bonus will be automatically sent to your aelf wallet after we verify it. Please check it after 2 hours.This step can be executed in the writecontract-createreceipt section of the
@@ -446,13 +470,15 @@ export default class Web3Info extends Component{
                   </>
                 }
               >
-                <Form.Item
-                  name="address"
-                  noStyle
-                  rules={[{ required: true, message: 'aelf Receiver Address is required.' }]}
-                >
-                  <Input/>
-                </Form.Item>
+                <Input/>
+              </Form.Item>
+              {/*</Form.Item>*/}
+
+              <Form.Item
+                label="Referral Code"
+                name="referralCode"
+              >
+                <Input maxLength={128} placeholder="Optional"/>
               </Form.Item>
 
               <Form.Item {...tailLayout}>
@@ -471,6 +497,29 @@ export default class Web3Info extends Component{
             </Form>
           </div>
         </Card>
+
+        <div className='next-card-blank'/>
+        <Card
+          className='hover-cursor-auto'
+          hoverable>
+          <div className='section-content'>
+            <InfoCircleFilled style={{
+              color: 'orange'
+            }} /> After staking your ELF tokens, you can get the data used to swap tokens (LOT and ELF). You will need to wait 5 days to get the data, but can check the data status in "Swap Test Token".
+          </div>
+        </Card>
+
+        <div className='next-card-blank'/>
+        <SwapElf
+          swapPairInfo={swapPairInfo}
+          ethAddress={account.address}
+          swapId={SWAP_PAIR}
+          receiptIds={receiptIds}
+          onSwapELFReceiptIdChange={this.onSwapELFReceiptIdChange}
+          swapELFReceiptInfo={swapELFReceiptInfo}
+          swapELFMerklePathInfo={swapELFMerklePathInfo}
+          web3PluginInstance={web3PluginInstance}
+        />
 
         <div className='next-card-blank'/>
         <Card
@@ -524,7 +573,6 @@ export default class Web3Info extends Component{
                       this.setState({
                         isRedeemReady: redeemReady
                       });
-                      console.log('receiptId: ', value);
                     }}
                   >
                     {/*<Select.Option value={250} key={250}>250 invalid id</Select.Option>*/}
