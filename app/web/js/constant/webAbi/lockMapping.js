@@ -28,6 +28,37 @@ export const lockMapping = [
       {
         "indexed": false,
         "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "invitingCode",
+        "type": "string"
+      }
+    ],
+    "name": "NewInviting",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "receiptId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
         "name": "asset",
         "type": "address"
       },
@@ -132,6 +163,11 @@ export const lockMapping = [
       {
         "internalType": "string",
         "name": "_targetAddress",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_code",
         "type": "string"
       }
     ],

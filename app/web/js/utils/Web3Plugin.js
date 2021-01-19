@@ -206,9 +206,11 @@ export class Web3Plugin {
     }
     let res = await this.lockContract.methods.receipts(receiptId).call();
     if (!res) {
+      message.warning(`Receipt ID ${receiptId} is not ready to redeem`);
       return false;
     }
     if (res.finished) {
+      message.warning(`Receipt ID ${receiptId} had been redeemed`);
       return false;
     }
     return res.endTime * 1000 <= Date.parse(new Date());
