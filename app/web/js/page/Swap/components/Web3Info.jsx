@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button, Card, Form, Input, Spin, message, Select } from 'antd';
+import { Button, Card, Form, Input, Spin, message, Select, InputNumber } from 'antd';
 import moment from 'moment';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { WEB3, SWAP_PAIR } from '../../../constant/constant';
@@ -454,7 +454,12 @@ export default class Web3Info extends Component{
                   </>
                 }
               >
-                <Input/>
+                <InputNumber
+                  style={{width: '100%'}}
+                  placeholder={`Max amount: ${allowance || '0'}, Min amount ${allowance ? '0.000004' : '0'}`}
+                  max={allowance}
+                  min={0.000004}
+                />
               </Form.Item>
 
               {/*<Form.Item*/}

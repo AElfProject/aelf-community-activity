@@ -1,4 +1,4 @@
-import { Form, Input, Button, message, Card } from 'antd';
+import { Form, Input, Button, message, Card, InputNumber } from 'antd';
 import React, {useState} from "react";
 import Web3 from 'web3';
 import { EXPLORER_URL, LOGIN_INFO, LOTTERY } from '../../../constant/constant';
@@ -12,6 +12,7 @@ import MessageTxToExplore from '../../../components/Message/TxToExplore';
 import BigNumber from 'bignumber.js';
 import { checkTimeAvailable, renderAvailableTime } from '../../../utils/cmsUtils';
 import moment from 'moment';
+import {RewardSharingStake} from './RewardSharingStake';
 import './RewardSharing.less'
 
 export const RewardSharing = ({aelfAddress}) => {
@@ -100,6 +101,11 @@ export const RewardSharing = ({aelfAddress}) => {
           Total Estimated Bonus: {estimatedBonus}ELF &nbsp;&nbsp;&nbsp;
           Estimated Available Bonus: {estimatedAvailableBonus} ELF({percentBN.toFormat(2)}%)</div>
         <div className='basic-blank'/>
+
+        <RewardSharingStake
+          aelfAddress={aelfAddress}
+        />
+
         {registeredDividend && registeredDividend.receiver
           ? <div>Ethereum Address: {registeredDividend.receiver}</div>
           : <div>

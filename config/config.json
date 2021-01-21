@@ -1,8 +1,8 @@
 {
   "APPNAME": "aelf community",
   "COMMON_PRIVATE": "f6e512a3c259e5f9af981d7f99d245aa5bc52fe448495e0b0dd56e8406be6f71",
-  "SWAP_CONTRACT_ADDRESS": "2YkKkNZKCcsfUsGwCfJ6wyTx5NYLgpCg1stBuRT4z5ep3psXNG",
-  "SWAP_PAIR": "7f3c5601cc70ace1dc303c5da47ce4ae0113bdb4b59ab2b868dbaa029944f562",
+  "SWAP_CONTRACT_ADDRESS": "2onFLTnPEiZrXGomzJ8g74cBre2cJuHrn1yBJF3P6Xu9K5Gbth",
+  "SWAP_PAIR": "1471937c1b0db1ea952b4f37392003b8edacf6c57b4f6bd3b9403c6ac3514dfa",
   "HTTP_PROVIDER": "http://1.119.195.50:11112/chain",
   "HTTP_PROVIDER_INNER": "http://1.119.195.50:11112/chain",
   "TOKEN_CONTRACT_ADDRESS": "7RzVGiuVWkvL4VfVHdZfQF2Tri3sgLe9U991bohHFfSRZXuGX",
@@ -22,13 +22,13 @@
       "method": "LOGIN",
       "contracts": [{
         "chainId": "tDVV",
-        "contractAddress": "2YkKkNZKCcsfUsGwCfJ6wyTx5NYLgpCg1stBuRT4z5ep3psXNG",
+        "contractAddress": "2onFLTnPEiZrXGomzJ8g74cBre2cJuHrn1yBJF3P6Xu9K5Gbth",
         "contractName": "Token swap contract",
         "description": "Swap token from the other chain. Base on protocol [-]",
         "github": "https://github.com/AElfProject/AElf/blob/token-swap-contract/protobuf/token_swap_contract.proto"
       },{
         "chainId": "tDVV",
-        "contractAddress": "RXcxgSXuagn8RrvhQAV81Z652EEYSwR6JLnqHYJ5UVpEptW8Y",
+        "contractAddress": "buePNjhmHckfZn9D8GTL1wq6JgA8K24SeTWnjCNcrz6Sf1FDh",
         "contractName": "Lottery contract",
         "description": "Good Luck",
         "github": "-"
@@ -44,12 +44,12 @@
   "LOTTERY": {
     "RATIO": 1000,
     "SYMBOL": "LOT",
-    "CONTRACT_ADDRESS": "RXcxgSXuagn8RrvhQAV81Z652EEYSwR6JLnqHYJ5UVpEptW8Y"
+    "CONTRACT_ADDRESS": "buePNjhmHckfZn9D8GTL1wq6JgA8K24SeTWnjCNcrz6Sf1FDh"
   },
   "WEB3": {
     "TOKEN_ADDRESS": "0xb5685232b185cadf7c5f58217722ac40bc4ec45e",
-    "LOCK_ADDRESS": "0xFB3dAC993A9638a1e3CB22dA7eFBA07370D880e2",
-    "MERKLE_ADDRESS": "0x589B3a879fc77807ae25B54AcBd414963117Ca28"
+    "LOCK_ADDRESS": "0x8fC5F0dE3D2b577a8141856Cc1a571A53CB39837",
+    "MERKLE_ADDRESS": "0x513508e125461F49d9ab3eF63704f286494387d6"
   },
   "CHAIN": {
     "AELF": {
