@@ -66,7 +66,7 @@ export default function renderLotteryDraw(props) {
     <Card
       className='hover-cursor-auto'
       hoverable
-      title='Lottery Draw: We draw the winning lottery code at 5 pm (GMT + 8)'>
+      title='Lottery Draw: We draw the winning lottery code at 6 pm (GMT + 8)'>
       <div className='section-content lottery-prize-step-container'>
         <div className='prize-title'>
           <span className='prize-current-token'>{currentDesc}</span>

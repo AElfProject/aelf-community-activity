@@ -48,6 +48,12 @@ export const lockMapping = [
         "internalType": "uint256",
         "name": "endTime",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "invitingCode",
+        "type": "string"
       }
     ],
     "name": "NewReceipt",
@@ -132,6 +138,11 @@ export const lockMapping = [
       {
         "internalType": "string",
         "name": "_targetAddress",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_code",
         "type": "string"
       }
     ],

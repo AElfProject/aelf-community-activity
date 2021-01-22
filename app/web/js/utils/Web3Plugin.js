@@ -4,6 +4,7 @@ import { BigNumber } from 'bignumber.js';
 // import big from 'bignumber';
 import {merkleAbi, lockAbi, tokenAbi} from '../constant/web3Abi';
 import {WEB3} from '../constant/constant';
+import moment from 'moment';
 
 const {TOKEN_ADDRESS, LOCK_ADDRESS, MERKLE_ADDRESS} = WEB3;
 
@@ -162,13 +163,14 @@ export class Web3Plugin {
   }
 
   async createReceipt (mortgageData) {
-    const {amount, address} = mortgageData;
+    const {amount, address, referralCode} = mortgageData;
 
     let from = this.myAccounts[0].address;
     let to = LOCK_ADDRESS;
     let transaction = this.lockContract.methods.createReceipt(
       this.web3.utils.toWei(amount.toString(), 'ether'),
-      address // target address
+      address, // target address
+      referralCode || ''
     );
 
     // let sucessFn = function (receipt) {
@@ -206,12 +208,20 @@ export class Web3Plugin {
     }
     let res = await this.lockContract.methods.receipts(receiptId).call();
     if (!res) {
+      message.warning(`Receipt ID ${receiptId} is not ready to redeem.`);
       return false;
     }
     if (res.finished) {
+      message.warning(`Receipt ID ${receiptId} had been redeemed.`);
       return false;
     }
-    return res.endTime * 1000 <= Date.parse(new Date());
+    if (res.endTime * 1000 > Date.parse(new Date())) {
+      message.warning(`Receipt ID ${receiptId} is not ready to redeem. Ready after ${
+        moment(res.endTime * 1000).format('YYYY-MM-DD HH:mm')
+      }`);
+      return false;
+    }
+    return true;
   }
   async execRedeem (redeemData) {
     let res = await this.lockContract.methods.receipts(redeemData.receiptId).call();

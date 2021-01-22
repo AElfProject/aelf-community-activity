@@ -1,17 +1,20 @@
 import { Form, Input, Button, message, Card } from 'antd';
 import React, {useState} from "react";
 import Web3 from 'web3';
-import { EXPLORER_URL, LOGIN_INFO, LOTTERY } from '../../../constant/constant';
+import { EXPLORER_URL, LOGIN_INFO, LOTTERY,TOKEN_CONTRACT_ADDRESS, TOKEN_DECIMAL } from '../../../constant/constant';
 import {useContract} from '../hooks/useContract';
 import {useRegisteredDividend} from '../hooks/useRegisteredDividend';
 import {useAllLotteriesCount, useBoughtLotteriesCount} from '../hooks/useLotteriesCount';
 import {useAvailableTime} from '../hooks/useAvailableTime';
 import {useCMSLotterySharing} from '../hooks/useCMSLotterySharing';
+import {useAelfTokenAllowance} from '../hooks/useAelfTokenAllowance';
+import {useLotteryStaked} from '../hooks/useLotteryStaked';
 import { NightElfCheck } from '../../../utils/NightElf/NightElf';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
 import BigNumber from 'bignumber.js';
-import { checkTimeAvailable, renderAvailableTime } from '../../../utils/cmsUtils';
+import { checkTimeAvailable, renderAvailableTime, getAvailableTime} from '../../../utils/cmsUtils';
 import moment from 'moment';
+import {RewardSharingStake} from './RewardSharingStake';
 import './RewardSharing.less'
 
 export const RewardSharing = ({aelfAddress}) => {
@@ -20,7 +23,12 @@ export const RewardSharing = ({aelfAddress}) => {
   const registeredDividend = useRegisteredDividend(aelfAddress, lotteryContract);
   const allLotteriesCount = useAllLotteriesCount(lotteryContract);
   const boughtLotteriesCount = useBoughtLotteriesCount(aelfAddress, lotteryContract);
+
   const rewardTime = useAvailableTime('lotteryRewardSharing');
+  const stakedTime = useAvailableTime('lotteryRewardSharingStaking')
+  // const {lotteryRewardSharing: rewardTime, lotteryRewardSharingStaking: stakedTime} = useAvailableTime(['lotteryRewardSharing', 'lotteryRewardSharingStaking']) 
+  // const stakedTime = useAvailableTime('lotteryRewardSharingStaking')
+  const stakedDisabled = !checkTimeAvailable(stakedTime);
   const rewardDisabled = !checkTimeAvailable(rewardTime);
   const lotterySharing = useCMSLotterySharing();
 
@@ -32,6 +40,23 @@ export const RewardSharing = ({aelfAddress}) => {
     type: 'success',
     msg: null
   });
+  const tokenContract = useContract(aelfAddress, TOKEN_CONTRACT_ADDRESS);
+  const [refreshTime, setRefreshTime]= useState(1);
+
+  const allowance  = useAelfTokenAllowance({
+    tokenContract,
+    address: aelfAddress,
+    contractAddress: LOTTERY.CONTRACT_ADDRESS,
+    tokenName: 'LOT',
+    refreshTime: refreshTime
+  });
+  const staked = useLotteryStaked({
+    lotteryContract,
+    address: aelfAddress,
+    refreshTime: refreshTime
+  });
+  const allowanceShow = allowance / (10 ** TOKEN_DECIMAL);
+  const stakedShow = staked / (10 ** TOKEN_DECIMAL);
 
   const onFinish = async (value) => {
     if(!Web3.utils.isAddress(value.ethAddress)) {
@@ -88,6 +113,7 @@ export const RewardSharing = ({aelfAddress}) => {
   if (!showLotterySharing) {
     return null;
   }
+
   return <>
     <Card
       className='hover-cursor-auto'
@@ -100,6 +126,14 @@ export const RewardSharing = ({aelfAddress}) => {
           Total Estimated Bonus: {estimatedBonus}ELF &nbsp;&nbsp;&nbsp;
           Estimated Available Bonus: {estimatedAvailableBonus} ELF({percentBN.toFormat(2)}%)</div>
         <div className='basic-blank'/>
+
+        <RewardSharingStake
+          disabled={stakedDisabled}
+          setRefreshTime={setRefreshTime}
+          approvedLot={allowanceShow}
+          stakedLot={stakedShow}
+        />
+
         {registeredDividend && registeredDividend.receiver
           ? <div>Ethereum Address: {registeredDividend.receiver}</div>
           : <div>
@@ -122,7 +156,7 @@ export const RewardSharing = ({aelfAddress}) => {
 
               <Form.Item>
                 <Button
-                  disabled={rewardDisabled}
+                  disabled={rewardDisabled ? rewardDisabled : (+stakedShow) === 0}
                   type="primary" htmlType="submit">
                   Submit
                 </Button>
