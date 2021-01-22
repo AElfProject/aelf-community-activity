@@ -4,6 +4,7 @@ import moment from 'moment';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { WEB3, SWAP_PAIR } from '../../../constant/constant';
 import { getAvailableTime, renderAvailableTime } from '../../../utils/cmsUtils';
+import SwapContract from '../../../utils/swapContract';
 
 import SwapElf from './SwapElf';
 
@@ -78,6 +79,8 @@ export default class Web3Info extends Component{
 
     this.redeemFormRef = React.createRef();
 
+    this.swapcontract = new SwapContract();
+
     this.connectMetaMask = this.connectMetaMask.bind(this);
     this.checkMetaMask = this.checkMetaMask.bind(this);
     this.onApproveFinish = this.onApproveFinish.bind(this);
@@ -145,18 +148,29 @@ export default class Web3Info extends Component{
       return;
     }
     const {web3PluginInstance} = this.props;
-    Promise.all(
-      [web3PluginInstance.getReceiptInfo(id), web3PluginInstance.getMerklePathInfo(id)]
-    ).then(result => {
+
+    try {
+      const result = await Promise.all(
+        [web3PluginInstance.getReceiptInfo(id),
+          web3PluginInstance.getMerklePathInfo(id)],
+      );
       this.setState({
         swapELFReceiptInfo: result[0],
         swapELFMerklePathInfo: result[1]
       });
-      console.log('swapELFReceiptInfo', result);
-    }).catch(e => {
-      message.warning(`Receipt ID: ${id} maybe not ready to swap`);
+
+      const swapContract = await this.swapcontract.getSwapContractInstance();
+      const swapAmounts = await swapContract.GetSwapAmounts.call({
+        swapId: SWAP_PAIR,
+        uniqueId: result[0][0]
+      });
+      if (swapAmounts) {
+        message.warning(`Receipt ID: ${id} had been swapped`, 6);
+      }
+    } catch(e) {
+      message.warning(`Receipt ID: ${id} maybe not ready to swap`, 6);
       message.warning(e.message);
-    });
+    }
   }
 
   async getAccounts () {
