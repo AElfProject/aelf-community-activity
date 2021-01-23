@@ -76,14 +76,14 @@ export const RewardSharingStake = ({disabled, approvedLot, stakedLot, setRefresh
     //   throw Error('Please input the amount of LOT to be staked.');
     // }
     if (!value.stakedLot) {
-      setApproveErrorMsg({
+      setStakingErrorMsg({
         type:"error",
         msg: "Please input the amount of LOT to be staked."
       })
       return
     }
     if (value.stakedLot > stakedLot) {
-      setApproveErrorMsg({
+      setStakingErrorMsg({
         type: "error",
         msg: `Please input the amount of LOT less then ${stakedLot}`
       })
