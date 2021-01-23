@@ -41,7 +41,8 @@ class DailyMissions extends Component {
         start: '',
         end: ''
       },
-      severalTaskTutorial: "/"
+      severalTaskTutorial: "/",
+      collectLoading: false
     };
     this.getCountdown = this.getCountdown.bind(this);
     this.hasAward = this.hasAward.bind(this);
@@ -185,20 +186,26 @@ class DailyMissions extends Component {
     message.success(txIdHTML, 6);
     setTimeout(() => {
       this.props.getDailyAwardHistory();
-    });
+    }, 1000);
   }
 
   async onGetAward(txId, type, chainId) {
+    this.setState({
+      collectLoading: true
+    });
     try {
       await this.getAward(txId, type, chainId);
     } catch {
       // do nothing
       // console.log('onGetAward', e);
     }
+    this.setState({
+      collectLoading: false
+    });
   }
 
   renderMission(effectiveTx, type) {
-    const { dailyTaskDate } = this.state;
+    const { dailyTaskDate, collectLoading } = this.state;
     const taskAvailable = checkTimeAvailable(dailyTaskDate);
 
     const { account } = this.props;
@@ -210,7 +217,8 @@ class DailyMissions extends Component {
     const hasAward = this.hasAward(type);
     const awardedButton =  <Button type="primary" disabled>Had awarded</Button>;
     const awardButton = <Button type="primary"
-                                disabled={!taskAvailable || !address}
+                                loading={collectLoading}
+                                disabled={!taskAvailable || !address || collectLoading}
                                 onClick={() => this.onGetAward(effectiveTxId, type, effectiveTxChainId)}>Collect</Button>;
     const buttonShow = hasAward ? awardedButton : awardButton;
     return (

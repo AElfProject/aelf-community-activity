@@ -38,7 +38,7 @@ module.exports = class TxsService extends Service {
 
     const sqlList = {
       resource: 'select * from resource_0 where address=? and tx_status=? order by id DESC limit 1',
-      normalTransfer: 'select * from transactions_token where address_from=? and tx_status=? and method!="CrossChainTransfer" order by id DESC limit 1',
+      normalTransfer: 'select * from transactions_token where address_from=? and tx_status=? and method!="CrossChainTransfer" and method!="CrossChainReceive" order by id DESC limit 1',
       crossTransfer: 'select * from transactions_token where address_from=? and tx_status=? and method="CrossChainTransfer" order by id DESC limit 1',
     };
     const sql = sqlList[type];

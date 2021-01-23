@@ -8,7 +8,7 @@ import {message} from 'antd';
 import Cookies from 'js-cookie'
 
 const instance = axios.create({
-  timeout: 6666,
+  timeout: 30000,
   headers: {
     'x-csrf-token': Cookies.get('csrfToken')
   }

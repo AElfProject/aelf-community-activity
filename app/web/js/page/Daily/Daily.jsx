@@ -36,6 +36,9 @@ class Daily extends Component {
       dailyAwardHistory: [],
       tutorial: []
     };
+
+    this.getDailyAwardHistoryTimer = null;
+
     this.getDailyAwardHistory = this.getDailyAwardHistory.bind(this);
   }
 
@@ -64,11 +67,18 @@ class Daily extends Component {
     if (!address) {
       return;
     }
-    const result = await axios.get(`${GET_AWARD_HISTORY}?address=${address}&limit=100`);
 
-    this.setState({
-      dailyAwardHistory: result.data
-    });
+    if (this.getDailyAwardHistoryTimer) {
+      clearInterval(this.getDailyAwardHistoryTimer);
+    }
+
+    this.getDailyAwardHistoryTimer = setInterval(async() => {
+      const result = await axios.get(`${GET_AWARD_HISTORY}?address=${address}&limit=100`);
+
+      this.setState({
+        dailyAwardHistory: result.data
+      });
+    }, 5000);
   }
 
   render() {
