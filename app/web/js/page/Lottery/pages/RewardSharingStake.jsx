@@ -8,44 +8,22 @@ import './RewardSharing.less'
 
 export const RewardSharingStake = ({disabled, approvedLot, stakedLot, setRefreshTime}) => {
 
-  // const lotteryContract = useContract(aelfAddress, LOTTERY.CONTRACT_ADDRESS);
-  // const tokenContract = useContract(aelfAddress, TOKEN_CONTRACT_ADDRESS);
-  // const [refreshTime, setRefreshTime]= useState(1);
   const initErrorMsg = {
     type: 'success',
     msg: null
-  }
+  };
   const [approveErrorMsg, setApproveErrorMsg] = useState({...initErrorMsg});
   const [stakingErrorMsg, setStakingErrorMsg] = useState({...initErrorMsg})
-  // const allowance  = useAelfTokenAllowance({
-  //   tokenContract,
-  //   address: aelfAddress,
-  //   contractAddress: LOTTERY.CONTRACT_ADDRESS,
-  //   tokenName: 'LOT',
-  //   refreshTime: refreshTime
-  // });
-
-  // const staked = useLotteryStaked({
-  //   lotteryContract,
-  //   address: aelfAddress,
-  //   refreshTime: refreshTime
-  // });
 
   const onApproveFinish = async (value) => {
     if (!value.approvedLOT) {
       setApproveErrorMsg({
         type:"error",
         msg: "Please input the amount of LOT to be approved."
-      })
+      });
       return
     }
-    if (value.approvedLOT > approvedLot) {
-      setApproveErrorMsg({
-        type: "error",
-        msg: `Please input the amount of LOT less then ${approvedLot}`
-      })
-      return
-    }
+
     setApproveErrorMsg({...initErrorMsg})
 
     const tokenContract = await NightElfCheck.initContractInstance({
@@ -72,24 +50,21 @@ export const RewardSharingStake = ({disabled, approvedLot, stakedLot, setRefresh
   const onApproveFinishFailed = () => {};
 
   const onStakeFinish = async (value) => {
-    // if (!value.stakedLot) {
-    //   throw Error('Please input the amount of LOT to be staked.');
-    // }
     if (!value.stakedLot) {
       setStakingErrorMsg({
         type:"error",
         msg: "Please input the amount of LOT to be staked."
-      })
+      });
       return
     }
-    if (value.stakedLot > stakedLot) {
+    if (value.stakedLot > approvedLot) {
       setStakingErrorMsg({
         type: "error",
-        msg: `Please input the amount of LOT less then ${stakedLot}`
-      })
+        msg: `Please input the amount of LOT less then ${approvedLot}`
+      });
       return
     }
-    setStakingErrorMsg({...initErrorMsg})
+    setStakingErrorMsg({...initErrorMsg});
 
     const lotteryContract = await NightElfCheck.initContractInstance({
       loginInfo: LOGIN_INFO,
@@ -139,7 +114,7 @@ export const RewardSharingStake = ({disabled, approvedLot, stakedLot, setRefresh
         <Form.Item>
           <Button
             type="primary" htmlType="submit" disabled={disabled}>
-            Approve
+            {approvedLot ? 'Approve More' : 'Approve'}
           </Button>
         </Form.Item>
       </Form>
