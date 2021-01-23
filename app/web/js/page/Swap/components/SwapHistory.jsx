@@ -4,6 +4,7 @@ import { Card, Tag } from 'antd';
 
 import {EXPLORER_URL, TOKEN_DECIMAL} from '../../../constant/constant';
 import addressFormat from '../../../utils/addressFormat';
+import {shorten} from '../../../utils/utils';
 
 export default function renderSwapHistory(historyList, swapInfo) {
   // TODO: get data from explore api
@@ -68,15 +69,16 @@ export default function renderSwapHistory(historyList, swapInfo) {
     const swapRatio = swapInfo.swapRatio || {originShare: 1, targetShare: 1};
     const {originShare, targetShare} = swapRatio;
     const ratio = parseInt(originShare, 10) / parseInt(targetShare, 10);
-    const amount = (tx.origin_amount / ratio / (10 ** TOKEN_DECIMAL)).toFixed(8);
+    const amountELF = (tx.origin_amount / ratio / (10 ** TOKEN_DECIMAL)).toFixed(4);
+    const amountLOT = (tx.origin_amount * 400 / ratio / (10 ** TOKEN_DECIMAL)).toFixed(4);
 
     return (
       <div key={tx.tx_id} className='swap-tx-container'>
         <div className='swap-tx-title'>
           <div><b>Tx ID: </b>
-            <a href={`${EXPLORER_URL}/tx/${tx.tx_id}`} target='_blank'>{tx.tx_id}</a>
+            <a href={`${EXPLORER_URL}/tx/${tx.tx_id}`} target='_blank'>{shorten(tx.tx_id, 32, 20)}</a>
           </div>
-          <div> <b>Amount:</b> {isNaN(amount) ? '-' : amount}</div>
+          <div> <b>Amount:</b> {isNaN(amountELF) ? '-' : `${amountELF} ELF`} &nbsp;  {isNaN(amountLOT) ? '-' : `${amountLOT} LOT`}</div>
           <div> <b>Time:</b> {timeFormatted}</div>
           <div> <b>Status:</b> {txStatusHTML}</div>
         </div>
