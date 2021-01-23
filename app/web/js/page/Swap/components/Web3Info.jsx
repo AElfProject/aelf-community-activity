@@ -486,7 +486,8 @@ export default class Web3Info extends Component{
                 rules={[{ required: true, message: 'aelf Receiver Address is required.' }]}
                 help={
                   <>
-                    <div>After completing the authorization, please provide the amount of ELF to stake (the amount should be no more than the authorized quantity) and the address for receiving ELF in the aelf mainnet. The staking bonus will be automatically sent to your aelf wallet after we verify it. Please check it after 2 hours.This step can be executed in the writecontract-createreceipt section of the
+                    {/* <div>After completing the authorization, please provide the amount of ELF to stake (the amount should be no more than the authorized quantity) and the address for receiving ELF in the aelf mainnet. The staking bonus will be automatically sent to your aelf wallet after we verify it. Please check it after 2 hours.This step can be executed in the writecontract-createreceipt section of the */}
+                    <div>After authorization, please provide the quantity of ERC20-ELF staking, the address of aelf wallet receiving ELF (mainnet token) and the referral code (optional). The back end will swap the last 24 hours of ERC20-ELF at 12 o’clock (noon) every day. Later, you can receive ELF (mainnet token) and LOT Token in the "Claim Token" part. This step can be executed in the writecontract-createreceipt section of the
                       <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
                     </div>
                   </>

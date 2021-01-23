@@ -9,7 +9,7 @@ import moment from 'moment';
 import React from 'react';
 
 export const getCommunityLink = type => {
-  return axios.get(`${GET_CMS_COMMUNITY_LINKS}?_limit=20&open=true${type ? `&type=${type}` : ''} `);
+  return axios.get(`${GET_CMS_COMMUNITY_LINKS}?_limit=50&open=true${type ? `&type=${type}` : ''} `);
 }
 
 export const getAvailableTime = type => {

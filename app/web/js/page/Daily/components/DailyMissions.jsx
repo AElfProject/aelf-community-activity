@@ -41,7 +41,8 @@ class DailyMissions extends Component {
         start: '',
         end: ''
       },
-      severalTaskTutorial: "/"
+      severalTaskTutorial: "/",
+      walletIOSUrl: '/'
     };
     this.getCountdown = this.getCountdown.bind(this);
     this.hasAward = this.hasAward.bind(this);
@@ -67,13 +68,13 @@ class DailyMissions extends Component {
         dailyTaskDate,
       });
     });
-    const { data: severalTask } = await getCommunityLink('severalTask');
-    const severalTaskTutorial = severalTask[0];
-    if (severalTaskTutorial) {
-      this.setState({
-        severalTaskTutorial
-      })
-    }
+    const { data } = await getCommunityLink();
+    const severalTaskTutorial = (data.find((item)=> item.type === 'severalTask') || {link: '/'}).link;
+    const walletIOSUrl = (data.find((item)=> item.type === "walletIOSUrl") || {link: '/'}).link;
+    this.setState({
+      severalTaskTutorial,
+      walletIOSUrl
+    })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -231,7 +232,7 @@ class DailyMissions extends Component {
   render() {
 
     const { account, dailyAwardHistory } = this.props;
-    const { effectiveTokenTx, effectiveResourceTx, effectiveCrossTransferTx, countdown, appData, dailyTaskDate, severalTaskTutorial } = this.state;
+    const { effectiveTokenTx, effectiveResourceTx, effectiveCrossTransferTx, countdown, appData, dailyTaskDate, severalTaskTutorial, walletIOSUrl } = this.state;
 
     const { accountInfo } = account;
     const { address } = accountInfo;
@@ -263,7 +264,7 @@ class DailyMissions extends Component {
             <div>
               During the event, you can collect 100 LOT tokens each day through the resource token trading function.
             </div>
-            {/*<a href={EXPLORER_URL + '/resource'} target='_blank'>Turn to aelf explorer</a>*/}
+            {/* <a href={EXPLORER_URL + '/resource'} target='_blank'>Turn to aelf explorer</a> */}
             <a href={CHAIN.AELF.EXPLORER_URL + '/resource'} target='_blank'>Turn to aelf explorer</a>
             {this.renderMission(effectiveResourceTx, 'resource')}
           </div>
@@ -275,11 +276,14 @@ class DailyMissions extends Component {
           hoverable
           title='Task 2 Same-chain transfer'>
           <div className='section-content swap-flex-wrap'>
-            <div>During the event, you can collect 100 LOT tokens each day by Same-chain transfer.<a href={severalTaskTutorial} target='_blank'>Check out the tutorial </a></div>
+            <div>During the event, you can collect 100 LOT tokens each day by Same-chain transfer.
+              <a href={severalTaskTutorial} target='_blank'>Check out the tutorial </a>
+            </div>
             <div>
               <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>
               <a href={WALLET_ANDROID_URL} target='_blank'>Android wallet, </a>
-              <a href={WALLET_IOS_URL} target='_blank'>iOS wallet</a>
+              {/* <a href={WALLET_IOS_URL} target='_blank'>iOS wallet</a> */}
+              <a href={walletIOSUrl} target='_blank'>iOS wallet</a>
             </div>
             {this.renderMission(effectiveTokenTx, 'normalTransfer')}
           </div>
@@ -291,11 +295,14 @@ class DailyMissions extends Component {
           hoverable
           title='Task 3 Cross-Chain Transfer'>
           <div className='section-content swap-flex-wrap'>
-            <div>During the event, you can collect 100 LOT tokens each day by Cross-Chain Transfer.<a href={severalTaskTutorial} target='_blank'>Check out the tutorial </a></div>
+            <div>During the event, you can collect 100 LOT tokens each day by Cross-Chain Transfer.
+             <a href={severalTaskTutorial} target='_blank'>Check out the tutorial </a>
+            </div> 
             <div>
               <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>
               <a href={WALLET_ANDROID_URL} target='_blank'>Android wallet, </a>
-              <a href={WALLET_IOS_URL} target='_blank'>iOS wallet</a>
+              {/* <a href={WALLET_IOS_URL} target='_blank'>iOS wallet</a> */}
+              <a href={walletIOSUrl} target='_blank'>iOS wallet</a>
             </div>
             {this.renderMission(effectiveCrossTransferTx, 'crossTransfer')}
           </div>
@@ -312,7 +319,7 @@ class DailyMissions extends Component {
           <div className='section-content swap-flex-wrap'>
             <div>Complete a bug submission on the aelf chain to collect LOT token rewards.</div>
             <div>Reward Range: 100-1,000 LOT Tokens,</div>
-            <div>Bug Bonus Levels: Minor = 100 LOT tokens, Major = 500 LOT tokens, Critical = 500 LOT tokens.</div>
+            <div>Bug Bonus Levels: Minor = 100 LOT tokens, Major = 500 LOT tokens, Critical = 1,000 LOT tokens.</div>
             <div>
               You can submit Bug information to a form:
               <a href={DAILY_TASK.FROM_LINK} target='_blank'> Bug Solicitation</a>

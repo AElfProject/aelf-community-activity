@@ -204,11 +204,12 @@ export default class SwapElf extends React.Component{
                   return <Select.Option value={receiptId.value} key={receiptId.value}>{receiptId.value}</Select.Option>
                 })}
               </Select>
-              <div>After completing the'staking', you will receive a Lock Receipt ID verified by the ‘ReadContract-getMyReceipts’ of the
+              <div>After completing the'staking', you will receive a Lock Receipt ID verified by the ‘ReadContract-getMyReceipts’ of the Ethereum Lock Contract Page.Token swap will be done every day at 12:00 noon on the backend, you can click ‘Submit’ tab to claim bonus. </div>
+              {/* <div>After completing the'staking', you will receive a Lock Receipt ID verified by the ‘ReadContract-getMyReceipts’ of the
                 <a href={web3PluginInstance.lockContractLink} target='_blank'> Ethereum Lock Contract Page</a>
               </div>
               <div>After 2 hours of staking, you can click ‘Submit’ tab to claim bonus. </div>
-              <div>If the receipt ID has been swapped, you can still submit it but will not be able to see an existing transaction.</div>
+              <div>If the receipt ID has been swapped, you can still submit it but will not be able to see an existing transaction.</div> */}
             </Form.Item>
 
             <Form.Item
