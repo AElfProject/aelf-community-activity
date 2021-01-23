@@ -170,7 +170,7 @@ export const RewardSharing = ({aelfAddress}) => {
           During this period, you can fill in the Ethereum wallet address to claim the bonus.
           Awards will be given in the order in which the information was submitted within 3 working days.</div>
         <div>Your aelf address will be bound to the Ethereum address to avoid repeat claims.</div> */}
-        <div>From <span className="grand-prize-error">{moment(stakedTime.start).format('YYYY-MM-DD HH:mm')}</span> to <span className="grand-prize-error">{moment(stakedTime.end).format('YYYY-MM-DD HH:mm')}</span> , users can stake LOT and fill in Ethereum Address. After <span className="grand-prize-error">{moment(stakedTime.end).format('YYYY-MM-DD HH:mm')}</span>, the ERC20-ELF awards of the prize pool will be divided in proportion according to the number of LOT token and Ethereum wallet addresses you submitted in the first 24 hours. We will distribute the token awards within 7 working days, and the more details will be announced.</div>
+        <div>From {moment(stakedTime.start).format('YYYY-MM-DD HH:mm')} to {moment(stakedTime.end).format('YYYY-MM-DD HH:mm')}, users can stake LOT and fill in Ethereum Address. After {moment(stakedTime.end).format('YYYY-MM-DD HH:mm')}, the ERC20-ELF awards of the prize pool will be divided in proportion according to the number of LOT token and Ethereum wallet addresses you submitted in the first 24 hours. We will distribute the token awards within 7 working days, and the more details will be announced.</div>
         <div>In order to avoid repeated collection, your aelf address would be bound with Ethereum address, and can be checked on the chain.</div>
       </div>
     </Card>
