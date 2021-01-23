@@ -5,13 +5,22 @@ import axios from '../../../service/axios';
 
 import {NightElfCheck, getViewResult} from '../../../utils/NightElf/NightElf';
 import addressFormat from '../../../utils/addressFormat';
-import { LOGIN_INFO, LOTTERY, TOKEN_CONTRACT_ADDRESS, EXPLORER_URL, TOKEN_DECIMAL } from '../../../constant/constant';
+import {
+  LOGIN_INFO,
+  LOTTERY,
+  TOKEN_CONTRACT_ADDRESS,
+  EXPLORER_URL,
+  TOKEN_DECIMAL,
+  HTTP_PROVIDER
+} from '../../../constant/constant';
 import TokenContract from '../../../utils/tokenContract';
 import Contract from '../../../utils/Contract';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
 import { POST_DECRYPT_LIST } from '../../../constant/apis';
 import { checkTimeAvailable, getAvailableTime } from '../../../utils/cmsUtils';
+import { sleep } from '../../../utils/utils';
 import moment from 'moment';
+import AElf from 'aelf-sdk';
 
 const columns = [
   {
@@ -82,6 +91,8 @@ export default class PersonalDraw extends Component{
         end: ''
       }
     };
+
+    this.aelf = new AElf(new AElf.providers.HttpProvider(HTTP_PROVIDER));
     this.tokenApproveCount = 0;
     this.buyCount = 0;
     this.tokenContract = new TokenContract();
@@ -220,19 +231,21 @@ export default class PersonalDraw extends Component{
       return;
     }
     try {
-      await buyLottery(this.buyCount);
-      const {tokenBalance, tokenAllowance} = this.state;
-      const costToken = this.buyCount * LOTTERY.RATIO * 10 ** 8;
-      this.setState({
-        tokenBalance: tokenBalance - costToken,
-        tokenAllowance: tokenAllowance - costToken,
-        historyLoading: true
-      });
+      await buyLottery(this.buyCount, this.aelf);
+
+      this.getVoteToken();
+      this.getVoteAllowance();
+
       setTimeout(() => {
         this.getBoughtLotteries();
-      }, 5000);
+      }, 3000);
     } catch(e) {
-      message.error(e.message || 'Failed to buy a lottery.')
+      if (e.TransactionId) {
+        MessageTxToExplore(e.TransactionId, 'error');
+        message.error(e.Error || 'Failed to buy a lottery.', 3000);
+      } else {
+        message.error(e.message || 'Failed to buy a lottery.');
+      }
     }
   }
 
@@ -310,7 +323,9 @@ export default class PersonalDraw extends Component{
                 type="primary" onClick={() => this.onBuyClick()}>Switch</Button>
             </div>
             <div className="text-grey">
-              The Lucky Draw Function will be closed after <span className="grand-prize-error">{moment(switchCodeDate.end).format('YYYY-MM-DD HH:mm')}</span>. Please switch it in time to avoid loss.
+              The Lucky Draw Function will be closed after <span className="grand-prize-error">
+              {switchCodeDate.end ? moment(switchCodeDate.end).format('YYYY-MM-DD HH:mm') : '-'}
+            </span>. Please switch it in time to avoid loss.
             </div>
           </div>
 
@@ -325,7 +340,7 @@ export default class PersonalDraw extends Component{
   }
 }
 
-async function buyLottery (buyCount) {
+async function buyLottery (buyCount, aelf) {
   if (!buyCount) {
     throw Error('Please input the amount of lottery code to be switched.');
   }
@@ -344,8 +359,31 @@ async function buyLottery (buyCount) {
   }
 
   const {TransactionId} = lotteryResult.result || lotteryResult;
+
+  await getBuyoutTxResult(TransactionId, aelf);
+  // TODO: check transaction
   message.success('You can see ths new lottery number after the transaction is confirmed if you refresh the page', 6);
   MessageTxToExplore(TransactionId);
+}
+
+async function getBuyoutTxResult(TransactionId, aelf) {
+  const txResult = await aelf.chain.getTxResult(TransactionId);
+
+  if (!txResult) {
+    throw Error('Can not get switch transaction result.');
+  }
+
+  if (txResult.Status.toLowerCase() === 'pending') {
+    await sleep(1000);
+    return getBuyoutTxResult(TransactionId, aelf);
+  }
+
+  if (txResult.Status.toLowerCase() === 'mined') {
+    return TransactionId;
+  }
+
+  MessageTxToExplore(TransactionId, 'error');
+  throw Error(txResult.Error || 'Buyout error');
 }
 
 async function approveVote(tokenApproveCount) {

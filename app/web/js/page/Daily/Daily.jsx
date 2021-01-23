@@ -51,6 +51,10 @@ class Daily extends Component {
     this.getDailyAwardHistory();
   }
 
+  componentWillUnmount() {
+    clearInterval(this.getDailyAwardHistoryTimer);
+  }
+
   async componentDidUpdate(prevProps, prevState, snapshot) {
     const addressChanged = prevProps.account && prevProps.account.accountInfo
       && prevProps.account.accountInfo.address !== this.props.account.accountInfo.address;
