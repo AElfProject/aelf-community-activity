@@ -240,7 +240,8 @@ export default class LotteryAward extends Component {
             </Form.Item>
 
             <Form.Item
-              label="Telegram / WeChat"
+              // label="Telegram / WeChat"
+              label="Telegram / Email"
             >
               <Form.Item
                 name="telegram"
@@ -249,7 +250,8 @@ export default class LotteryAward extends Component {
               >
                 <Input maxLength={128}/>
               </Form.Item>
-              <div>Please enter your user name (Telegram / WeChat) so that we can contact you</div>
+              {/* <div>Please enter your user name (Telegram / WeChat) so that we can contact you</div> */}
+              <div>Please enter your user name (Telegram / Email) so that we can contact you</div>
             </Form.Item>
 
             <Form.Item {...tailLayout}>
