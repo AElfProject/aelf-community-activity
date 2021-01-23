@@ -1,5 +1,5 @@
 import { Form, Input, Button, message, Card } from 'antd';
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import Web3 from 'web3';
 import { EXPLORER_URL, LOGIN_INFO, LOTTERY,TOKEN_CONTRACT_ADDRESS, TOKEN_DECIMAL } from '../../../constant/constant';
 import {useContract} from '../hooks/useContract';
@@ -17,7 +17,13 @@ import moment from 'moment';
 import {RewardSharingStake} from './RewardSharingStake';
 import './RewardSharing.less'
 
+import { LotteryContext, LotteryProvider } from '../context/lotteryContext';
+
 export const RewardSharing = ({aelfAddress}) => {
+
+  const lotteryContext = useContext(LotteryContext);
+  const {state, dispatch} = lotteryContext;
+  const {allowanceLot: allowance} = state;
 
   const lotteryContract = useContract(aelfAddress, LOTTERY.CONTRACT_ADDRESS);
   const registeredDividend = useRegisteredDividend(aelfAddress, lotteryContract);
@@ -26,7 +32,7 @@ export const RewardSharing = ({aelfAddress}) => {
 
   const rewardTime = useAvailableTime('lotteryRewardSharing');
   const stakedTime = useAvailableTime('lotteryRewardSharingStaking')
-  // const {lotteryRewardSharing: rewardTime, lotteryRewardSharingStaking: stakedTime} = useAvailableTime(['lotteryRewardSharing', 'lotteryRewardSharingStaking']) 
+  // const {lotteryRewardSharing: rewardTime, lotteryRewardSharingStaking: stakedTime} = useAvailableTime(['lotteryRewardSharing', 'lotteryRewardSharingStaking'])
   // const stakedTime = useAvailableTime('lotteryRewardSharingStaking')
   const stakedDisabled = !checkTimeAvailable(stakedTime);
   const rewardDisabled = !checkTimeAvailable(rewardTime);
@@ -40,16 +46,16 @@ export const RewardSharing = ({aelfAddress}) => {
     type: 'success',
     msg: null
   });
-  const tokenContract = useContract(aelfAddress, TOKEN_CONTRACT_ADDRESS);
+  // const tokenContract = useContract(aelfAddress, TOKEN_CONTRACT_ADDRESS);
   const [refreshTime, setRefreshTime]= useState(1);
 
-  const allowance  = useAelfTokenAllowance({
-    tokenContract,
-    address: aelfAddress,
-    contractAddress: LOTTERY.CONTRACT_ADDRESS,
-    tokenName: 'LOT',
-    refreshTime: refreshTime
-  });
+  // const allowance  = useAelfTokenAllowance({
+  //   tokenContract,
+  //   address: aelfAddress,
+  //   contractAddress: LOTTERY.CONTRACT_ADDRESS,
+  //   tokenName: 'LOT',
+  //   refreshTime: refreshTime
+  // });
   const staked = useLotteryStaked({
     lotteryContract,
     address: aelfAddress,

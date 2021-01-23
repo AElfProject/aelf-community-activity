@@ -23,6 +23,8 @@ import TutorialList from '../../components/TutorialList';
 import { getCommunityLink, getLotteryReferendumsInfo } from '../../utils/cmsUtils';
 import {RewardSharing} from './pages/RewardSharing';
 
+import { LotteryContext, LotteryProvider } from './context/lotteryContext';
+
 function mapStateToProps(state) {
   return {
     account: state.account.toJS()
@@ -112,6 +114,7 @@ class Lottery extends Component {
     const { grandPrize, grandPrizeAmount } = prizeInfo[0];
 
     return (
+      <LotteryProvider aelfAddress={address}>
       <div>
         <div className='basic-blank'/>
         <div className='basic-container lottery-container'>
@@ -148,8 +151,8 @@ class Lottery extends Component {
           </Tabs>
         </div>
       </div>
+      </LotteryProvider>
     );
-
   }
 }
 

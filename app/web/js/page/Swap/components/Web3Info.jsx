@@ -165,7 +165,7 @@ export default class Web3Info extends Component{
         uniqueId: result[0][0]
       });
       if (swapAmounts) {
-        message.warning(`Receipt ID: ${id} had been swapped`, 6);
+        message.error(`Receipt ID: ${id} had been swapped`, 6);
       }
     } catch(e) {
       message.warning(`Receipt ID: ${id} maybe not ready to swap`, 6);

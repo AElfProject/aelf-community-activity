@@ -88,9 +88,11 @@ class DailyMissions extends Component {
 
   hasAward(type) {
     const { dailyAwardHistory } = this.props;
-    const firstTx = dailyAwardHistory[0] || {};
-    const secondTx = dailyAwardHistory[1] || {};
-    const typeArray = [firstTx.type, secondTx.type];
+    // const firstTx = dailyAwardHistory[0] || {};
+    // const secondTx = dailyAwardHistory[1] || {};
+    // const typeArray = [firstTx.type, secondTx.type];
+    const typeArray = dailyAwardHistory.map(awardItem => awardItem.type);
+
     // check type
     const index = typeArray.indexOf(type);
     if (index < 0) {
@@ -305,7 +307,7 @@ class DailyMissions extends Component {
           <div className='section-content swap-flex-wrap'>
             <div>During the event, you can collect 100 LOT tokens each day by Cross-Chain Transfer.
              <a href={severalTaskTutorial} target='_blank'>Check out the tutorial </a>
-            </div> 
+            </div>
             <div>
               <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>
               <a href={WALLET_ANDROID_URL} target='_blank'>Android wallet, </a>

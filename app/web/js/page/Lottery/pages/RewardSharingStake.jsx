@@ -1,19 +1,23 @@
 import { Form, Button, InputNumber } from 'antd';
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import { LOGIN_INFO, LOTTERY, TOKEN_CONTRACT_ADDRESS, TOKEN_DECIMAL } from '../../../constant/constant';
 // import {useContract} from '../hooks/useContract';
 import { NightElfCheck } from '../../../utils/NightElf/NightElf';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
 import './RewardSharing.less'
+import { LotteryContext } from '../context/lotteryContext';
 
 export const RewardSharingStake = ({disabled, approvedLot, stakedLot, setRefreshTime}) => {
+
+  const lotteryContext = useContext(LotteryContext);
+  const {dispatch} = lotteryContext;
 
   const initErrorMsg = {
     type: 'success',
     msg: null
   };
   const [approveErrorMsg, setApproveErrorMsg] = useState({...initErrorMsg});
-  const [stakingErrorMsg, setStakingErrorMsg] = useState({...initErrorMsg})
+  const [stakingErrorMsg, setStakingErrorMsg] = useState({...initErrorMsg});
 
   const onApproveFinish = async (value) => {
     if (!value.approvedLOT) {
@@ -45,6 +49,10 @@ export const RewardSharingStake = ({disabled, approvedLot, stakedLot, setRefresh
     MessageTxToExplore(TransactionId);
     setTimeout(() => {
       setRefreshTime(new Date().getTime());
+      dispatch({
+        type: 'refresh',
+        value: new Date().getTime()
+      });
     }, 3000);
   };
   const onApproveFinishFailed = () => {};
@@ -83,10 +91,13 @@ export const RewardSharingStake = ({disabled, approvedLot, stakedLot, setRefresh
     MessageTxToExplore(TransactionId);
     setTimeout(() => {
       setRefreshTime(new Date().getTime());
+      dispatch({
+        type: 'refresh',
+        value: new Date().getTime()
+      });
     }, 3000);
   };
   const onStakeFinishFailed = () => {};
-
 
   return <>
     <div>

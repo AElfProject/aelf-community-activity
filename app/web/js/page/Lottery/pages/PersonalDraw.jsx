@@ -19,6 +19,8 @@ import MessageTxToExplore from '../../../components/Message/TxToExplore';
 import { POST_DECRYPT_LIST } from '../../../constant/apis';
 import { checkTimeAvailable, getAvailableTime } from '../../../utils/cmsUtils';
 import { sleep } from '../../../utils/utils';
+
+import {LotteryContext} from '../context/lotteryContext';
 import moment from 'moment';
 import AElf from 'aelf-sdk';
 
@@ -27,7 +29,7 @@ const columns = [
     title: 'ID',
     dataIndex: 'id',
     key: 'id',
-    width: 180,
+    width: 80,
   },
   // {
   //   title: 'Random Hash',
@@ -72,13 +74,12 @@ function renderHistory(dataSource, historyLoading) {
     dataSource={dataSource}
     loading={historyLoading}
     columns={columns}
-    pagination={false}
     rowKey='id'
     scroll={{x: 512}}
   />;
 }
 
-export default class PersonalDraw extends Component{
+class PersonalDraw extends Component{
   constructor(props) {
     super(props);
     this.state = {
@@ -86,6 +87,7 @@ export default class PersonalDraw extends Component{
       tokenAllowance: 0,
       boughtLotteries: [],
       historyLoading: false,
+      buyoutLoading: false,
       switchCodeDate: {
         start: '',
         end: ''
@@ -104,8 +106,6 @@ export default class PersonalDraw extends Component{
   }
 
   async componentDidMount() {
-    await this.getVoteToken();
-    await this.getVoteAllowance();
     await this.getBoughtLotteries();
 
     getAvailableTime().then(res => {
@@ -120,47 +120,8 @@ export default class PersonalDraw extends Component{
   async componentDidUpdate(prevProps, prevState, snapshot) {
     const addressChanged = prevProps.address !== this.props.address;
     if (addressChanged) {
-      await this.getVoteToken();
-      await this.getVoteAllowance();
       await this.getBoughtLotteries();
     }
-  }
-
-  async getVoteToken() {
-    const { address } = this.props;
-
-    let tokenBalance = 0;
-    if (address) {
-      const tokenContractInstance = await this.tokenContract.getTokenContractInstance();
-      const balance = await tokenContractInstance.GetBalance.call({
-        symbol: LOTTERY.SYMBOL,
-        owner: address
-      });
-      tokenBalance = parseInt(balance.balance, 10);
-    }
-
-    this.setState({
-      tokenBalance
-    });
-  }
-
-  async getVoteAllowance() {
-    const { address } = this.props;
-
-    let tokenAllowance = 0;
-    if (address) {
-      const tokenContractInstance = await this.tokenContract.getTokenContractInstance();
-      const allowance = await tokenContractInstance.GetAllowance.call({
-        symbol: LOTTERY.SYMBOL,
-        spender: LOTTERY.CONTRACT_ADDRESS,
-        owner: address
-      });
-      tokenAllowance = allowance.allowance;
-    }
-
-    this.setState({
-      tokenAllowance
-    });
   }
 
   async decryptBoughtLotteries(boughtLotteriesReversed) {
@@ -226,18 +187,24 @@ export default class PersonalDraw extends Component{
   }
 
   async onBuyClick() {
+
     if (this.buyCount%1) {
       message.error('Please enter a positive integer.');
       return;
     }
+    this.setState({
+      buyoutLoading: true
+    });
     try {
       await buyLottery(this.buyCount, this.aelf);
 
-      this.getVoteToken();
-      this.getVoteAllowance();
-
       setTimeout(() => {
         this.getBoughtLotteries();
+        const {dispatch} = this.context;
+        dispatch({
+          type: 'refresh',
+          refreshTime: new Date().getTime()
+        });
       }, 3000);
     } catch(e) {
       if (e.TransactionId) {
@@ -247,6 +214,9 @@ export default class PersonalDraw extends Component{
         message.error(e.message || 'Failed to buy a lottery.');
       }
     }
+    this.setState({
+      buyoutLoading: false
+    });
   }
 
   onApproveChange(value) {
@@ -258,15 +228,19 @@ export default class PersonalDraw extends Component{
   }
 
   async onApproveClick() {
+    const {dispatch} = this.context;
     try {
       await approveVote(this.tokenApproveCount);
-      message.success('Please wait for block confirmation', 10);
-      setTimeout(() => {
-        this.getVoteAllowance();
-      }, 3000);
+      // message.success('Please wait for block confirmation', 10);
     } catch(e) {
       message.error(e.message || 'Failed to approve.')
     }
+    setTimeout(() => {
+      dispatch({
+        type: 'refresh',
+        refreshTime: new Date().getTime()
+      });
+    }, 3000);
   }
 
   renderNoToken() {
@@ -275,13 +249,19 @@ export default class PersonalDraw extends Component{
   }
 
   render() {
+
+    const {state: stateContext} = this.context;
+
     const {address, currentPeriodNumber} = this.props;
-    const {tokenBalance, tokenAllowance, boughtLotteries, historyLoading, switchCodeDate} = this.state;
+    const {
+      boughtLotteries, historyLoading, switchCodeDate,
+      buyoutLoading
+    } = this.state;
 
     const switchDisabled = !checkTimeAvailable(switchCodeDate);
 
-    const tokenBalanceActual = tokenBalance / 10 ** 8;
-    const tokenAllowanceActual = tokenAllowance / 10 ** 8;
+    const tokenBalanceActual = stateContext.balanceLot / 10 ** 8;
+    const tokenAllowanceActual = stateContext.allowanceLot / 10 ** 8;
 
     const historyHTML = renderHistory(boughtLotteries, historyLoading);
 
@@ -299,10 +279,10 @@ export default class PersonalDraw extends Component{
           <div>
             <div>Address: {address ? addressFormat(address) : 'Please login'}</div>
             <div className='basic-blank'/>
-            <div> Balance: {tokenBalance ? tokenBalanceActual + ' ' + LOTTERY.SYMBOL : noTokenHTML}</div>
+            <div> Balance: {stateContext.balanceLot ? tokenBalanceActual + ' ' + LOTTERY.SYMBOL : noTokenHTML}</div>
             <div className='basic-blank'/>
             <div>
-              Authorized credit limit for lottery application: {tokenAllowance ? tokenAllowanceActual + ' ' + LOTTERY.SYMBOL : 0} &nbsp;&nbsp;&nbsp;
+              Authorized credit limit for lottery application: {stateContext.allowanceLot ? tokenAllowanceActual + ' ' + LOTTERY.SYMBOL : 0} &nbsp;&nbsp;&nbsp;
               <InputNumber min={0} max={tokenBalanceActual - tokenAllowanceActual} onChange={this.onApproveChange} />
               &nbsp;&nbsp;&nbsp;
               <Button
@@ -314,12 +294,13 @@ export default class PersonalDraw extends Component{
               Code Amount ({LOTTERY.RATIO} {LOTTERY.SYMBOL} = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
               <InputNumber
                 min={0}
-                max={Math.floor(Math.min(tokenAllowanceActual, tokenBalanceActual)/LOTTERY.RATIO)}
+                max={Math.min(Math.floor(Math.min(tokenAllowanceActual, tokenBalanceActual)/LOTTERY.RATIO), 100)}
                 defaultValue={1}
                 onChange={this.onExchangeNumberChange} />
               &nbsp;&nbsp;&nbsp;
               <Button
-                disabled={switchDisabled}
+                loading={buyoutLoading}
+                disabled={switchDisabled || buyoutLoading}
                 type="primary" onClick={() => this.onBuyClick()}>Switch</Button>
             </div>
             <div className="text-grey">
@@ -409,3 +390,7 @@ async function approveVote(tokenApproveCount) {
   const {TransactionId} = approveResult.result || approveResult;
   MessageTxToExplore(TransactionId);
 }
+
+PersonalDraw.contextType = LotteryContext;
+
+export default PersonalDraw;

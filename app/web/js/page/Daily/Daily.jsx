@@ -76,13 +76,17 @@ class Daily extends Component {
       clearInterval(this.getDailyAwardHistoryTimer);
     }
 
-    this.getDailyAwardHistoryTimer = setInterval(async() => {
+    const setHistory = async () => {
       const result = await axios.get(`${GET_AWARD_HISTORY}?address=${address}&limit=100`);
-
       this.setState({
         dailyAwardHistory: result.data
       });
-    }, 5000);
+    };
+    setHistory();
+
+    this.getDailyAwardHistoryTimer = setInterval(async() => {
+      setHistory();
+    }, 6000);
   }
 
   render() {
