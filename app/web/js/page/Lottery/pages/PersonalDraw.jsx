@@ -175,11 +175,6 @@ class PersonalDraw extends Component{
 
     await this.decryptBoughtLotteries(boughtLotteriesReversed);
 
-    // this.setState({
-    //   boughtLotteries: boughtLotteriesReversed,
-    //   historyLoading: false
-    // });
-
     if (boughtLotteries.length === 20) {
       const newStartId = boughtLotteries[0].id;
       await this.getBoughtLotteries(newStartId, false);
@@ -209,7 +204,6 @@ class PersonalDraw extends Component{
     } catch(e) {
       if (e.TransactionId) {
         MessageTxToExplore(e.TransactionId, 'error');
-        message.error(e.Error || 'Failed to buy a lottery.', 3000);
       } else {
         message.error(e.message || 'Failed to buy a lottery.');
       }
