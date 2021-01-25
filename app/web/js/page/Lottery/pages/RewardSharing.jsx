@@ -26,7 +26,8 @@ export const RewardSharing = ({aelfAddress}) => {
   const {allowanceLot: allowance} = state;
 
   const lotteryContract = useContract(aelfAddress, LOTTERY.CONTRACT_ADDRESS);
-  const registeredDividend = useRegisteredDividend(aelfAddress, lotteryContract);
+  const [refreshRegisteredInfo , setRefreshRegisteredInfo] = useState(0);
+  const registeredDividend = useRegisteredDividend(aelfAddress, lotteryContract, refreshRegisteredInfo);
   const allLotteriesCount = useAllLotteriesCount(lotteryContract);
   const boughtLotteriesCount = useBoughtLotteriesCount(aelfAddress, lotteryContract);
 
@@ -104,6 +105,7 @@ export const RewardSharing = ({aelfAddress}) => {
         aelf Tx Hash (Chain: tDVV): <a target='_blank' href={explorerHref}>{TransactionId}</a>
       </span>
     });
+    setRefreshRegisteredInfo(new Date().getTime());
   };
   const onFinishFailed = () => {};
 
