@@ -304,9 +304,7 @@ class PersonalDraw extends Component{
                 type="primary" onClick={() => this.onBuyClick()}>Switch</Button>
             </div>
             <div className="text-grey">
-              The Lucky Draw Function will be closed after <span className="grand-prize-error">
-              {switchCodeDate.end ? moment(switchCodeDate.end).format('YYYY-MM-DD HH:mm') : '-'}
-            </span>. Please switch it in time to avoid loss.
+              The Lucky Draw Function will be closed after {switchCodeDate.end ? moment(switchCodeDate.end).format('YYYY-MM-DD HH:mm') : '-'}. Please switch it in time to avoid loss.
             </div>
           </div>
 
