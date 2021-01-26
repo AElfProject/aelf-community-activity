@@ -79,6 +79,7 @@ export default class Web3Info extends Component{
 
     this.redeemFormRef = React.createRef();
 
+    this.updateAccountTimer = null;
     this.swapcontract = new SwapContract();
 
     this.connectMetaMask = this.connectMetaMask.bind(this);
@@ -111,13 +112,12 @@ export default class Web3Info extends Component{
         setFieldsValue: () => {}
       }
     };
+    updateAccountTimer && clearInterval(updateAccountTimer);
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
     if (!prevProps.web3PluginInstance.web3 && this.props.web3PluginInstance.web3 !== 'undefined') {
       await this.checkMetaMask();
-      // await this.getAccounts();
-      // await this.getApproveAndLockedELF();
     }
   }
 
@@ -127,9 +127,22 @@ export default class Web3Info extends Component{
     this.setState({
       connectOk
     });
+    const updateAccountInfo = async () => {
+      const {account} = this.state;
+      const accountTemp = await this.getAccounts();
+      if (accountTemp && account.address !== accountTemp.address) {
+        await this.getApproveAndLockedELF();
+      }
+    };
     if (connectOk) {
-      await this.getAccounts();
-      await this.getApproveAndLockedELF();
+      await updateAccountInfo();
+      if (this.updateAccountTimer) {
+        clearInterval(this.updateAccountTimer);
+      }
+
+      this.updateAccountTimer = setInterval(async () => {
+        await updateAccountInfo();
+      }, 1000);
     }
   }
 
@@ -175,22 +188,24 @@ export default class Web3Info extends Component{
 
   async getAccounts () {
     const {web3PluginInstance} = this.props;
+    const {account: accountPre} = this.state;
     const accounts = await web3PluginInstance.getAccounts();
     const account = accounts[0];
-    if (account) {
-      this.setState({
-        account
-      });
-    }
-    console.log('account', account, accounts);
 
-    // TODO
-    if (account.address) {
-      this.redeemFormRef.current.setFieldsValue({
-        address: account.address,
-      });
-      this.getReceiptIDs(account.address);
+    if (!account || !account.address) {
+      return;
     }
+
+    this.setState({
+      account
+    });
+
+    this.redeemFormRef.current.setFieldsValue({
+      address: account.address,
+    });
+    this.getReceiptIDs(account.address);
+
+    return account;
   }
 
   async getReceiptIDs (address = null) {
@@ -328,11 +343,11 @@ export default class Web3Info extends Component{
 
     const timeNow = moment().unix();
     const submitDisable = moment(mortgageDate.end).unix() < timeNow || moment(mortgageDate.start).unix() > timeNow;
-    console.log('submitDisable', submitDisable, timeNow, moment(mortgageDate.end).unix(), moment(mortgageDate.start).unix());
+    // console.log('submitDisable', submitDisable, timeNow, moment(mortgageDate.end).unix(), moment(mortgageDate.start).unix());
 
     const {web3PluginInstance, swapPairInfo} = this.props;
     window.web3PluginInstance2 = web3PluginInstance;
-    console.log('web3PluginInstance', web3PluginInstance, account.address, mortgageDate);
+    // console.log('web3PluginInstance', web3PluginInstance, account.address, mortgageDate);
     return (
       <>
         <Card

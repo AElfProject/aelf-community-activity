@@ -97,6 +97,7 @@ export class Web3Plugin {
     try {
       const accounts = await this.web3.eth.getAccounts();
       const account = accounts[0];
+
       const balance = await this.web3.eth.getBalance(account);
       const tokenBalance = await this.tokenContract.methods.balanceOf(account)
         .call();
@@ -108,11 +109,12 @@ export class Web3Plugin {
         'tokenBalance': this.web3.utils.fromWei(tokenBalance, 'ether'),
         'tokenName': tokenName
       };
-      this.myAccounts.push(myAccount);
+
+      this.myAccounts = this.myAccounts.filter(item => item.address.toLowerCase() !== account.toLowerCase());
+      this.myAccounts.unshift(myAccount);
       return this.myAccounts;
     } catch (e) {
       message.warning(e.message);
-      return;
     }
   }
 
