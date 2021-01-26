@@ -112,7 +112,7 @@ export default class Web3Info extends Component{
         setFieldsValue: () => {}
       }
     };
-    updateAccountTimer && clearInterval(updateAccountTimer);
+    this.updateAccountTimer && clearInterval(this.updateAccountTimer);
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
