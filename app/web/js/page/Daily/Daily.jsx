@@ -37,7 +37,7 @@ class Daily extends Component {
       tutorial: []
     };
 
-    this.getDailyAwardHistoryTimer = null;
+    // this.getDailyAwardHistoryTimer = null;
     this.getDailyAwardHistoryLock = null;
 
     this.getDailyAwardHistory = this.getDailyAwardHistory.bind(this);
@@ -51,11 +51,11 @@ class Daily extends Component {
 
     this.getDailyAwardHistory();
   }
-
-  componentWillUnmount() {
-    this.getDailyAwardHistoryLock = true;
-    clearInterval(this.getDailyAwardHistoryTimer);
-  }
+  //
+  // componentWillUnmount() {
+  //   this.getDailyAwardHistoryLock = true;
+  //   clearInterval(this.getDailyAwardHistoryTimer);
+  // }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
     const addressChanged = prevProps.account && prevProps.account.accountInfo
@@ -74,9 +74,9 @@ class Daily extends Component {
       return;
     }
 
-    if (this.getDailyAwardHistoryTimer) {
-      clearInterval(this.getDailyAwardHistoryTimer);
-    }
+    // if (this.getDailyAwardHistoryTimer) {
+    //   clearInterval(this.getDailyAwardHistoryTimer);
+    // }
 
     const setHistory = async () => {
       if (this.getDailyAwardHistoryLock) {
@@ -91,9 +91,9 @@ class Daily extends Component {
     };
     setHistory();
 
-    this.getDailyAwardHistoryTimer = setInterval(() => {
-      setHistory();
-    }, 6000);
+    // this.getDailyAwardHistoryTimer = setInterval(() => {
+    //   setHistory();
+    // }, 6000);
   }
 
   render() {

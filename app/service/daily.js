@@ -8,7 +8,7 @@ const {
 } = require('egg');
 const AElf = require('aelf-sdk');
 const moment = require('moment');
-const {CHAIN, DAILY} = require('../../config/config.json');
+const {CHAIN, DAILY, UTC_OFFSET} = require('../../config/config.json');
 
 const tokenContract = require('../utils/tokenContract');
 
@@ -21,8 +21,8 @@ Object.keys(CHAIN).forEach(chainID => {
 const whiteListType = ['normalTransfer', 'crossTransfer', 'resource'];
 
 function checkTimeIsEffective(time) {
-  const startTime = moment.utc().startOf('day');
-  const timeNow =  moment.utc();
+  const startTime =  moment().utcOffset(UTC_OFFSET).startOf('day');
+  const timeNow =   moment().utcOffset(UTC_OFFSET);
   return moment.utc(time).isBetween(startTime, timeNow);
 }
 
@@ -76,7 +76,8 @@ module.exports = class TxsService extends Service {
       throw Error(`Insufficient ${DAILY.SYMBOL}, please report in telegram.`);
     }
 
-    const endTime = moment.utc().endOf('day').unix();
+    // const endTime = moment.utc().endOf('day').unix();
+    const endTime = moment().utcOffset(UTC_OFFSET).endOf('day').unix();
 
     const history = await ctx.model.AwardHistories.findOne({
       where: {

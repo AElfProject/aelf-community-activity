@@ -56,6 +56,10 @@ class DailyMissions extends Component {
   async componentDidMount() {
     this.getCountdown();
     this.getEffectiveTxs();
+
+    this.getEffectiveTxsTimer = setInterval(() => {
+      this.getEffectiveTxs();
+    }, 10000);
     // const { data: appData } = await getCommunityLink('wallet');
     // console.log(appData)
     // this.setState({
@@ -76,6 +80,10 @@ class DailyMissions extends Component {
       severalTaskTutorial,
       walletIOSUrl
     })
+  }
+
+  componentWillUnmount() {
+    this.getEffectiveTxsTimer && clearInterval(this.getEffectiveTxsTimer);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -242,7 +250,11 @@ class DailyMissions extends Component {
   render() {
 
     const { account, dailyAwardHistory } = this.props;
-    const { effectiveTokenTx, effectiveResourceTx, effectiveCrossTransferTx, countdown, appData, dailyTaskDate, severalTaskTutorial, walletIOSUrl } = this.state;
+    const {
+      effectiveTokenTx, effectiveResourceTx, effectiveCrossTransferTx,
+      countdown, appData, dailyTaskDate, severalTaskTutorial, walletIOSUrl
+    } = this.state;
+    const taskAvailable = checkTimeAvailable(dailyTaskDate);
 
     const { accountInfo } = account;
     const { address } = accountInfo;
@@ -254,10 +266,10 @@ class DailyMissions extends Component {
         <Card
           className='hover-cursor-auto'
           hoverable
-          title={[
-            <span key='1'>Countdown (UTC +0 23:59:59)：</span>,
+          title={taskAvailable ? [
+            <span key='1'>Countdown (GMT +8 23:59:59)：</span>,
             <CountDown key='2' countdown={countdown} />
-          ]}
+          ] : <span>Not during the event of daily tasks</span>}
           extra={renderAvailableTime(dailyTaskDate)}
         >
           <div className='section-title'>

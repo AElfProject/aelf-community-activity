@@ -6,6 +6,7 @@
 
 const { Controller } = require('egg');
 const moment = require('moment');
+const {UTC_OFFSET} = require('../../config/config.json');
 const formatOutput = require('../utils/formatOutput.js');
 
 module.exports = class DailyController extends Controller {
@@ -13,7 +14,8 @@ module.exports = class DailyController extends Controller {
   async getCountdownTime() {
     const { ctx } = this;
     try {
-      const time = moment.utc().endOf('day').unix() - moment().unix();
+      // const time = moment.utc().endOf('day').unix() - moment().unix();
+      const time = moment().utcOffset(UTC_OFFSET).endOf('day').unix() - moment().unix();
       formatOutput(ctx, 'get', time);
     } catch (error) {
       formatOutput(ctx, 'error', error, 422);
