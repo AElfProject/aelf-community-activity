@@ -10,10 +10,12 @@ import {
 
 import {initDepositByInvitorSeries} from '../charts/depositByInvitor';
 
+const defaultPageSize = 50;
+
 export default function App() {
   const [info, setInfo] = useState({});
   const [userAddress, setUserAddress] = useState('');
-  const [pageSize, setPageSize] = useState(100);
+  const [pageSize, setPageSize] = useState(defaultPageSize);
   const [pageNum, setPageNum] = useState(1);
 
   const [seriesStyle, setSeriesStyle] = useState({});
@@ -54,7 +56,7 @@ export default function App() {
   return (
     <div className="App">
       <div>
-        Page size(default 100): <InputNumber
+        Page size(default {defaultPageSize}): <InputNumber
           placeholder="Page size"
           onChange={value => {
             setPageSize(value);
@@ -66,16 +68,16 @@ export default function App() {
             setPageSize(value);
           }}
         />
-      </div>
-
-      <div>
         <button onClick={handleDepositByInvitor}>get deposit by invitor</button>
-      </div>
-      <div>
         <button onClick={handleDepositByUser}>get deposit by users</button>
       </div>
+      <br/>
       <div>
-        <Input placeholder="Please input user eth address" value={userAddress} onChange={e => {
+        <Input
+          placeholder="Please input user eth address"
+          value={userAddress}
+          style={{width: '500px'}}
+          onChange={e => {
           setUserAddress(e.target.value);
         }}/>
         <button onClick={handleUserDeposit}>get user deposit</button>
