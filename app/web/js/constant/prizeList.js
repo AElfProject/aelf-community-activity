@@ -1,20 +1,30 @@
 export const prizeList = [
   {
-    time: 'June 24',
+    time: 'June 23 19:00',
+    endTime: '1611745200000',
     heavyweight: true,
     limit: '0ELF',
     description: 'airpods  * 1, Media Robot Vacuum Cleaner * 1'
   },
   {
-    time: 'June 25',
+    time: 'June 24 20:00',
+    endTime: '1611748800000',
+    heavyweight: true,
+    limit: '0ELF',
+    description: 'airpods  * 1, Media Robot Vacuum Cleaner * 1'
+  },
+  {
+    time: 'June 25 21:00',
+    endTime: '1611752400000',
     heavyweight: false,
     description: '5 random drops (199ELF * 2 + 399ELF * 2 + 999ELF * 1)'
   },
-  {
-    time: 'June 26',
-    heavyweight: false,
-    description:'Xiaomi Stereo * 1, Tmall Genie * 1'
-  },
+  // {
+  //   time: 'June 26 22:00',
+  //   endTime: '1611756000000',
+  //   heavyweight: false,
+  //   description:'Xiaomi Stereo * 1, Tmall Genie * 1'
+  // },
   {
     time: 'June 27',
     heavyweight: false,
@@ -118,31 +128,19 @@ export const prizeList = [
   }
 ];
 
-// export const getPrizeListInfo = (todayTagInput, startDate = 810, monthInput, dateInput = 0) => {
-export const getPrizeListInfo = (options) => {
+export const getPrizeListInfoNew = (options) => {
   const {
-    todayTagInput,
     prizeList,
-    startDate,
-    monthInput,
-    dateInput = 0,
-    next
   } = options;
 
-  const today = new Date();
-  const month = monthInput || today.getMonth() + 1;
-  let date = dateInput || today.getDate();
-  date = date < 10 ? '0' + date : date;
-  const todayTag = todayTagInput || parseInt(month + '' + date, 10);
-  let startIndex = todayTag === startDate ? 0 : todayTag - startDate;
-  if ((todayTag - startDate) > 60) {
-    const temp = Math.floor(todayTag / 100) * 100;
-    startIndex = startIndex - (temp - next);
-  }
+  const timeNow = new Date().getTime();
+  const gameStart = prizeList[0] ? prizeList[0].endTime < timeNow : false;
+  const validPrizeList = prizeList.filter(prize => {
+    return prize.endTime > timeNow;
+  });
 
-  console.log('todayTag: ', todayTag);
   return {
-    prizes: prizeList.slice(startIndex, startIndex + 4),
-    gameStart: startIndex >= 0
+    prizes: validPrizeList.slice(0, 4),
+    gameStart
   };
 };

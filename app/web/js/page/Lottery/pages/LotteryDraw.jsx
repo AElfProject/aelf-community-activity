@@ -3,7 +3,7 @@ import React from 'react';
 import { Steps, Popover, Card } from 'antd';
 import { StarFilled } from '@ant-design/icons';
 const { Step } = Steps;
-import { getPrizeListInfo } from '../../../constant/prizeList';
+import { getPrizeListInfoNew } from '../../../constant/prizeList';
 import isMobile  from '../../../utils/isMobile';
 import './LotteryDraw.less';
 
@@ -47,7 +47,7 @@ export default function renderLotteryDraw(props) {
   const {
     prizes,
     gameStart
-  } = getPrizeListInfo({
+  } = getPrizeListInfoNew({
     // todayTagInput: 903,
     prizeList: prizesAll,
     startDate: Number.parseInt(start, 10),
