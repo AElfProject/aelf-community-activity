@@ -14,6 +14,7 @@
     "axios": "^0.19.2",
     "bignumber.js": "^9.0.1",
     "buffer": "^5.5.0",
+    "echarts": "^5.0.1",
     "egg": "^2.15.1",
     "egg-mysql": "^3.0.0",
     "egg-scripts": "^2.11.0",

@@ -14,6 +14,7 @@ import App from './App';
 import Swap from './page/Swap/Swap';
 import Lottery from './page/Lottery/Lottery';
 import Daily from './page/Daily/Daily';
+import Charts from './page/Charts';
 
 import "antd/dist/antd.less";
 import './index.less';
@@ -28,6 +29,7 @@ ReactDOM.render(
         <Route path="/swap" component={Swap}/>
         <Route path="/lottery" component={Lottery}/>
         <Route path="/daily" component={Daily}/>
+        <Route path="/chart" component={Charts}/>
       </Route>
     </Router>
   </Provider>,
