@@ -65,7 +65,7 @@ export default function App() {
         &nbsp; Page number(default 1)<InputNumber
           placeholder="Page number"
           onChange={value => {
-            setPageSize(value);
+            setPageNum(value);
           }}
         />
         <button onClick={handleDepositByInvitor}>get deposit by invitor</button>
