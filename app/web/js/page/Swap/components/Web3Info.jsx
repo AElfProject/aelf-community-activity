@@ -1,12 +1,15 @@
-import React, {Component} from 'react';
-import { Button, Card, Form, Input, Spin, message, Select, InputNumber } from 'antd';
+import React, { Component } from 'react';
+import { Button, Card, Form, Input, InputNumber, message, Select, Spin } from 'antd';
 import moment from 'moment';
 import { InfoCircleFilled } from '@ant-design/icons';
-import { WEB3, SWAP_PAIR } from '../../../constant/constant';
+import { SWAP_PAIR, WEB3 } from '../../../constant/constant';
 import { getAvailableTime, renderAvailableTime } from '../../../utils/cmsUtils';
 import SwapContract from '../../../utils/swapContract';
+import { getOrSetInviter } from '../../../utils/localStorage';
 
 import SwapElf from './SwapElf';
+import axios from '../../../service/axios';
+import { GET_CMS_COMMUNITY_CONFIG } from '../../../constant/apis';
 
 const {LOCK_ADDRESS} = WEB3;
 
@@ -74,7 +77,8 @@ export default class Web3Info extends Component{
       redeemDate: {
         start: '',
         end: ''
-      }
+      },
+      validCodes: []
     };
 
     this.redeemFormRef = React.createRef();
@@ -103,7 +107,16 @@ export default class Web3Info extends Component{
           mortgageDate,
           redeemDate
         });
-      })
+      });
+
+    try {
+      const inviter = await axios.get(`${GET_CMS_COMMUNITY_CONFIG}?key=inviter`);
+      this.setState({
+        validCodes: inviter.data[0].value.data
+      });
+    } catch(e) {
+      message.warning('Get valid inviter code failed');
+    }
   }
 
   componentWillUnmount() {
@@ -276,6 +289,8 @@ export default class Web3Info extends Component{
       this.setState({ mortgageLoading: false });
       return;
     }
+    const {validCodes} = this.state;
+    mortgageData.referralCode = getOrSetInviter(validCodes);
 
     web3PluginInstance.createReceipt(mortgageData).then(receipt => {
       const etherscanPrefix = web3PluginInstance.currentNetwork === 'ethereum' ? '' : web3PluginInstance.currentNetwork + '.';
@@ -306,6 +321,7 @@ export default class Web3Info extends Component{
       redeemedLink: null,
       redeemedTxHash: null
     });
+
     web3PluginInstance.execRedeem(redeemData).then(receipt => {
       const etherscanPrefix = web3PluginInstance.currentNetwork === 'ethereum' ? '' : web3PluginInstance.currentNetwork + '.';
       this.setState({
@@ -336,8 +352,10 @@ export default class Web3Info extends Component{
       receiptIds, // mainnetTokenRewardPivot, mortgageDate
       mainnetTokenRewardPivot, mortgageDate, redeemDate,
       swapELFReceiptInfo, swapELFMerklePathInfo,
-      isRedeemReady
+      isRedeemReady, validCodes
     } = this.state;
+
+    const inviterCode = getOrSetInviter(validCodes);
 
     const {address: accountAddress} = account;
 
@@ -435,10 +453,9 @@ export default class Web3Info extends Component{
               </Form.Item>
 
               <Form.Item {...tailLayout}>
-                <Button type="primary" htmlType="submit" disabled={submitDisable}>
+                <Button type="primary" htmlType="submit" loading={approveLoading} disabled={submitDisable || approveLoading}>
                   Submit
                 </Button>
-                &nbsp;<Spin spinning={approveLoading}/>
               </Form.Item>
               {approvedLink &&
                 <Form.Item
@@ -461,7 +478,10 @@ export default class Web3Info extends Component{
             <Form
               {...layout}
               name="mortgage"
-              initialValues={{spenderAddress: LOCK_ADDRESS}}
+              initialValues={{
+                spenderAddress: LOCK_ADDRESS,
+                referralCode: inviterCode,
+              }}
               onFinish={this.onMortgageFinish}
               onFinishFailed={this.onMortgageFinishFailed}
               onValuesChange={(changedValues, allValues) => {
@@ -516,14 +536,15 @@ export default class Web3Info extends Component{
                 label="Referral Code"
                 name="referralCode"
               >
-                <Input maxLength={128} placeholder="Optional"/>
+                <Input disabled maxLength={128} placeholder={inviterCode || 'Optional'}/>
               </Form.Item>
 
               <Form.Item {...tailLayout}>
-                <Button type="primary" htmlType="submit" disabled={submitDisable}>
+                <Button type="primary" htmlType="submit"
+                        loading={mortgageLoading}
+                        disabled={submitDisable || mortgageLoading}>
                   Submit
                 </Button>
-                &nbsp;<Spin spinning={mortgageLoading}/>
               </Form.Item>
               {mortgagedLink &&
               <Form.Item
@@ -611,10 +632,11 @@ export default class Web3Info extends Component{
               </Form.Item>
 
               <Form.Item {...tailLayout}>
-                <Button type="primary" htmlType="submit" disabled={!accountAddress || !isRedeemReady}>
+                <Button type="primary" htmlType="submit"
+                        loading={redeemLoading}
+                        disabled={!accountAddress || !isRedeemReady || redeemLoading}>
                   Submit
                 </Button>
-                &nbsp;<Spin spinning={redeemLoading}/>
               </Form.Item>
               {redeemedLink &&
               <Form.Item

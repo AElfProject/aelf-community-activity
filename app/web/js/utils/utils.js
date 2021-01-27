@@ -17,15 +17,10 @@ export function sleep(timestamp = 1000) {
   });
 }
 
-export function getURLParam(key)
-{
-  const query = window.location.search.substring(1);
-  const vars = query.split("&");
-  for (let i = 0; i < vars.length; i++) {
-    const pair = vars[i].split("=");
-    if(pair[0] === key){
-      return pair[1];
-    }
-  }
-  return '';
+export function getUrlParameter(name) {
+  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+  var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+  const string = '?' + window.location.href.split('?')[1];
+  var results = regex.exec(string);
+  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
