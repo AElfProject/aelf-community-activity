@@ -38,6 +38,7 @@ class Daily extends Component {
     };
 
     this.getDailyAwardHistoryTimer = null;
+    this.getDailyAwardHistoryLock = null;
 
     this.getDailyAwardHistory = this.getDailyAwardHistory.bind(this);
   }
@@ -52,6 +53,7 @@ class Daily extends Component {
   }
 
   componentWillUnmount() {
+    this.getDailyAwardHistoryLock = true;
     clearInterval(this.getDailyAwardHistoryTimer);
   }
 
@@ -77,14 +79,19 @@ class Daily extends Component {
     }
 
     const setHistory = async () => {
+      if (this.getDailyAwardHistoryLock) {
+        return;
+      }
+      this.getDailyAwardHistoryLock = true;
       const result = await axios.get(`${GET_AWARD_HISTORY}?address=${address}&limit=100`);
       this.setState({
         dailyAwardHistory: result.data
       });
+      this.getDailyAwardHistoryLock = false;
     };
     setHistory();
 
-    this.getDailyAwardHistoryTimer = setInterval(async() => {
+    this.getDailyAwardHistoryTimer = setInterval(() => {
       setHistory();
     }, 6000);
   }
