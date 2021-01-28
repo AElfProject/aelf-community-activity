@@ -120,7 +120,7 @@ export const  SwapElf = (swapInfo) => {
       setSwappedLink(explorerHref);
       setSwappedTxHash(TransactionId);
       MessageTxToExplore(TransactionId);
-
+      setReadyToSubmit(false);
       setSubmitLoading(false);
     } catch(e) {
       setSubmitLoading(false);
@@ -143,8 +143,6 @@ export const  SwapElf = (swapInfo) => {
     if (id === undefined) {
       return;
     }
-
-    console.log('merkleTreeRecorderContract: ', web3PluginInstance);
 
     try {
 
@@ -190,10 +188,12 @@ export const  SwapElf = (swapInfo) => {
       });
       if (swapAmounts) {
         message.error(`Receipt ID: ${id} had been swapped`, 6);
+        setReadyToSubmit(false);
         return;
       }
       setReadyToSubmit(true);
     } catch(e) {
+      setReadyToSubmit(false);
       message.warning(`Receipt ID: ${id} maybe not ready to swap`, 6);
       e.message && message.warning(e.message);
     }
