@@ -4,8 +4,13 @@ export const merkleTreeGenerator = [
     "inputs": [
       {
         "internalType": "contract Receipts",
-        "name": "_lock",
+        "name": "_receiptMaker",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_pathLengthLimit",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
@@ -47,17 +52,48 @@ export const merkleTreeGenerator = [
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "_pathLengthLimit",
+        "type": "uint256"
+      }
+    ],
+    "name": "changePathLengthLimit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract Receipts",
+        "name": "_receiptMaker",
+        "type": "address"
+      }
+    ],
+    "name": "changeReceiptMaker",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "_receiptId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_firstReceiptId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_lastReceiptId",
         "type": "uint256"
       }
     ],
     "name": "generateMerklePath",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
       {
         "internalType": "uint256",
         "name": "",
@@ -81,11 +117,16 @@ export const merkleTreeGenerator = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_treeIndex",
+        "name": "_firstReceiptId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_lastReceiptId",
         "type": "uint256"
       }
     ],
-    "name": "getMerkleTree",
+    "name": "getArbitraryMerkleTree",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -117,13 +158,63 @@ export const merkleTreeGenerator = [
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "merkleTreeCount",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_expectCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getMerkleTree",
     "outputs": [
       {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_firstReceiptId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_lastReceiptId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getMerkleTreeRoot",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
       }
     ],
     "stateMutability": "view",
@@ -144,19 +235,6 @@ export const merkleTreeGenerator = [
   },
   {
     "inputs": [],
-    "name": "receiptCountInTree",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "receiptProviderAddress",
     "outputs": [
       {
@@ -166,13 +244,6 @@ export const merkleTreeGenerator = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "recordReceipts",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

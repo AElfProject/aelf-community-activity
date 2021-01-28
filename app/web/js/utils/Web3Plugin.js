@@ -252,8 +252,8 @@ export class Web3Plugin {
     // originAmount = info[2]
   }
 
-  async getMerklePathInfo (id) {
-    return await this.merkleContract.methods.generateMerklePath(id).call();
+  async getMerklePathInfo (id, firstLeafIndex, lastLeafIndex) {
+    return await this.merkleContract.methods.generateMerklePath(id, firstLeafIndex, lastLeafIndex).call();
     // merkleBytes = info[0]
     // merkleBool = info[1]
   }

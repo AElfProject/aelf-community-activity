@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { Button, Card, Form, Input, InputNumber, message, Select, Spin } from 'antd';
 import moment from 'moment';
 import { InfoCircleFilled } from '@ant-design/icons';
-import { SWAP_PAIR, WEB3 } from '../../../constant/constant';
+import { SWAP_PAIR, WEB3, RECORDER_ID } from '../../../constant/constant';
 import { getAvailableTime, renderAvailableTime } from '../../../utils/cmsUtils';
 import SwapContract from '../../../utils/swapContract';
+import MerkleTreeRecorderContract from '../../../utils/merkleTreeRecorderContract';
 import { getOrSetInviter } from '../../../utils/localStorage';
 
-import SwapElf from './SwapElf';
+import { SwapElf } from './SwapElfNew';
 import axios from '../../../service/axios';
 import { GET_CMS_COMMUNITY_CONFIG } from '../../../constant/apis';
 
@@ -67,8 +68,6 @@ export default class Web3Info extends Component{
       redeemedLink: null,
       redeemedTxHash: null,
       receiptIds: [],
-      swapELFReceiptInfo: [],
-      swapELFMerklePathInfo: [[], [], [], []],
       mortgageDate: {
         start: '',
         end: ''
@@ -85,6 +84,7 @@ export default class Web3Info extends Component{
 
     this.updateAccountTimer = null;
     this.swapcontract = new SwapContract();
+    this.merkleTreeRecorderContract = new MerkleTreeRecorderContract();
 
     this.connectMetaMask = this.connectMetaMask.bind(this);
     this.checkMetaMask = this.checkMetaMask.bind(this);
@@ -92,7 +92,6 @@ export default class Web3Info extends Component{
     this.onMortgageFinish = this.onMortgageFinish.bind(this);
     this.getReceiptIDs = this.getReceiptIDs.bind(this);
     this.onRedeemFinish = this.onRedeemFinish.bind(this);
-    this.onSwapELFReceiptIdChange = this.onSwapELFReceiptIdChange.bind(this);
   }
 
   async componentDidMount() {
@@ -163,40 +162,6 @@ export default class Web3Info extends Component{
     const {web3PluginInstance} = this.props;
     await web3PluginInstance.connectMetaMask();
     this.checkMetaMask(false);
-  }
-
-  async onSwapELFReceiptIdChange (id) {
-    this.setState({
-      swapELFReceiptInfo: [],
-      swapELFMerklePathInfo: [[], [], [], []]
-    });
-    if (id === undefined) {
-      return;
-    }
-    const {web3PluginInstance} = this.props;
-
-    try {
-      const result = await Promise.all(
-        [web3PluginInstance.getReceiptInfo(id),
-          web3PluginInstance.getMerklePathInfo(id)],
-      );
-      this.setState({
-        swapELFReceiptInfo: result[0],
-        swapELFMerklePathInfo: result[1]
-      });
-
-      const swapContract = await this.swapcontract.getSwapContractInstance();
-      const swapAmounts = await swapContract.GetSwapAmounts.call({
-        swapId: SWAP_PAIR,
-        uniqueId: result[0][0]
-      });
-      if (swapAmounts) {
-        message.error(`Receipt ID: ${id} had been swapped`, 6);
-      }
-    } catch(e) {
-      message.warning(`Receipt ID: ${id} maybe not ready to swap`, 6);
-      message.warning(e.message);
-    }
   }
 
   async getAccounts () {
@@ -351,7 +316,6 @@ export default class Web3Info extends Component{
       redeem, redeemLoading, redeemedLink, redeemedTxHash,
       receiptIds, // mainnetTokenRewardPivot, mortgageDate
       mainnetTokenRewardPivot, mortgageDate, redeemDate,
-      swapELFReceiptInfo, swapELFMerklePathInfo,
       isRedeemReady, validCodes
     } = this.state;
 
@@ -563,9 +527,8 @@ export default class Web3Info extends Component{
           ethAddress={account.address}
           swapId={SWAP_PAIR}
           receiptIds={receiptIds}
-          onSwapELFReceiptIdChange={this.onSwapELFReceiptIdChange}
-          swapELFReceiptInfo={swapELFReceiptInfo}
-          swapELFMerklePathInfo={swapELFMerklePathInfo}
+          merkleTreeRecorderContract={this.merkleTreeRecorderContract}
+          swapcontract={this.swapcontract}
           web3PluginInstance={web3PluginInstance}
         />
 
