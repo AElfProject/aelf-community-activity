@@ -34,8 +34,8 @@ export const  SwapElf = (swapInfo) => {
   const [readyToSubmit, setReadyToSubmit] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [merkleIndexInfo, setMerkleIndexInfo] = useState({
-    currentIndex: 0,
-    lastLeafIndex: 0
+    lastLeafIndex: '',
+    lastRecordedLeafIndex: ''
   });
 
   const [swapELFReceiptInfo, setSwapELFReceiptInfo] = useState([]);
@@ -44,25 +44,22 @@ export const  SwapElf = (swapInfo) => {
   const onFinish = useCallback(async () => {
     setSubmitLoading(true);
     try {
-      // const swapId = '' + swapInfo.swapId;
       const originAmount = swapELFReceiptInfo[2];
       const uniqueId = swapELFReceiptInfo[0];
       const receiverAddress = swapELFReceiptInfo[1];
-      const merklePathTreeIndex = swapELFMerklePathInfo[0];
       const merklePathBytes = swapELFMerklePathInfo[1].join(',');
       const merklePathBool = swapELFMerklePathInfo[2].join(',');
 
       if (!(swapId && originAmount && uniqueId && receiverAddress
-        && merklePathTreeIndex && merklePathBytes && merklePathBool)) {
+         && merklePathBytes && merklePathBool)) {
         message.warning('This receipt ID not ready yet.');
         setSubmitLoading(false);
         return;
       }
 
-      // if (+swapPairInfo.roundCount < (+merklePathTreeIndex + 1)) {
-      if (+merkleIndexInfo.lastLeafIndex < +merklePathTreeIndex) {
+      if (+merkleIndexInfo.lastRecordedLeafIndex < +merkleIndexInfo.lastLeafIndex) {
         message.warning(`This receipt ID not ready yet. 
-        Merkle Tree Index can not be greater than ${merkleIndexInfo.lastLeafIndex}, this is ${merklePathTreeIndex}`);
+        Merkle Tree Index can not be greater than ${merkleIndexInfo.lastRecordedLeafIndex}, this is ${merkleIndexInfo.lastLeafIndex}`);
         setSubmitLoading(false);
         return;
       }
@@ -138,8 +135,13 @@ export const  SwapElf = (swapInfo) => {
       return;
     }
 
+    setReadyToSubmit(false);
     setSwapELFReceiptInfo([]);
     setSwapELFMerklePathInfo([[], [], []]);
+    setMerkleIndexInfo({
+      lastLeafIndex: '',
+      lastRecordedLeafIndex: ''
+    });
     if (id === undefined) {
       return;
     }
@@ -150,7 +152,6 @@ export const  SwapElf = (swapInfo) => {
       const lastRecordedLeafIndex = await merkleTreeRecorderContractInstance.GetLastRecordedLeafIndex.call();
 
       if (+lastRecordedLeafIndex.value < +id) {
-        setReadyToSubmit(false);
         message.warning(
           `Receipt ID: ${id} is not ready to swap, you can swap before ${lastRecordedLeafIndex.value}`,
           6
@@ -177,8 +178,8 @@ export const  SwapElf = (swapInfo) => {
       setSwapELFReceiptInfo(result[0]);
       setSwapELFMerklePathInfo(result[1]);
       setMerkleIndexInfo({
-        currentIndex: result[1][0],
-        lastLeafIndex
+        lastLeafIndex,
+        lastRecordedLeafIndex: lastRecordedLeafIndex.value
       });
 
       const swapContract = await swapcontract.getSwapContractInstance();
@@ -306,8 +307,8 @@ export const  SwapElf = (swapInfo) => {
           <Form.Item
             label="Merkle Tree Index (int)"
           >
-            <Input disabled value={swapELFMerklePathInfo[0]}/>
-            <span>Merkle Tree Index can not be greater than  {merkleIndexInfo.lastLeafIndex  || ''}.</span>
+            <Input disabled value={merkleIndexInfo.lastLeafIndex}/>
+            <span>Merkle Tree Index can not be greater than  {merkleIndexInfo.lastRecordedLeafIndex  || ''}.</span>
           </Form.Item>
 
           <Form.Item
