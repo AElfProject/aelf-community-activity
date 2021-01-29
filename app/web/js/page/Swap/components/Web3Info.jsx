@@ -469,8 +469,8 @@ export default class Web3Info extends Component{
               >
                 <InputNumber
                   style={{width: '100%'}}
-                  placeholder={`Max amount: ${allowance || '0'}, Min amount ${allowance ? '0.000004' : '0'}`}
-                  max={allowance}
+                  placeholder={`Min Amount ${allowance ? '0.000004' : '0'}`}
+                  max={Math.min(allowance || account.tokenBalance)}
                   min={0.000004}
                 />
               </Form.Item>
