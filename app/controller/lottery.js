@@ -27,4 +27,27 @@ module.exports = class LotteryController extends Controller {
       formatOutput(ctx, 'error', error, 422);
     }
   }
+
+  async getStakeList() {
+    const { ctx } = this;
+    try {
+      const { offset, limit, share } = ctx.request.query;
+      const keysRule = {
+        offset: 'number',
+        limit: 'number',
+        share: 'number',
+      };
+      const options = {
+        offset: +offset,
+        limit: +limit,
+        share: +share,
+      };
+      ctx.validate(keysRule, options);
+
+      const result = await ctx.service.lottery.getStakeList(options);
+      formatOutput(ctx, 'get', result);
+    } catch (error) {
+      formatOutput(ctx, 'error', error, 422);
+    }
+  }
 };

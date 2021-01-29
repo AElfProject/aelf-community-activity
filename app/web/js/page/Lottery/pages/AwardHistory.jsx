@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import { Card, Table } from 'antd';
 import moment from 'moment';
 import Contract from '../../../utils/Contract';
+import { getUrlParameter } from '../../../utils/utils';
 import addressFormat from '../../../utils/addressFormat';
 import { LOTTERY } from '../../../constant/constant';
 import LotteryAward from './LotteryAward';
+import AElf from 'aelf-sdk';
+const {wallet: Wallet} = AElf;
 
 const awardHistoryColumns = [
   {
@@ -31,6 +34,25 @@ const awardHistoryColumns = [
     dataIndex: 'rewardName',
     key: 'rewardName',
     width: 150,
+  }
+];
+
+const registerInfoColumns = [
+  {
+    title: 'Register',
+    dataIndex: 'registrationInformation',
+    key: 'registrationInformation',
+    width: 300,
+    render: (registrationInformation) => {
+      const AES_KEY = getUrlParameter('aes');
+      let info;
+      try {
+        info = Wallet.AESDecrypt(registrationInformation, AES_KEY);
+      } catch(e) {
+        info = registrationInformation;
+      }
+      return <span>{info}</span>;
+    }
   }
 ];
 
@@ -149,7 +171,9 @@ export default class AwardHistory extends Component{
         Random Hash: {randomHash}</div>
       <Table
         dataSource={rewardLotteries}
-        columns={awardHistoryColumns}
+        columns={getUrlParameter('aes')
+          ? [...awardHistoryColumns, ...registerInfoColumns]
+          : awardHistoryColumns}
         pagination={false}
         rowKey='id'
         scroll={{x: 1024}}
