@@ -288,7 +288,7 @@ class PersonalDraw extends Component{
               Code Amount ({LOTTERY.RATIO} {LOTTERY.SYMBOL} = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
               <InputNumber
                 min={0}
-                max={Math.min(Math.floor(Math.min(tokenAllowanceActual, tokenBalanceActual)/LOTTERY.RATIO), 100)}
+                max={Math.min(Math.floor(Math.min(tokenAllowanceActual, tokenBalanceActual)/LOTTERY.RATIO), LOTTERY.MAX_BUY)}
                 defaultValue={1}
                 onChange={this.onExchangeNumberChange} />
               &nbsp;&nbsp;&nbsp;

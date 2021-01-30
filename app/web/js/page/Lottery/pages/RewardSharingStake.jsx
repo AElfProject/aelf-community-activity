@@ -10,7 +10,8 @@ import { LotteryContext } from '../context/lotteryContext';
 export const RewardSharingStake = ({disabled, approvedLot, stakedLot, setRefreshTime}) => {
 
   const lotteryContext = useContext(LotteryContext);
-  const {dispatch} = lotteryContext;
+  const {dispatch, state} = lotteryContext;
+  const { balanceLot } = state;
 
   const initErrorMsg = {
     type: 'success',
@@ -147,7 +148,7 @@ export const RewardSharingStake = ({disabled, approvedLot, stakedLot, setRefresh
           validateStatus={stakingErrorMsg.type}
         >
           <InputNumber
-            max={approvedLot}
+            max={Math.min(approvedLot, balanceLot / (10**8))}
             min={0}
             placeholder="please input" className="reward-sharing-staked"/>
         </Form.Item>

@@ -23,7 +23,10 @@ export const RewardSharing = ({aelfAddress}) => {
 
   const lotteryContext = useContext(LotteryContext);
   const {state, dispatch} = lotteryContext;
-  const {allowanceLot: allowance} = state;
+  const {
+    allowanceLot: allowance,
+    balanceLot
+  } = state;
 
   const lotteryContract = useContract(aelfAddress, LOTTERY.CONTRACT_ADDRESS);
   const [refreshRegisteredInfo , setRefreshRegisteredInfo] = useState(0);
@@ -32,7 +35,7 @@ export const RewardSharing = ({aelfAddress}) => {
   const boughtLotteriesCount = useBoughtLotteriesCount(aelfAddress, lotteryContract);
 
   const rewardTime = useAvailableTime('lotteryRewardSharing');
-  const stakedTime = useAvailableTime('lotteryRewardSharingStaking')
+  const stakedTime = useAvailableTime('lotteryRewardSharingStaking');
   // const {lotteryRewardSharing: rewardTime, lotteryRewardSharingStaking: stakedTime} = useAvailableTime(['lotteryRewardSharing', 'lotteryRewardSharingStaking'])
   // const stakedTime = useAvailableTime('lotteryRewardSharingStaking')
   const stakedDisabled = !checkTimeAvailable(stakedTime);
@@ -132,7 +135,9 @@ export const RewardSharing = ({aelfAddress}) => {
       <div className='section-content swap-flex-wrap reward-sharing'>
         <div>
           Total Estimated Bonus: {estimatedBonus}ELF &nbsp;&nbsp;&nbsp;
-          Estimated Available Bonus: {estimatedAvailableBonus} ELF({percentBN.toFormat(2)}%)</div>
+          Estimated Available Bonus: {estimatedAvailableBonus} ELF({percentBN.toFormat(2)}%)&nbsp;&nbsp;&nbsp;
+          My LOT Balance: {balanceLot ? new BigNumber(balanceLot).div(10 ** 8).toFormat() : '-'} LOT
+        </div>
         <div className='basic-blank'/>
 
         <RewardSharingStake
