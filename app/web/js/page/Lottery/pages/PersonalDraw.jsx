@@ -50,14 +50,14 @@ const columns = [
     key: 'rewardName',
     width: 200
   },
-  {
-    title: 'Registration Information (After Draw)',
-    // dataIndex: 'registrationInformation',
-    dataIndex: 'decryptInfo',
-    // key: 'registrationInformation',
-    key: 'decryptInfo',
-    width: 300
-  },
+  // {
+  //   title: 'Registration Information (After Draw)',
+  //   // dataIndex: 'registrationInformation',
+  //   dataIndex: 'decryptInfo',
+  //   // key: 'registrationInformation',
+  //   key: 'decryptInfo',
+  //   width: 300
+  // },
 ];
 
 function renderHistory(dataSource, historyLoading) {
@@ -71,6 +71,7 @@ function renderHistory(dataSource, historyLoading) {
   //   },
   // ];
   return <Table
+    pagination={{pageSize: 20}}
     dataSource={dataSource}
     loading={historyLoading}
     columns={columns}
@@ -298,7 +299,8 @@ class PersonalDraw extends Component{
                 type="primary" onClick={() => this.onBuyClick()}>Switch</Button>
             </div>
             <div className="text-grey">
-              The Lucky Draw Function will be closed after {switchCodeDate.end ? moment(switchCodeDate.end).format('YYYY-MM-DD HH:mm') : '-'}. Please switch it in time to avoid loss.
+              <div>At most 50 Lottery Code can be swapped for each switch.</div>
+              <div>The Lucky Draw Function will be closed after {switchCodeDate.end ? moment(switchCodeDate.end).format('YYYY-MM-DD HH:mm') : '-'}. Please switch it in time to avoid loss.</div>
             </div>
           </div>
 

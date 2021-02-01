@@ -6,7 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
     <title>aelf-community</title>
     <link href="/favicon.ico" rel="bookmark" type="image/x-icon">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-934E1SDTWL"></script>
+    <script>
+        if (window.location.host === 'community-activity.aelf.io') {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
 
+          gtag('config', 'G-934E1SDTWL');
+        }
+    </script>
 </head>
 
 <body>

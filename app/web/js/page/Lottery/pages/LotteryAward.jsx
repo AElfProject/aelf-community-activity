@@ -236,7 +236,7 @@ export default class LotteryAward extends Component {
               >
                 <Input maxLength={256}/>
               </Form.Item>
-              <div>If the prize need to be mailed, you need to enter your shipping address, contact information and name. If the prize is ELF Tokens, you only need to enter your wallet address</div>
+              <div>If you're concerned about privacy issue caused by filling in real address, you can fill in anything instead and wait for aelf team to contact you through offical channel. Please ensure contact you submit below is accurate.</div>
             </Form.Item>
 
             <Form.Item
@@ -251,7 +251,7 @@ export default class LotteryAward extends Component {
                 <Input maxLength={128}/>
               </Form.Item>
               {/* <div>Please enter your user name (Telegram / WeChat) so that we can contact you</div> */}
-              <div>Please enter your user name (Telegram / Email) so that we can contact you</div>
+              <div>Please note that verification of aelf's official status is required. aelf team will not charge you extra for any reason.</div>
             </Form.Item>
 
             <Form.Item {...tailLayout}>
