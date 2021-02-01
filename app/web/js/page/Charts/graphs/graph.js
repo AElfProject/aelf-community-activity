@@ -1,8 +1,7 @@
 import Axios from 'axios';
+import {THEGRAPH} from '../../../../../../config/config.json';
 
-const DEFAULT_ENDPOINT =
-  "https://api.thegraph.com/subgraphs/name/aelfproject/map";
-
+const DEFAULT_ENDPOINT = THEGRAPH.LOCK;
 export const GET_DEPOSIT_BY_INVITE_CODE = (pageNum, pageSize) => {
   const skip = pageSize * (pageNum - 1);
   return `
@@ -64,4 +63,29 @@ export async function getUserDeposit(address) {
   );
   const { account = null } = data;
   return account;
+}
+
+export const GET_INVITE_CODE_BY_USER = (address) => {
+  return `
+    {
+      account(id: "${address}") {
+        id
+        amount
+        receipts {
+          inviteCode {
+            id
+          }
+        }
+      }
+    }
+  `;
+};
+
+export async function getInviteCodeByUser(address) {
+  const { data = {} } = await queryGraph(
+    GET_INVITE_CODE_BY_USER(address.toLowerCase())
+  );
+
+  const { account = {} } = data;
+  return account || {};
 }

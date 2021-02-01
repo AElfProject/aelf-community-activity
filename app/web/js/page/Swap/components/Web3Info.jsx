@@ -11,6 +11,7 @@ import { getOrSetInviter } from '../../../utils/localStorage';
 import { SwapElf } from './SwapElfNew';
 import axios from '../../../service/axios';
 import { GET_CMS_COMMUNITY_CONFIG } from '../../../constant/apis';
+import { getInviteCodeByUser } from '../../../page/Charts/graphs/graph';
 
 const {LOCK_ADDRESS} = WEB3;
 
@@ -77,7 +78,8 @@ export default class Web3Info extends Component{
         start: '',
         end: ''
       },
-      validCodes: []
+      validCodes: [],
+      inviteCode: ''
     };
 
     this.redeemFormRef = React.createRef();
@@ -113,6 +115,8 @@ export default class Web3Info extends Component{
       this.setState({
         validCodes: inviter.data[0].value.data
       });
+
+      await this.getInviteCodeByUser();
     } catch(e) {
       message.warning('Get valid inviter code failed');
     }
@@ -144,18 +148,22 @@ export default class Web3Info extends Component{
       const accountTemp = await this.getAccounts();
       if (accountTemp && account.address !== accountTemp.address) {
         await this.getApproveAndLockedELF();
+        await this.getInviteCodeByUser().catch((error => {
+          console.log('getInviteCodeByUser failed', error);
+        }));
       }
     };
-    if (connectOk) {
-      await updateAccountInfo();
-      if (this.updateAccountTimer) {
-        clearInterval(this.updateAccountTimer);
-      }
-
-      this.updateAccountTimer = setInterval(async () => {
-        await updateAccountInfo();
-      }, 1000);
+    if (!connectOk) {
+      return;
     }
+    await updateAccountInfo();
+    if (this.updateAccountTimer) {
+      clearInterval(this.updateAccountTimer);
+    }
+
+    this.updateAccountTimer = setInterval( () => {
+      updateAccountInfo();
+    }, 1000);
   }
 
   async connectMetaMask() {
@@ -191,6 +199,30 @@ export default class Web3Info extends Component{
     const {account} = this.state;
     const receiptIds = await web3PluginInstance.getMyReceiptIds(address || account.address);
     this.setState({ receiptIds });
+  }
+
+  async getInviteCodeByUser() {
+    const {validCodes, account} = this.state;
+    if (!account.address) {
+      return;
+    }
+    const result = await getInviteCodeByUser(account.address);
+    const {receipts = []} = result;
+    const length = receipts.length;
+    let inviteCode = '';
+    for (let i = length - 1; i > 0; i--) {
+      inviteCode = receipts[i].inviteCode.id;
+      if (validCodes.includes(inviteCode)) {
+        this.setState({
+          inviteCode
+        });
+        return inviteCode;
+      }
+    }
+    this.setState({
+      inviteCode
+    });
+    return inviteCode;
   }
 
   async getApproveAndLockedELF () {
@@ -316,10 +348,10 @@ export default class Web3Info extends Component{
       redeem, redeemLoading, redeemedLink, redeemedTxHash,
       receiptIds, // mainnetTokenRewardPivot, mortgageDate
       mainnetTokenRewardPivot, mortgageDate, redeemDate,
-      isRedeemReady, validCodes
+      isRedeemReady, validCodes, inviteCode: inviteCodeFromEvent
     } = this.state;
 
-    const inviterCode = getOrSetInviter(validCodes);
+    const inviterCode = getOrSetInviter(validCodes) || inviteCodeFromEvent;
 
     const {address: accountAddress} = account;
 

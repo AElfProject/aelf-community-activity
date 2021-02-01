@@ -17,9 +17,14 @@ export const setInviter = (whiteList = []) => {
 };
 
 export const getOrSetInviter = (whiteList = []) => {
-  const inviter = localStorage.getItem('inviter');
+  let inviter = setInviter(whiteList);
+  if (inviter) {
+    return inviter;
+  }
+  // const inviter = localStorage.getItem('inviter');
+  inviter = localStorage.getItem('inviter');
   if (checkInviter(inviter, whiteList)) {
     return inviter;
   }
-  return setInviter(whiteList);
+  // return setInviter(whiteList);
 };
