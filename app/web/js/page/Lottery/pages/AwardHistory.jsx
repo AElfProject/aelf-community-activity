@@ -116,7 +116,8 @@ export default class AwardHistory extends Component{
     const promiseList = [];
     const { rewardResults } = this.state;
     // const getPeriodDetailPromiseList = [];
-    for (let index = 1; index < currentPeriodNumber; index++) {
+    // for (let index = 1; index < currentPeriodNumber; index++) {
+    for (let index = LOTTERY.START_PERIOD; index < currentPeriodNumber; index++) {
       promiseList.push(getRewardResultByPeriod(index).then(rewardResult => {
         // const { rewardResults } = this.state;
         const reverseIndex = currentPeriodNumber - 1 - index;
@@ -166,7 +167,7 @@ export default class AwardHistory extends Component{
 
     return (<div className="history-container" key={randomHash}>
       {/*<div className='history-period'>{timeFormatted}</div>*/}
-      <div className='history-period'>Period: {period} &nbsp;&nbsp;&nbsp;
+      <div className='history-period'>Period: {period - LOTTERY.START_PERIOD + 1} &nbsp;&nbsp;&nbsp;
         {timeShow}  &nbsp;&nbsp;&nbsp;
         Random Hash: {randomHash}</div>
       <Table

@@ -39,6 +39,7 @@ export default class LotteryAward extends Component {
     this.handleOk = this.handleOk.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.renderOption = this.renderOption.bind(this);
+    this.renderLotteryIdOption = this.renderLotteryIdOption.bind(this);
     this.renderFromItemSelect = this.renderFromItemSelect.bind(this);
     this.onPeriodChange = this.onPeriodChange.bind(this);
     this.removeLotteryIdArray = this.removeLotteryIdArray.bind(this);
@@ -145,8 +146,13 @@ export default class LotteryAward extends Component {
   }
 
   renderOption(value) {
+    return <Option value={value} key={value}>{value - LOTTERY.START_PERIOD + 1}</Option>;
+  }
+
+  renderLotteryIdOption(value) {
     return <Option value={value} key={value}>{value}</Option>;
   }
+
   renderFromItemSelect(arrayInput, nameInput, labelInput, onChange) {
 
     const desc = {
@@ -154,8 +160,10 @@ export default class LotteryAward extends Component {
       lotteryId: 'You can check the lottery code in the lottery draw page.'
     };
 
+    const renderOptions = nameInput === 'lotteryId' ? this.renderLotteryIdOption : this.renderOption;
+
     const optionsHTML = arrayInput.map(value => {
-      return this.renderOption(value);
+      return renderOptions(value);
     });
 
     const placeholder = arrayInput.length
@@ -209,7 +217,11 @@ export default class LotteryAward extends Component {
       <Card
         className='hover-cursor-auto'
         hoverable
-        title={'Take Award (Latest Award Period: ' + (currentPeriodNumber ? currentPeriodNumber - 1 : 0) + ')'}
+        title={'Take Award (Latest Award Period: ' + (
+          currentPeriodNumber < LOTTERY.START_PERIOD
+            ? '-'
+            : currentPeriodNumber - LOTTERY.START_PERIOD
+        ) + ')'}
         extra={renderAvailableTime(takeAwardDate)}
       >
         <div className='section-content lottery-form-container'>
@@ -270,7 +282,7 @@ export default class LotteryAward extends Component {
           onOk={this.handleOk}
           onCancel={this.handleCancel}
         >
-          <p>Period: {period} &nbsp;&nbsp;&nbsp; Lottery ID: {lotteryId}</p>
+          <p>Period: {period - LOTTERY.START_PERIOD + 1} &nbsp;&nbsp;&nbsp; Lottery ID: {lotteryId}</p>
           <p>{registrationInformation}</p>
         </Modal>
       </Card>

@@ -268,7 +268,9 @@ class PersonalDraw extends Component{
         hoverable
         title='My Lottery'>
         <div className='section-content'>
-          <div className='personal-title'>Switch Lottery Code (Current Period: {currentPeriodNumber})</div>
+          <div className='personal-title'>Switch Lottery Code (Current Period: {
+            currentPeriodNumber < LOTTERY.START_PERIOD ? '-' : currentPeriodNumber - LOTTERY.START_PERIOD + 1
+          })</div>
           <div className='basic-line'/>
           <div className='basic-blank'/>
           <div>
