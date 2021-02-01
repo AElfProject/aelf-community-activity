@@ -151,9 +151,10 @@ export const  SwapElf = (swapInfo) => {
       const merkleTreeRecorderContractInstance = await merkleTreeRecorderContract.getMerkleTreeRecorderInstance();
       const lastRecordedLeafIndex = await merkleTreeRecorderContractInstance.GetLastRecordedLeafIndex.call();
 
-      if (+lastRecordedLeafIndex.value < +id) {
+      if (!lastRecordedLeafIndex || (+lastRecordedLeafIndex.value < +id)) {
         message.warning(
-          `Receipt ID: ${id} is not ready to swap, you can swap before ${lastRecordedLeafIndex.value}`,
+          `Receipt ID: ${id} is not ready to swap, you can swap before ${
+            lastRecordedLeafIndex ? lastRecordedLeafIndex.value : 0}`,
           6
         );
         return;
