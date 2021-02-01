@@ -284,7 +284,7 @@ class DailyMissions extends Component {
           title='Task 1 Resource Trading'>
           <div className='section-content'>
             <div>
-              During the event, you can collect 100 LOT tokens each day through the resource token trading function.
+              During the event, you can collect 100 LOT tokens each day through the resource token trading function. (Note: Resource trading is only supported in Chrome browser on PC.)
             </div>
             {/* <a href={EXPLORER_URL + '/resource'} target='_blank'>Turn to aelf explorer</a> */}
             <a href={CHAIN.AELF.EXPLORER_URL + '/resource'} target='_blank'>Turn to aelf explorer</a>
@@ -304,8 +304,8 @@ class DailyMissions extends Component {
             <div>
               <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>
               <a href={WALLET_ANDROID_URL} target='_blank'>Android wallet, </a>
-              {/* <a href={WALLET_IOS_URL} target='_blank'>iOS wallet</a> */}
-              <a href={walletIOSUrl} target='_blank'>iOS wallet</a>
+               <a href={WALLET_IOS_URL} target='_blank'>iOS wallet</a>
+              {/*<a href={walletIOSUrl} target='_blank'>iOS wallet</a>*/}
             </div>
             {this.renderMission(effectiveTokenTx, 'normalTransfer')}
           </div>

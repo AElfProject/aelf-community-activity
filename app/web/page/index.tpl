@@ -9,7 +9,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-934E1SDTWL"></script>
     <script>
-        if (window.location.host === 'community-activity.aelf.io') {
+        if (['mainnet-tryout.aelf.io', 'mainnet-tryout.aelf.io'].includes(window.location.host)) {
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
