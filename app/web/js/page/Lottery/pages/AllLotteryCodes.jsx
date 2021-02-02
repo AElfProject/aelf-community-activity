@@ -125,6 +125,7 @@ export const LotteryCodeContainer = (({
     lotteryContract,
     address: aelfAddress,
     periodNumber: periodSelected,
+    refreshTime: +periodSelected === +currentPeriod ? refreshTime : null
   });
 
   useEffect(() => {
