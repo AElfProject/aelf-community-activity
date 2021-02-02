@@ -140,7 +140,7 @@ export const LotteryCodeContainer = (({
   }, [currentPeriod]);
 
   const updateBoughtLotteries = useCallback(async () => {
-    if (!periodSelected || !lotteryContract || !aelfAddress || !count) {
+    if (!periodSelected || !lotteryContract || !aelfAddress) {
       setLoading(false);
       setBoughtLotteries([]);
       return;
