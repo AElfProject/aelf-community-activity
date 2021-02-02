@@ -1,22 +1,18 @@
 /* From start */
 import React, { Component } from 'react';
-import { Table, InputNumber, Button, message, Card } from 'antd';
-import axios from '../../../service/axios';
+import { InputNumber, Button, message, Card } from 'antd';
 
-import {NightElfCheck, getViewResult} from '../../../utils/NightElf/NightElf';
+import {NightElfCheck} from '../../../utils/NightElf/NightElf';
 import addressFormat from '../../../utils/addressFormat';
 import {
   LOGIN_INFO,
   LOTTERY,
   TOKEN_CONTRACT_ADDRESS,
-  EXPLORER_URL,
   TOKEN_DECIMAL,
   HTTP_PROVIDER
 } from '../../../constant/constant';
 import TokenContract from '../../../utils/tokenContract';
-import Contract from '../../../utils/Contract';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
-import { POST_DECRYPT_LIST } from '../../../constant/apis';
 import { checkTimeAvailable, getAvailableTime } from '../../../utils/cmsUtils';
 import { sleep } from '../../../utils/utils';
 
@@ -25,65 +21,6 @@ import { LotteryCodeContainer } from '../pages/AllLotteryCodes';
 import {LotteryContext} from '../context/lotteryContext';
 import moment from 'moment';
 import AElf from 'aelf-sdk';
-
-const columns = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-    width: 80,
-  },
-  // {
-  //   title: 'Random Hash',
-  //   dataIndex: 'random_hash',
-  //   key: 'random_hash',
-  //   // render: text => <a>{text}</a>,
-  //   // render: text => <a>{text}</a>,
-  // },
-  {
-    title: 'block',
-    dataIndex: 'block',
-    key: 'block',
-    width: 150
-  },
-  {
-    title: 'Reward Name',
-    dataIndex: 'rewardName',
-    key: 'rewardName',
-    width: 200
-  },
-  // {
-  //   title: 'Registration Information (After Draw)',
-  //   // dataIndex: 'registrationInformation',
-  //   dataIndex: 'decryptInfo',
-  //   // key: 'registrationInformation',
-  //   key: 'decryptInfo',
-  //   width: 300
-  // },
-];
-
-function renderHistory(dataSource, historyLoading) {
-  // const dataSource =  [
-  //   {
-  //     id: '36',
-  //     owner: '2hxkDg6Pd2d4yU1A16PTZVMMrEDYEPR8oQojMDwWdax5LsBaxX',
-  //     level: '0',
-  //     block: '116371',
-  //     registrationInformation: ''
-  //   },
-  // ];
-  return <Table
-    pagination={{
-      pageSize: 20,
-      showSizeChanger: false
-    }}
-    dataSource={dataSource}
-    loading={historyLoading}
-    columns={columns}
-    rowKey='id'
-    scroll={{x: 512}}
-  />;
-}
 
 class PersonalDraw extends Component{
   constructor(props) {
@@ -108,12 +45,9 @@ class PersonalDraw extends Component{
     this.onApproveChange = this.onApproveChange.bind(this);
     this.onExchangeNumberChange = this.onExchangeNumberChange.bind(this);
     this.onApproveClick = this.onApproveClick.bind(this);
-    this.getBoughtLotteries = this.getBoughtLotteries.bind(this);
   }
 
   async componentDidMount() {
-    await this.getBoughtLotteries();
-
     getAvailableTime().then(res => {
       const { data } = res;
       const switchCodeDate = data.find(item => item.type === 'lotterySwitchCode') || {};
@@ -121,83 +55,6 @@ class PersonalDraw extends Component{
         switchCodeDate,
       });
     });
-  }
-
-  async componentDidUpdate(prevProps, prevState, snapshot) {
-    const addressChanged = prevProps.address !== this.props.address;
-    if (addressChanged) {
-      await this.getBoughtLotteries();
-    }
-  }
-
-  async decryptBoughtLotteries(boughtLotteriesReversed) {
-    const registrationInformationList = boughtLotteriesReversed.map(item => {
-      return item.registrationInformation;
-    });
-    const decryptedList = (await axios.post(POST_DECRYPT_LIST, {
-      encryptedList: registrationInformationList
-    })).data || [];
-
-    decryptedList.forEach((item, index) => {
-      if (!!item) {
-        boughtLotteriesReversed[index].decryptInfo = item;
-      }
-    });
-
-    this.setState({
-      boughtLotteries: boughtLotteriesReversed,
-      historyLoading: false
-    });
-  }
-
-  async getBoughtLotteries(startId = -1, clearPre = true, periodInput = 1) {
-    const { address, currentPeriodNumber } = this.props;
-    // const period = periodInput !== -1 ? periodInput : currentPeriodNumber;
-    // const period = periodInput < currentPeriodNumber ? periodInput : currentPeriodNumber;
-
-    // if (periodInput > currentPeriodNumber) {
-    //   return;
-    // }
-    // const
-    const { boughtLotteries: boughtLotteriesPre } = this.state;
-    if (!address) {
-      this.setState({
-        boughtLotteries: []
-      });
-      return;
-    }
-    this.setState({
-      historyLoading: true
-    });
-
-    const lotteryContract = await NightElfCheck.initContractInstance({
-      loginInfo: LOGIN_INFO,
-      contractAddress: LOTTERY.CONTRACT_ADDRESS,
-    });
-
-    const boughtLotteriesResult = await lotteryContract.GetBoughtLotteries.call({
-      // period,
-      period: 9,
-      // period: 0,
-      startId,
-      owner: address
-    });
-
-    const boughtLotteries = getViewResult('lotteries', boughtLotteriesResult) || [];
-    const boughtLotteriesReversed = clearPre ? boughtLotteries.reverse() : [...boughtLotteries.reverse(), ...boughtLotteriesPre];
-
-    await this.decryptBoughtLotteries(boughtLotteriesReversed);
-
-    if (boughtLotteries.length === 20) {
-      const newStartId = boughtLotteries[0].id;
-      await this.getBoughtLotteries(newStartId, false);
-    // } else if (period > 1) {
-    }
-    // else if (periodInput < currentPeriodNumber) {
-    //   const newStartId = boughtLotteries[0] ? boughtLotteries[0].id : startId;
-    //   // await this.getBoughtLotteries(newStartId, false, period - 1);
-    //   await this.getBoughtLotteries(newStartId, false, periodInput + 1);
-    // }
   }
 
   async onBuyClick() {
@@ -213,11 +70,10 @@ class PersonalDraw extends Component{
       await buyLottery(this.buyCount, this.aelf);
 
       setTimeout(() => {
-        this.getBoughtLotteries();
         const {dispatch} = this.context;
         dispatch({
           type: 'refresh',
-          refreshTime: new Date().getTime()
+          value: new Date().getTime()
         });
       }, 3000);
     } catch(e) {
@@ -251,7 +107,7 @@ class PersonalDraw extends Component{
     setTimeout(() => {
       dispatch({
         type: 'refresh',
-        refreshTime: new Date().getTime()
+        value: new Date().getTime()
       });
     }, 3000);
   }
@@ -277,8 +133,6 @@ class PersonalDraw extends Component{
     const tokenAllowanceActual = stateContext.allowanceLot / 10 ** 8;
     const boughtLotteryCountInOnePeriod = stateContext.boughtLotteryCountInOnePeriod;
 
-    const historyHTML = renderHistory(boughtLotteries, historyLoading);
-
     const noTokenHTML = this.renderNoToken();
 
     return (
@@ -302,7 +156,7 @@ class PersonalDraw extends Component{
               <InputNumber min={0} max={tokenBalanceActual - tokenAllowanceActual} onChange={this.onApproveChange} />
               &nbsp;&nbsp;&nbsp;
               <Button
-                // disabled={switchDisabled}
+                disabled={switchDisabled}
                 type="primary" onClick={() => this.onApproveClick()}>Increase the upper limit</Button>
             </div>
             <div className='basic-blank'/>
@@ -321,11 +175,11 @@ class PersonalDraw extends Component{
               &nbsp;&nbsp;&nbsp;
               <Button
                 loading={buyoutLoading}
-                // disabled={switchDisabled || buyoutLoading}
+                disabled={switchDisabled || buyoutLoading}
                 type="primary" onClick={() => this.onBuyClick()}>Switch</Button>
             </div>
             <div className="text-grey">
-              <div>At most 50 Lottery Code can be swapped for each switch. The total number of available lottery codes in a period is limited to 1000. You had swapped {boughtLotteryCountInOnePeriod}.
+              <div>At most 50 Lottery Code can be swapped for each switch. The total number of available lottery codes in a period is limited to 1000.
               </div>
               <div>The Lucky Draw Function will be closed after {switchCodeDate.end ? moment(switchCodeDate.end).format('YYYY-MM-DD HH:mm') : '-'}. Please switch it in time to avoid loss.</div>
             </div>
@@ -339,7 +193,6 @@ class PersonalDraw extends Component{
             currentPeriod={currentPeriodNumber}
             aelfAddress={address}
           />
-          {/*{historyHTML}*/}
         </div>
       </Card>
     );

@@ -1,5 +1,5 @@
 import { Select, Row, Col, Table } from 'antd';
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { LOTTERY } from '../../../constant/constant';
 import {useContract} from '../hooks/useContract';
 import {useBoughtLotteryCountInOnePeriod} from '../hooks/useBoughtLotteryCountInOnePeriod';
@@ -10,6 +10,7 @@ import './RewardSharing.less'
 
 import axios from '../../../service/axios';
 import { POST_DECRYPT_LIST } from '../../../constant/apis';
+import { LotteryContext } from '../context/lotteryContext';
 
 const columns = [
   {
@@ -111,12 +112,16 @@ export const LotteryCodeContainer = (({
   currentPeriod,
   aelfAddress
 }) => {
+  const lotteryContext = useContext(LotteryContext);
+  const {state} = lotteryContext;
+  const { refreshTime } = state;
+
   const [periodSelected, setPeriodSelected] = useState();
   const lotteryContract = useContract('123', LOTTERY.CONTRACT_ADDRESS);
   const [boughtLotteries, setBoughtLotteries] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const count = useBoughtLotteryCountInOnePeriod ({
+  const count = useBoughtLotteryCountInOnePeriod({
     lotteryContract,
     address: aelfAddress,
     periodNumber: periodSelected,
@@ -129,25 +134,35 @@ export const LotteryCodeContainer = (({
     setPeriodSelected(currentPeriod);
   }, [currentPeriod]);
 
-  useEffect(() => {
+  const updateBoughtLotteries = useCallback(async () => {
     if (!periodSelected || !lotteryContract || !aelfAddress) {
       setLoading(false);
       setBoughtLotteries([]);
       return;
     }
-    const getData = async () => {
-      setBoughtLotteries([]);
-      setLoading(true);
-      const result = await getBoughtLotteries({
-        lotteryContract,
-        address: aelfAddress,
-        period: periodSelected,
-      });
-      setLoading(false);
-      setBoughtLotteries(result);
-    };
-    getData();
+    setBoughtLotteries([]);
+    setLoading(true);
+    const result = await getBoughtLotteries({
+      lotteryContract,
+      address: aelfAddress,
+      period: periodSelected,
+    });
+    setLoading(false);
+    setBoughtLotteries(result);
   }, [periodSelected, lotteryContract, aelfAddress]);
+
+  useEffect(() => {
+    updateBoughtLotteries();
+  }, [updateBoughtLotteries]);
+
+  useEffect(() => {
+    if (!refreshTime) {
+      return;
+    }
+    if (+periodSelected === +currentPeriod) {
+      updateBoughtLotteries();
+    }
+  }, [refreshTime]);
 
   const handleChange = (value) => {
     setPeriodSelected(value);
