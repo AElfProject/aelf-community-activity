@@ -304,7 +304,8 @@ class PersonalDraw extends Component{
                 type="primary" onClick={() => this.onBuyClick()}>Switch</Button>
             </div>
             <div className="text-grey">
-              <div>At most 50 Lottery Code can be swapped for each switch.</div>
+              <div>At most 50 Lottery Code can be swapped for each switch. The total number of available lottery codes in a period is limited to 1000.
+              </div>
               <div>The Lucky Draw Function will be closed after {switchCodeDate.end ? moment(switchCodeDate.end).format('YYYY-MM-DD HH:mm') : '-'}. Please switch it in time to avoid loss.</div>
             </div>
           </div>
