@@ -93,9 +93,13 @@ async function getBoughtLotteries({
   const boughtLotteries = getViewResult('lotteries', boughtLotteriesResult) || [];
   const boughtLotteriesReversed =[...boughtLotteries.reverse(), ...boughtLotteriesPre];
 
+  if (boughtLotteriesPre.length && boughtLotteriesReversed[0].id === boughtLotteriesPre[0].id) {
+    return boughtLotteriesPre;
+  }
+
   const boughtLotteriesDecrypted = await decryptBoughtLotteries(boughtLotteriesReversed);
 
-  if (boughtLotteries.length === 20) {
+  if (boughtLotteries.length === 100) {
     const newStartId = boughtLotteries[0].id;
     return await getBoughtLotteries({
       lotteryContract,
@@ -136,7 +140,7 @@ export const LotteryCodeContainer = (({
   }, [currentPeriod]);
 
   const updateBoughtLotteries = useCallback(async () => {
-    if (!periodSelected || !lotteryContract || !aelfAddress) {
+    if (!periodSelected || !lotteryContract || !aelfAddress || !count) {
       setLoading(false);
       setBoughtLotteries([]);
       return;
