@@ -10,7 +10,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ActionsAccount from '../../../actions/account';
 import { Button, Card, message } from 'antd';
-import { EXPLORER_URL, WALLET_WEB_URL, WALLET_IOS_URL, WALLET_ANDROID_URL, CHAIN, DAILY_TASK } from '../../../constant/constant';
+import { EXPLORER_URL, WALLET_WEB_URL, WALLET_IOS_URL, WALLET_IOS_URL_TEST_FLIGHT,
+  WALLET_ANDROID_URL, CHAIN, DAILY_TASK } from '../../../constant/constant';
 import addressFormat from '../../../utils/addressFormat';
 import { add } from '../../../actions/counter';
 
@@ -304,7 +305,8 @@ class DailyMissions extends Component {
             <div>
               <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>
               <a href={WALLET_ANDROID_URL} target='_blank'>Android wallet, </a>
-               <a href={WALLET_IOS_URL} target='_blank'>iOS wallet</a>
+               <a href={WALLET_IOS_URL} target='_blank'>iOS wallet (App Store), </a>
+               <a href={WALLET_IOS_URL_TEST_FLIGHT} target='_blank'>iOS wallet (Test Flight)</a>
               {/*<a href={walletIOSUrl} target='_blank'>iOS wallet</a>*/}
             </div>
             {this.renderMission(effectiveTokenTx, 'normalTransfer')}
@@ -323,8 +325,8 @@ class DailyMissions extends Component {
             <div>
               <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>
               <a href={WALLET_ANDROID_URL} target='_blank'>Android wallet, </a>
-              {/* <a href={WALLET_IOS_URL} target='_blank'>iOS wallet</a> */}
-              <a href={walletIOSUrl} target='_blank'>iOS wallet</a>
+              <a href={WALLET_IOS_URL} target='_blank'>iOS wallet (App Store), </a>
+              <a href={WALLET_IOS_URL_TEST_FLIGHT} target='_blank'>iOS wallet (Test Flight)</a>
             </div>
             {this.renderMission(effectiveCrossTransferTx, 'crossTransfer')}
           </div>

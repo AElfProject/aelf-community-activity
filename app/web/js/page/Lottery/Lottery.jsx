@@ -131,13 +131,14 @@ class Lottery extends Component {
               {grandPrize && <GrandPrize grandPrizeAmount={grandPrizeAmount}/>}
               <div className='next-card-blank'/>
 
-              <RewardSharing
-                aelfAddress={address}
-              />
-
               <PersonalDraw
                 address={address}
                 currentPeriodNumber={currentPeriodNumber}
+              />
+              <div className='next-card-blank'/>
+
+              <RewardSharing
+                aelfAddress={address}
               />
               <div className='next-card-blank'/>
             </TabPane>

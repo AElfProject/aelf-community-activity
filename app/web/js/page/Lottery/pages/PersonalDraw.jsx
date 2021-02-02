@@ -71,7 +71,10 @@ function renderHistory(dataSource, historyLoading) {
   //   },
   // ];
   return <Table
-    pagination={{pageSize: 20}}
+    pagination={{
+      pageSize: 20,
+      showSizeChanger: false
+    }}
     dataSource={dataSource}
     loading={historyLoading}
     columns={columns}
