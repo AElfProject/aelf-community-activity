@@ -14,14 +14,14 @@ const awardHistoryColumns = [
     title: 'ID',
     dataIndex: 'id',
     key: 'id',
-    width: 50,
+    width: 100,
   },
   {
     title: 'Owner',
     dataIndex: 'owner',
     key: 'owner',
     render: text => <div>{addressFormat(text)}</div>,
-    width: 520
+    width: 470
   },
   {
     title: 'Block',

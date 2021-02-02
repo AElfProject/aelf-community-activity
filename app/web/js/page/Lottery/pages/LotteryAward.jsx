@@ -218,7 +218,7 @@ export default class LotteryAward extends Component {
         className='hover-cursor-auto'
         hoverable
         title={'Take Award (Latest Award Period: ' + (
-          currentPeriodNumber < LOTTERY.START_PERIOD
+          currentPeriodNumber <= LOTTERY.START_PERIOD
             ? '-'
             : currentPeriodNumber - LOTTERY.START_PERIOD
         ) + ')'}

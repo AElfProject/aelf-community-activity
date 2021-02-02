@@ -20,6 +20,8 @@ import { POST_DECRYPT_LIST } from '../../../constant/apis';
 import { checkTimeAvailable, getAvailableTime } from '../../../utils/cmsUtils';
 import { sleep } from '../../../utils/utils';
 
+import { LotteryCodeContainer } from '../pages/AllLotteryCodes';
+
 import {LotteryContext} from '../context/lotteryContext';
 import moment from 'moment';
 import AElf from 'aelf-sdk';
@@ -148,9 +150,15 @@ class PersonalDraw extends Component{
     });
   }
 
-  async getBoughtLotteries(startId = -1, clearPre = true) {
-    // const {currentPeriodNumber} = this.props;
-    const { address } = this.props;
+  async getBoughtLotteries(startId = -1, clearPre = true, periodInput = 1) {
+    const { address, currentPeriodNumber } = this.props;
+    // const period = periodInput !== -1 ? periodInput : currentPeriodNumber;
+    // const period = periodInput < currentPeriodNumber ? periodInput : currentPeriodNumber;
+
+    // if (periodInput > currentPeriodNumber) {
+    //   return;
+    // }
+    // const
     const { boughtLotteries: boughtLotteriesPre } = this.state;
     if (!address) {
       this.setState({
@@ -168,8 +176,9 @@ class PersonalDraw extends Component{
     });
 
     const boughtLotteriesResult = await lotteryContract.GetBoughtLotteries.call({
-      // period: currentPeriodNumber,
-      period: 0,
+      // period,
+      period: 9,
+      // period: 0,
       startId,
       owner: address
     });
@@ -182,7 +191,13 @@ class PersonalDraw extends Component{
     if (boughtLotteries.length === 20) {
       const newStartId = boughtLotteries[0].id;
       await this.getBoughtLotteries(newStartId, false);
+    // } else if (period > 1) {
     }
+    // else if (periodInput < currentPeriodNumber) {
+    //   const newStartId = boughtLotteries[0] ? boughtLotteries[0].id : startId;
+    //   // await this.getBoughtLotteries(newStartId, false, period - 1);
+    //   await this.getBoughtLotteries(newStartId, false, periodInput + 1);
+    // }
   }
 
   async onBuyClick() {
@@ -260,6 +275,7 @@ class PersonalDraw extends Component{
 
     const tokenBalanceActual = stateContext.balanceLot / 10 ** 8;
     const tokenAllowanceActual = stateContext.allowanceLot / 10 ** 8;
+    const boughtLotteryCountInOnePeriod = stateContext.boughtLotteryCountInOnePeriod;
 
     const historyHTML = renderHistory(boughtLotteries, historyLoading);
 
@@ -286,7 +302,7 @@ class PersonalDraw extends Component{
               <InputNumber min={0} max={tokenBalanceActual - tokenAllowanceActual} onChange={this.onApproveChange} />
               &nbsp;&nbsp;&nbsp;
               <Button
-                disabled={switchDisabled}
+                // disabled={switchDisabled}
                 type="primary" onClick={() => this.onApproveClick()}>Increase the upper limit</Button>
             </div>
             <div className='basic-blank'/>
@@ -294,17 +310,22 @@ class PersonalDraw extends Component{
               Code Amount ({LOTTERY.RATIO} {LOTTERY.SYMBOL} = 1 Lottery Code): &nbsp;&nbsp;&nbsp;
               <InputNumber
                 min={0}
-                max={Math.min(Math.floor(Math.min(tokenAllowanceActual, tokenBalanceActual)/LOTTERY.RATIO), LOTTERY.MAX_BUY)}
+                max={Math.min(
+                  Math.floor(
+                    Math.min(tokenAllowanceActual, tokenBalanceActual)/LOTTERY.RATIO
+                  ),
+                  Math.min(LOTTERY.MAX_BUY, 1000 - boughtLotteryCountInOnePeriod)
+                )}
                 defaultValue={1}
                 onChange={this.onExchangeNumberChange} />
               &nbsp;&nbsp;&nbsp;
               <Button
                 loading={buyoutLoading}
-                disabled={switchDisabled || buyoutLoading}
+                // disabled={switchDisabled || buyoutLoading}
                 type="primary" onClick={() => this.onBuyClick()}>Switch</Button>
             </div>
             <div className="text-grey">
-              <div>At most 50 Lottery Code can be swapped for each switch. The total number of available lottery codes in a period is limited to 1000.
+              <div>At most 50 Lottery Code can be swapped for each switch. The total number of available lottery codes in a period is limited to 1000. You had swapped {boughtLotteryCountInOnePeriod}.
               </div>
               <div>The Lucky Draw Function will be closed after {switchCodeDate.end ? moment(switchCodeDate.end).format('YYYY-MM-DD HH:mm') : '-'}. Please switch it in time to avoid loss.</div>
             </div>
@@ -314,7 +335,11 @@ class PersonalDraw extends Component{
           <div className='personal-title'>All Lottery Numbers</div>
           <div className='basic-line'/>
           <div className='basic-blank'/>
-          {historyHTML}
+          <LotteryCodeContainer
+            currentPeriod={currentPeriodNumber}
+            aelfAddress={address}
+          />
+          {/*{historyHTML}*/}
         </div>
       </Card>
     );

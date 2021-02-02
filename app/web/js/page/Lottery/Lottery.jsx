@@ -114,7 +114,7 @@ class Lottery extends Component {
     const { grandPrize, grandPrizeAmount } = prizeInfo[0];
 
     return (
-      <LotteryProvider aelfAddress={address}>
+      <LotteryProvider aelfAddress={address} currentPeriodNumber={currentPeriodNumber}>
       <div>
         <div className='basic-blank'/>
         <div className='basic-container lottery-container'>
