@@ -38,9 +38,9 @@ module.exports = class LotteryService extends Service {
       return Promise.all([
         item.address_from,
         lotteryContractInstance.GetStakingAmount.call(item.address_from)
-          .then(result => result.value).catch(() => -1),
+          .then(result => result ? result.value : result).catch(() => -1),
         lotteryContractInstance.GetRegisteredDividend.call(item.address_from)
-          .then(result => result.receiver).catch(() => 'error'),
+          .then(result => result ? result.receiver : result).catch(() => 'error'),
       ]);
     });
     const result = await Promise.all(queryList);
