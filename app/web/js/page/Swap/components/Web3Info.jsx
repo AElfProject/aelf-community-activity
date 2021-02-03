@@ -7,11 +7,15 @@ import { getAvailableTime, renderAvailableTime } from '../../../utils/cmsUtils';
 import SwapContract from '../../../utils/swapContract';
 import MerkleTreeRecorderContract from '../../../utils/merkleTreeRecorderContract';
 import { getOrSetInviter } from '../../../utils/localStorage';
+import addressFormat from '../../../utils/addressFormat';
 
 import { SwapElf } from './SwapElfNew';
 import axios from '../../../service/axios';
 import { GET_CMS_COMMUNITY_CONFIG } from '../../../constant/apis';
 import { getInviteCodeByUser } from '../../../page/Charts/graphs/graph';
+import { bindActionCreators } from 'redux';
+import * as ActionsAccount from '../../../actions/account';
+import { connect } from 'react-redux';
 
 const {LOCK_ADDRESS} = WEB3;
 
@@ -33,7 +37,18 @@ const styles = {
   }
 };
 
-export default class Web3Info extends Component{
+function mapStateToProps(state) {
+  return {
+    account: state.account.toJS()
+  }
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    ...bindActionCreators(ActionsAccount, dispatch)
+  }
+}
+
+class Web3Info extends Component{
   constructor(props) {
     super(props);
     this.state = {
@@ -359,8 +374,12 @@ export default class Web3Info extends Component{
     const submitDisable = moment(mortgageDate.end).unix() < timeNow || moment(mortgageDate.start).unix() > timeNow;
     // console.log('submitDisable', submitDisable, timeNow, moment(mortgageDate.end).unix(), moment(mortgageDate.start).unix());
 
-    const {web3PluginInstance, swapPairInfo} = this.props;
+    const {web3PluginInstance, swapPairInfo, account: aelfAccount} = this.props;
     window.web3PluginInstance2 = web3PluginInstance;
+
+    const {accountInfo} = aelfAccount;
+    const {address: aelfAddress} = accountInfo;
+
     // console.log('web3PluginInstance', web3PluginInstance, account.address, mortgageDate);
     return (
       <>
@@ -524,7 +543,7 @@ export default class Web3Info extends Component{
                   </>
                 }
               >
-                <Input/>
+                <Input disabled placeholder={aelfAddress ? addressFormat(aelfAddress) : 'Please login NightELf at first'}/>
               </Form.Item>
               {/*</Form.Item>*/}
 
@@ -647,3 +666,5 @@ export default class Web3Info extends Component{
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Web3Info);
