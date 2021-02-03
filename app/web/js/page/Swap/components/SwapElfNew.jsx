@@ -6,6 +6,7 @@ import {getMerklePathFromOtherChain} from '../../../utils/getMerklePath';
 import {NightElfCheck} from '../../../utils/NightElf/NightElf';
 import { LOGIN_INFO, SWAP_CONTRACT_ADDRESS, EXPLORER_URL, RECORDER_ID, SWAP_PAIR } from '../../../constant/constant';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
+import BigNumber from 'bignumber.js';
 
 const layout = {
   labelCol: { span: 4 },
@@ -270,14 +271,17 @@ export const  SwapElf = (swapInfo) => {
             help={
               <>
                 <div>
-                  You will receive aelf Mainnet Token Reward: {swapELFReceiptInfo[2] / 400 / (10**18) || '-'} ELF,&nbsp;
-                  {swapELFReceiptInfo[2] / (10**18) || '-'} LOT</div>
+                  You will receive aelf Mainnet Token Reward: {swapELFReceiptInfo[2]
+                  ? new BigNumber(swapELFReceiptInfo[2]).div(400).div(10**18).toFormat() : '-'} ELF,&nbsp;
+                  {swapELFReceiptInfo[2]
+                    ? new BigNumber(swapELFReceiptInfo[2]).div(10**18).toFormat() : '-'} LOT</div>
               </>
             }
             // name="originAmount"
             // rules={[{ required: true, message: 'Please input the origin amount!' }]}
           >
-            <Input disabled value={swapELFReceiptInfo[2] / (10**18) || ''}/>
+            <Input disabled value={swapELFReceiptInfo[2]
+              ? new BigNumber(swapELFReceiptInfo[2]).div(10**18).toString() : ''}/>
           </Form.Item>
 
           <Form.Item
