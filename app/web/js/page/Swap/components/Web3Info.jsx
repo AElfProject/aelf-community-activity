@@ -284,7 +284,13 @@ class Web3Info extends Component{
   }
 
   onMortgageFinish (mortgageData) {
-    const {web3PluginInstance} = this.props;
+    // const {web3PluginInstance} = this.props;
+    const {web3PluginInstance, account: aelfAccount} = this.props;
+    const {accountInfo} = aelfAccount;
+    const {address: aelfAddress} = accountInfo;
+
+    mortgageData.address = aelfAddress;
+
     this.setState({
       mortgageLoading: true,
       mortgagedLink: null,
@@ -295,14 +301,15 @@ class Web3Info extends Component{
       this.setState({ mortgageLoading: false });
       return;
     }
-    const length = mortgageData.address.length;
-    if (!(length <= 51 && length >= 47)) {
-      message.error('Invalid aelf Wallet Address');
-      this.setState({ mortgageLoading: false });
-      return;
-    }
-    const {validCodes} = this.state;
-    mortgageData.referralCode = getOrSetInviter(validCodes);
+    // const length = mortgageData.address.length;
+    // if (!(length <= 51 && length >= 47)) {
+    //   message.error('Invalid aelf Wallet Address');
+    //   this.setState({ mortgageLoading: false });
+    //   return;
+    // }
+    const {validCodes, inviteCode: inviteCodeFromEvent} = this.state;
+
+    mortgageData.referralCode = getOrSetInviter(validCodes) || inviteCodeFromEvent;
 
     web3PluginInstance.createReceipt(mortgageData).then(receipt => {
       const etherscanPrefix = web3PluginInstance.currentNetwork === 'ethereum' ? '' : web3PluginInstance.currentNetwork + '.';
@@ -533,7 +540,7 @@ class Web3Info extends Component{
               <Form.Item
                 label="aelf Wallet Address "
                 name="address"
-                rules={[{ required: true, message: 'aelf Receiver Address is required.' }]}
+                // rules={[{ required: true, message: 'aelf Receiver Address is required.' }]}
                 help={
                   <>
                     {/* <div>After completing the authorization, please provide the amount of ELF to stake (the amount should be no more than the authorized quantity) and the address for receiving ELF in the aelf mainnet. The staking bonus will be automatically sent to your aelf wallet after we verify it. Please check it after 2 hours.This step can be executed in the writecontract-createreceipt section of the */}
