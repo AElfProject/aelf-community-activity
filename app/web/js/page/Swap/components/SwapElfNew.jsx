@@ -7,6 +7,7 @@ import {NightElfCheck} from '../../../utils/NightElf/NightElf';
 import { LOGIN_INFO, SWAP_CONTRACT_ADDRESS, EXPLORER_URL, RECORDER_ID, SWAP_PAIR } from '../../../constant/constant';
 import MessageTxToExplore from '../../../components/Message/TxToExplore';
 import BigNumber from 'bignumber.js';
+import addressFormat from '../../../utils/addressFormat';
 
 const layout = {
   labelCol: { span: 4 },
@@ -289,7 +290,7 @@ export const  SwapElf = (swapInfo) => {
             // name="receiverAddress"
             // rules={[{ required: true, message: 'Please input the receiver address!' }]}
           >
-            <Input disabled value={swapELFReceiptInfo[1]}/>
+            <Input disabled value={swapELFReceiptInfo[1] ? addressFormat(swapELFReceiptInfo[1]) : ''}/>
             {/*<Input />*/}
             <span>aelf Receiving Address must be the same as your ELF wallet address.</span>
           </Form.Item>
