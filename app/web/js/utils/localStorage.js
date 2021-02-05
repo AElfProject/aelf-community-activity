@@ -1,6 +1,11 @@
 import { getUrlParameter } from './utils';
 
 function checkInviter (inviter, whiteList = []) {
+  if (inviter
+    && (inviter.includes('ELF_') && inviter.includes('_tDVV'))) {
+    return inviter;
+  }
+
   if (whiteList.includes(inviter)) {
     return inviter;
   }

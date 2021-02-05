@@ -16,6 +16,7 @@ import { getInviteCodeByUser } from '../../../page/Charts/graphs/graph';
 import { bindActionCreators } from 'redux';
 import * as ActionsAccount from '../../../actions/account';
 import { connect } from 'react-redux';
+import copy from 'copy-to-clipboard';
 
 const {LOCK_ADDRESS} = WEB3;
 
@@ -387,6 +388,7 @@ class Web3Info extends Component{
     const {accountInfo} = aelfAccount;
     const {address: aelfAddress} = accountInfo;
 
+    const referralLink = `${window.location.href.split('?')[0]}?inviter=${addressFormat(aelfAddress)}`;
     // console.log('web3PluginInstance', web3PluginInstance, account.address, mortgageDate);
     return (
       <>
@@ -415,6 +417,32 @@ class Web3Info extends Component{
               : null }
             { !account.address && web3PluginInstance.web3 && web3PluginInstance.web3 !== 'undefined'
             &&  <a onClick={this.connectMetaMask}>Connect to Web3</a>}
+          </div>
+        </Card>
+
+        <div className='next-card-blank'/>
+
+        <Card
+          className='hover-cursor-auto'
+          title='My Referral Link'
+          hoverable>
+          <div className='section-content'>
+            { aelfAddress
+              ? <div>
+                  <div>
+                    <Input
+                      disabled
+                      value={referralLink}
+                    />
+                  </div>
+                  <div className='basic-blank'/>
+                  <Button type="primary" onClick={() => {
+                    copy(referralLink)
+                  }}>
+                    Click to copy My Referral Link
+                  </Button>
+                </div>
+              : 'Please login NightELF extension'}
           </div>
         </Card>
 
