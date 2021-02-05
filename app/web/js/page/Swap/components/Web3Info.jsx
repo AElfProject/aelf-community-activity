@@ -437,7 +437,12 @@ class Web3Info extends Component{
                   </div>
                   <div className='basic-blank'/>
                   <Button type="primary" onClick={() => {
-                    copy(referralLink)
+                    const result = copy(referralLink);
+                    if (result) {
+                      message.success('Copied');
+                    } else {
+                      message.error('Copy Failed');
+                    }
                   }}>
                     Click to copy My Referral Link
                   </Button>
