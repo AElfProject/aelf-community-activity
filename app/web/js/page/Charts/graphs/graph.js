@@ -89,3 +89,20 @@ export async function getInviteCodeByUser(address) {
   const { account = {} } = data;
   return account || {};
 }
+
+export const GET_AMOUNT_BY_INVITOR = (invitor) => {
+  return `
+    {
+      invitor (id: "${invitor}") {
+        amount
+      }
+    }
+  `;
+};
+export async function getAmountByInvitor(inviteCode) {
+  const { data = {} } = await queryGraph(
+    GET_AMOUNT_BY_INVITOR(inviteCode)
+  );
+  const { invitor = {} } = data;
+  return invitor || {};
+}

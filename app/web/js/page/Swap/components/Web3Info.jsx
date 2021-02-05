@@ -9,6 +9,8 @@ import MerkleTreeRecorderContract from '../../../utils/merkleTreeRecorderContrac
 import { getOrSetInviter } from '../../../utils/localStorage';
 import addressFormat from '../../../utils/addressFormat';
 
+import {ReferralLinkStakingInfo} from './ReferralLinkStakeInfo';
+
 import { SwapElf } from './SwapElfNew';
 import axios from '../../../service/axios';
 import { GET_CMS_COMMUNITY_CONFIG } from '../../../constant/apis';
@@ -95,7 +97,8 @@ class Web3Info extends Component{
         end: ''
       },
       validCodes: [],
-      inviteCode: ''
+      inviteCode: '',
+      referralRule: '',
     };
 
     this.redeemFormRef = React.createRef();
@@ -135,6 +138,15 @@ class Web3Info extends Component{
       await this.getInviteCodeByUser();
     } catch(e) {
       message.warning('Get valid inviter code failed');
+    }
+
+    try {
+      const referralRule = await axios.get(`${GET_CMS_COMMUNITY_CONFIG}?key=referralRule`);
+      this.setState({
+        referralRule: referralRule.data[0].value
+      });
+    } catch(e) {
+      message.warning('Get referral rule failed');
     }
   }
 
@@ -371,7 +383,8 @@ class Web3Info extends Component{
       redeem, redeemLoading, redeemedLink, redeemedTxHash,
       receiptIds, // mainnetTokenRewardPivot, mortgageDate
       mainnetTokenRewardPivot, mortgageDate, redeemDate,
-      isRedeemReady, validCodes, inviteCode: inviteCodeFromEvent
+      isRedeemReady, validCodes, inviteCode: inviteCodeFromEvent,
+      referralRule
     } = this.state;
 
     const inviterCode = getOrSetInviter(validCodes) || inviteCodeFromEvent;
@@ -425,8 +438,16 @@ class Web3Info extends Component{
         <Card
           className='hover-cursor-auto'
           title='My Referral Link'
+          extra={
+            <a href={referralRule} target="_blank">Referral Rules</a>
+          }
           hoverable>
           <div className='section-content'>
+            <ReferralLinkStakingInfo
+              wethAddress={account.address}
+              aelfAddress={aelfAddress ? addressFormat(aelfAddress) : ''}
+              web3PluginInstance={web3PluginInstance}
+            />
             { aelfAddress
               ? <div>
                   <div>
@@ -588,6 +609,9 @@ class Web3Info extends Component{
               {/*</Form.Item>*/}
 
               <Form.Item
+                style={{
+                  display: 'none'
+                }}
                 label="Referral Code"
                 name="referralCode"
               >

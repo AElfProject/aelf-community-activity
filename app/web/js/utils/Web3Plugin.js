@@ -278,6 +278,14 @@ export class Web3Plugin {
     }
   }
 
+  async getTotalAmountInReceipts () {
+    try {
+      return await this.lockContract.methods.totalAmountInReceipts().call();
+    } catch (e) {
+      console.log('getTotalAmountInReceipts', e);
+    }
+  }
+
   getNetwork () {
     switch (window.ethereum.networkVersion) {
       case '1' || 1:
