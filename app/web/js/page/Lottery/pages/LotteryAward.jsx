@@ -211,7 +211,7 @@ export default class LotteryAward extends Component {
     periodArray.sort((a,b) => b - a);
 
     const periodItemHTML = this.renderFromItemSelect(periodArray, 'period', 'Period', this.onPeriodChange);
-    const lotteryIdItemHTML = this.renderFromItemSelect(lotteryIdArray, 'lotteryId', 'Lottery ID');
+    const lotteryIdItemHTML = this.renderFromItemSelect(lotteryIdArray, 'lotteryId', 'Lottery Code');
 
     return (
       <Card

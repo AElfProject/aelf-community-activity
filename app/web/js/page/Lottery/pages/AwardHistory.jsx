@@ -6,12 +6,13 @@ import { getUrlParameter } from '../../../utils/utils';
 import addressFormat from '../../../utils/addressFormat';
 import { LOTTERY } from '../../../constant/constant';
 import LotteryAward from './LotteryAward';
+import {EXPLORER_URL} from '../../../../../../config/config.json';
 import AElf from 'aelf-sdk';
 const {wallet: Wallet} = AElf;
 
 const awardHistoryColumns = [
   {
-    title: 'ID',
+    title: 'Lottery Code',
     dataIndex: 'id',
     key: 'id',
     width: 100,
@@ -27,7 +28,8 @@ const awardHistoryColumns = [
     title: 'Block',
     dataIndex: 'block',
     key: 'block',
-    width: 100
+    width: 100,
+    render: block => <a href={`${EXPLORER_URL}/block/${block}`} target='_blank'>{block}</a>
   },
   {
     title: 'Reward Name',

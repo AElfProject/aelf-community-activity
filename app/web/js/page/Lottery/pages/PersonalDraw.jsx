@@ -186,7 +186,7 @@ class PersonalDraw extends Component{
           </div>
 
           <div className='basic-blank'/>
-          <div className='personal-title'>All Lottery Numbers</div>
+          <div className='personal-title'>All Lottery Numbers (You can take award in Draw History Tab)</div>
           <div className='basic-line'/>
           <div className='basic-blank'/>
           <LotteryCodeContainer

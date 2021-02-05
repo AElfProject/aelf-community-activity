@@ -147,44 +147,39 @@ export const RewardSharing = ({aelfAddress}) => {
           stakedLot={stakedShow}
         />
 
-        {registeredDividend && registeredDividend.receiver
-          ? <div>Ethereum Address: {registeredDividend.receiver}</div>
-          : <div>
-            <Form
-              layout="inline"
-              name="basic"
-              className="reward-sharing-form"
-              initialValues={{ remember: true }}
-              onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
-            >
-              <Form.Item
-                label="Ethereum Address"
-                name="ethAddress"
-                help={addressErrorMsg.msg}
-                validateStatus={addressErrorMsg.type}
-              >
-                <Input placeholder="please input" className="reward-eth-address-input"/>
-              </Form.Item>
+        {/*{registeredDividend && registeredDividend.receiver*/}
+        {/*  ? <div>Ethereum Address: {registeredDividend.receiver}</div>*/}
+        {/*  : <div>*/}
+        {/*    <Form*/}
+        {/*      layout="inline"*/}
+        {/*      name="basic"*/}
+        {/*      className="reward-sharing-form"*/}
+        {/*      initialValues={{ remember: true }}*/}
+        {/*      onFinish={onFinish}*/}
+        {/*      onFinishFailed={onFinishFailed}*/}
+        {/*    >*/}
+        {/*      <Form.Item*/}
+        {/*        label="Ethereum Address"*/}
+        {/*        name="ethAddress"*/}
+        {/*        help={addressErrorMsg.msg}*/}
+        {/*        validateStatus={addressErrorMsg.type}*/}
+        {/*      >*/}
+        {/*        <Input placeholder="please input" className="reward-eth-address-input"/>*/}
+        {/*      </Form.Item>*/}
 
-              <Form.Item>
-                <Button
-                  disabled={rewardDisabled ? rewardDisabled : (+stakedShow) === 0}
-                  type="primary" htmlType="submit">
-                  Submit
-                </Button>
-              </Form.Item>
-            </Form>
-          </div>
-        }
+        {/*      <Form.Item>*/}
+        {/*        <Button*/}
+        {/*          disabled={rewardDisabled ? rewardDisabled : (+stakedShow) === 0}*/}
+        {/*          type="primary" htmlType="submit">*/}
+        {/*          Submit*/}
+        {/*        </Button>*/}
+        {/*      </Form.Item>*/}
+        {/*    </Form>*/}
+        {/*  </div>*/}
+        {/*}*/}
         <div className='basic-blank'/>
-        {/* <div>From <span>{moment(rewardTime.start).format('YYYY-MM-DD HH:mm')} to {moment(rewardTime.end).format('YYYY-MM-DD HH:mm')}, </span>
-          users can fill in the information to claim the bonus.
-          During this period, you can fill in the Ethereum wallet address to claim the bonus.
-          Awards will be given in the order in which the information was submitted within 3 working days.</div>
-        <div>Your aelf address will be bound to the Ethereum address to avoid repeat claims.</div> */}
-        <div>From {moment(stakedTime.start).format('YYYY-MM-DD HH:mm')} to {moment(stakedTime.end).format('YYYY-MM-DD HH:mm')}, users can stake LOT and fill in Ethereum Address. After {moment(stakedTime.end).format('YYYY-MM-DD HH:mm')}, the ERC20-ELF awards of the prize pool will be divided in proportion according to the number of LOT token and Ethereum wallet addresses you submitted in the first 24 hours. We will distribute the token awards within 7 working days, and the more details will be announced.</div>
-        <div>In order to avoid repeated collection, your aelf address would be bound with Ethereum address, and can be checked on the chain.</div>
+        <div>From {moment(stakedTime.start).format('YYYY-MM-DD HH:mm')} to {moment(stakedTime.end).format('YYYY-MM-DD HH:mm')}, users can stake LOT. After {moment(stakedTime.end).format('YYYY-MM-DD HH:mm')}, the ELF awards of the prize pool will be divided in proportion according to the number of LOT token.</div>
+        <div>You can collect your bonus after {moment(stakedTime.end).format('YYYY-MM-DD HH:mm')}, and the more details will be announced.</div>
       </div>
     </Card>
     <div className='next-card-blank'/>

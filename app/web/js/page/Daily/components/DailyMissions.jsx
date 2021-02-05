@@ -300,7 +300,7 @@ class DailyMissions extends Component {
           title='Task 2 Same-chain transfer'>
           <div className='section-content swap-flex-wrap'>
             <div>During the event, you can collect 100 LOT tokens each day by Same-chain transfer.
-              <a href={severalTaskTutorial} target='_blank'>Check out the tutorial </a>
+              {/*<a href={severalTaskTutorial} target='_blank'>Check out the tutorial </a>*/}
             </div>
             <div>
               <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>
@@ -320,7 +320,7 @@ class DailyMissions extends Component {
           title='Task 3 Cross-Chain Transfer'>
           <div className='section-content swap-flex-wrap'>
             <div>During the event, you can collect 100 LOT tokens each day by Cross-Chain Transfer.
-             <a href={severalTaskTutorial} target='_blank'>Check out the tutorial </a>
+             {/*<a href={severalTaskTutorial} target='_blank'>Check out the tutorial </a>*/}
             </div>
             <div>
               <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>

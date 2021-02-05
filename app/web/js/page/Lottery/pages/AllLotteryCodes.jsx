@@ -11,37 +11,44 @@ import './RewardSharing.less'
 import axios from '../../../service/axios';
 import { POST_DECRYPT_LIST } from '../../../constant/apis';
 import { LotteryContext } from '../context/lotteryContext';
+import { EXPLORER_URL } from '../../../../../../config/config.json';
 
-const columns = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-    width: 80,
-  },
-  {
-    title: 'block',
-    dataIndex: 'block',
-    key: 'block',
-    width: 150
-  },
-  {
-    title: 'Reward Name',
-    dataIndex: 'rewardName',
-    key: 'rewardName',
-    width: 200
-  },
-  {
-    title: 'Registration Information (After Draw)',
-    // dataIndex: 'registrationInformation',
-    dataIndex: 'decryptInfo',
-    // key: 'registrationInformation',
-    key: 'decryptInfo',
-    width: 300
-  },
-];
+const getColumns = (defaultString = '-') => {
+  return [
+    {
+      title: 'Lottery Code',
+      dataIndex: 'id',
+      key: 'id',
+      width: 80,
+    },
+    {
+      title: 'block',
+      dataIndex: 'block',
+      key: 'block',
+      width: 150,
+      render: block => <a href={`${EXPLORER_URL}/block/${block}`} target='_blank'>{block}</a>
+    },
+    {
+      title: 'Reward Name (If you win)',
+      dataIndex: 'rewardName',
+      key: 'rewardName',
+      width: 200,
+      render: (value) => value || defaultString
+    },
+    {
+      title: 'Registration Information (After Draw)',
+      // dataIndex: 'registrationInformation',
+      dataIndex: 'decryptInfo',
+      // key: 'registrationInformation',
+      key: 'decryptInfo',
+      width: 300,
+      render: (value) => value || defaultString
+    },
+  ];
+};
 
 export const AllLotteryCodes = ({
+  currentPeriod,
   dataSource, historyLoading
 }) => {
   return <Table
@@ -51,7 +58,7 @@ export const AllLotteryCodes = ({
     }}
     dataSource={dataSource}
     loading={historyLoading}
-    columns={columns}
+    columns={getColumns(currentPeriod ? '' : '-')}
     rowKey='id'
     scroll={{x: 512}}
   />
@@ -199,6 +206,7 @@ export const LotteryCodeContainer = (({
     <div />
     <div>
       <AllLotteryCodes
+        currentPeriod={+periodSelected === +currentPeriod}
         dataSource={boughtLotteries}
         historyLoading={loading}
       />
