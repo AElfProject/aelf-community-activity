@@ -17,6 +17,7 @@ import { add } from '../../../actions/counter';
 
 import { checkTimeAvailable, getAvailableTime, renderAvailableTime, getCommunityLink } from '../../../utils/cmsUtils';
 import TutorialList from '../../../components/TutorialList';
+import {UTC_OFFSET} from '../../../../../../config/config.json';
 
 function mapStateToProps(state) {
   return {
@@ -112,7 +113,7 @@ class DailyMissions extends Component {
       end_time: 0
     };
 
-    return moment.utc()
+    return moment().utcOffset(UTC_OFFSET)
       .startOf('day')
       .unix() <= transaction.end_time;
   }
@@ -227,7 +228,7 @@ class DailyMissions extends Component {
     const effectiveTxId = effectiveTx.length ? effectiveTx[0].tx_id : null;
     const effectiveTxChainId = effectiveTx.length ? effectiveTx[0].chain_id : null;
     const hasAward = this.hasAward(type);
-    const awardedButton =  <Button type="primary" disabled>Had awarded</Button>;
+    const awardedButton = <Button type="primary" disabled>Had awarded</Button>;
     const awardButton = <Button type="primary"
                                 loading={collectLoading}
                                 disabled={!taskAvailable || !address || collectLoading}
