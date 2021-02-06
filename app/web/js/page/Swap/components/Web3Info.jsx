@@ -468,7 +468,7 @@ class Web3Info extends Component{
                     Click to copy My Referral Link
                   </Button>
                 </div>
-              : 'Please login NightELF extension'}
+              : 'Please login NightELF extension. (Open the page in PC or in AELF Wallet APP)'}
           </div>
         </Card>
 
@@ -490,7 +490,7 @@ class Web3Info extends Component{
         <div className='next-card-blank'/>
         <Card
           className='hover-cursor-auto'
-          title='Step 1: Approve'
+          title='Step 1: Approve (ETH Network)'
           headStyle={styles.cardSubHeader}
           hoverable>
           <div className='section-content swap-form-container'>
@@ -529,7 +529,8 @@ class Web3Info extends Component{
               </Form.Item>
 
               <Form.Item {...tailLayout}>
-                <Button type="primary" htmlType="submit" loading={approveLoading} disabled={submitDisable || approveLoading}>
+                <Button type="primary" htmlType="submit" loading={approveLoading}
+                        disabled={submitDisable || approveLoading || !account.address}>
                   Submit
                 </Button>
               </Form.Item>
@@ -547,7 +548,7 @@ class Web3Info extends Component{
         <div className='next-card-blank'/>
         <Card
           className='hover-cursor-auto'
-          title='Step 2: Staking'
+          title='Step 2: Staking (ETH Network)'
           headStyle={styles.cardSubHeader}
           hoverable>
           <div className='section-content swap-form-container'>
@@ -621,7 +622,7 @@ class Web3Info extends Component{
               <Form.Item {...tailLayout}>
                 <Button type="primary" htmlType="submit"
                         loading={mortgageLoading}
-                        disabled={submitDisable || mortgageLoading}>
+                        disabled={submitDisable || mortgageLoading || !account.address}>
                   Submit
                 </Button>
               </Form.Item>
@@ -650,7 +651,7 @@ class Web3Info extends Component{
         <div className='next-card-blank'/>
         <Card
           className='hover-cursor-auto'
-          title='Redeem'
+          title='Redeem (ETH Network)'
           headStyle={styles.cardMainHeader}
           // extra={<span>Available Time: {moment(redeemDate.start).format('YYYY-MM-DD HH:mm')} - {moment(redeemDate.end).format('YYYY-MM-DD HH:mm')}</span>}
           hoverable>

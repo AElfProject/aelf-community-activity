@@ -20,8 +20,25 @@ export default class AelfBridgeCheck {
   constructor() {
     // let resovleTemp = null;
     this.check = new Promise((resolve, reject) => {
-      // TODO:
-      resolve(true);
+      const bridgeInstance = new AElfBridge({
+        timeout: 3000
+      });
+      bridgeInstance.connect().then(isConnected => {
+        if (isConnected) {
+          resolve(true);
+        } else {
+          reject({
+            error: 200001,
+            message: 'timeout, please use AELF Wallet APP or open the page in PC'
+          });
+        }
+      });
+      setTimeout(() => {
+        reject({
+          error: 200001,
+          message: 'timeout, please use AELF Wallet APP or open the page in PC'
+        });
+      }, 3000);
     });
     // document.addEventListener('NightElf', result => {
     //   resovleTemp(true);

@@ -208,7 +208,7 @@ export const  SwapElf = (swapInfo) => {
       hoverable
       headStyle={styles.cardMainHeader}
       // extra={<span>Available Time: {moment(swapTest.start).format('YYYY-MM-DD HH:mm')} - {moment(swapTest.end).format('YYYY-MM-DD HH:mm')}</span>}
-      title='Claim Token'>
+      title='Claim Token (AELF and ETH Network)'>
       <div className='section-content swap-form-container'>
         <Form
           {...layout}

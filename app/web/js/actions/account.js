@@ -35,10 +35,10 @@ export function asyncLogin() {
           dispatch(login(detail));
         }
       }).catch(error => {
-        message.error(error.message || 'Explorer extension error');
+        message.error(error.message || 'AELF Explorer extension error');
       });
     }).catch(error => {
-      message.error(`Explorer extension load failed: ${error.message}`);
+      message.error(`AELF Explorer extension load failed: ${error.message}`);
       console.log('error: ', error);
     });
   }

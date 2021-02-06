@@ -29,88 +29,32 @@ export const RewardSharing = ({aelfAddress}) => {
   } = state;
 
   const lotteryContract = useContract(aelfAddress, LOTTERY.CONTRACT_ADDRESS);
-  const [refreshRegisteredInfo , setRefreshRegisteredInfo] = useState(0);
-  const registeredDividend = useRegisteredDividend(aelfAddress, lotteryContract, refreshRegisteredInfo);
+  // const [refreshRegisteredInfo , setRefreshRegisteredInfo] = useState(0);
+  // const registeredDividend = useRegisteredDividend(aelfAddress, lotteryContract, refreshRegisteredInfo);
   const allLotteriesCount = useAllLotteriesCount(lotteryContract);
   const boughtLotteriesCount = useBoughtLotteriesCount(aelfAddress, lotteryContract);
 
   const rewardTime = useAvailableTime('lotteryRewardSharing');
   const stakedTime = useAvailableTime('lotteryRewardSharingStaking');
-  // const {lotteryRewardSharing: rewardTime, lotteryRewardSharingStaking: stakedTime} = useAvailableTime(['lotteryRewardSharing', 'lotteryRewardSharingStaking'])
-  // const stakedTime = useAvailableTime('lotteryRewardSharingStaking')
   const stakedDisabled = !checkTimeAvailable(stakedTime);
-  const rewardDisabled = !checkTimeAvailable(rewardTime);
+  // const rewardDisabled = !checkTimeAvailable(rewardTime);
   const lotterySharing = useCMSLotterySharing();
 
-  console.log('lotterySharing: ', lotterySharing);
-  // console.log('lotteryContract', aelfAddress, LOTTERY.CONTRACT_ADDRESS, lotteryContract, registeredDividend);
-  // console.log('lotteryContract boughtLotteriesCount', allLotteriesCount, boughtLotteriesCount);
-
-  const [addressErrorMsg, setAddressErrorMsg] = useState({
-    type: 'success',
-    msg: null
-  });
+  // const [addressErrorMsg, setAddressErrorMsg] = useState({
+  //   type: 'success',
+  //   msg: null
+  // });
   // const tokenContract = useContract(aelfAddress, TOKEN_CONTRACT_ADDRESS);
   const [refreshTime, setRefreshTime]= useState(1);
 
-  // const allowance  = useAelfTokenAllowance({
-  //   tokenContract,
-  //   address: aelfAddress,
-  //   contractAddress: LOTTERY.CONTRACT_ADDRESS,
-  //   tokenName: 'LOT',
-  //   refreshTime: refreshTime
-  // });
   const staked = useLotteryStaked({
     lotteryContract,
     address: aelfAddress,
     refreshTime: refreshTime
   });
+
   const allowanceShow = allowance / (10 ** TOKEN_DECIMAL);
   const stakedShow = staked / (10 ** TOKEN_DECIMAL);
-
-  const onFinish = async (value) => {
-    if(!Web3.utils.isAddress(value.ethAddress)) {
-      setAddressErrorMsg({
-        type: 'error',
-        msg: 'Invalid Address',
-      });
-      return;
-    }
-    setAddressErrorMsg({
-      type: 'success',
-      msg: null
-    });
-
-    const lotteryContract = await NightElfCheck.initContractInstance({
-      loginInfo: LOGIN_INFO,
-      contractAddress: LOTTERY.CONTRACT_ADDRESS,
-    });
-    if (!lotteryContract) {
-      message.error('Lottery Contract not ready');
-      return;
-    }
-
-    const registerDividendResult = await lotteryContract.RegisterDividend({
-      receiver: value.ethAddress
-    });
-
-    if (registerDividendResult.error) {
-      throw Error(registerDividendResult.errorMessage.message || registerDividendResult.errorMessage);
-    }
-
-    const {TransactionId} = registerDividendResult.result || registerDividendResult;
-    message.success('You can see ths new lottery number after the transaction is confirmed if you refresh the page', 6);
-    MessageTxToExplore(TransactionId);
-    const explorerHref = `${EXPLORER_URL}/tx/${TransactionId}`;
-    setAddressErrorMsg({
-      type: 'success',
-      msg: <span>
-        aelf Tx Hash (Chain: tDVV): <a target='_blank' href={explorerHref}>{TransactionId}</a>
-      </span>
-    });
-    setRefreshRegisteredInfo(new Date().getTime());
-  };
-  const onFinishFailed = () => {};
 
   const percentBN = new BigNumber(boughtLotteriesCount.value).div(allLotteriesCount.value).times(100);
   const amount = lotterySharing[0].amount;
@@ -120,6 +64,11 @@ export const RewardSharing = ({aelfAddress}) => {
     start: lotterySharing[0].start,
     end: lotterySharing[0].end,
   });
+  const collectNotAvailable = checkTimeAvailable({
+    start: lotterySharing[0].start,
+    end: moment(lotterySharing[0].end).add(18, 'hours'),
+  });
+  const [collectLoading, setCollectLoading] = useState(false);
 
   if (!showLotterySharing) {
     return null;
@@ -134,10 +83,52 @@ export const RewardSharing = ({aelfAddress}) => {
     >
       <div className='section-content swap-flex-wrap reward-sharing'>
         <div>
+          <b>The maximum share of the prize amount is 600000 ELF！</b>
+        </div>
+        <div>
           Total Estimated Bonus: {estimatedBonus}ELF &nbsp;&nbsp;&nbsp;
-          Estimated Available Bonus: {estimatedAvailableBonus} ELF({percentBN.toFormat(2)}%)&nbsp;&nbsp;&nbsp;
           My LOT Balance: {balanceLot ? new BigNumber(balanceLot).div(10 ** 8).toFormat() : '-'} LOT
         </div>
+        <div className='basic-blank'/>
+
+        <div>
+          My Available Bonus: {estimatedAvailableBonus} ELF({percentBN.toFormat(2)}%)&nbsp;&nbsp;&nbsp;
+          <Button
+            type="primary" htmlType="submit"
+            disabled={collectNotAvailable || !staked || +staked === 0 || collectLoading}
+            loading={collectLoading}
+            onClick={async () => {
+              setCollectLoading(true);
+              const lotteryContract = await NightElfCheck.initContractInstance({
+                loginInfo: LOGIN_INFO,
+                contractAddress: LOTTERY.CONTRACT_ADDRESS,
+              });
+              if (!lotteryContract) {
+                message.error('Lottery Contract not ready');
+                setCollectLoading(false);
+                return;
+              }
+
+              const takeDividResult = await lotteryContract.TakeDividend();
+
+              if (takeDividResult.error) {
+                setCollectLoading(false);
+                throw Error(takeDividResult.errorMessage.message || takeDividResult.errorMessage);
+              }
+
+              const {TransactionId} = takeDividResult.result || takeDividResult;
+              MessageTxToExplore(TransactionId);
+
+              setTimeout(() => {
+                setRefreshTime(new Date().getTime());
+                setCollectLoading(false);
+              }, 3000);
+            }}
+          >
+            Collect
+          </Button>
+        </div>
+
         <div className='basic-blank'/>
 
         <RewardSharingStake
@@ -147,39 +138,9 @@ export const RewardSharing = ({aelfAddress}) => {
           stakedLot={stakedShow}
         />
 
-        {/*{registeredDividend && registeredDividend.receiver*/}
-        {/*  ? <div>Ethereum Address: {registeredDividend.receiver}</div>*/}
-        {/*  : <div>*/}
-        {/*    <Form*/}
-        {/*      layout="inline"*/}
-        {/*      name="basic"*/}
-        {/*      className="reward-sharing-form"*/}
-        {/*      initialValues={{ remember: true }}*/}
-        {/*      onFinish={onFinish}*/}
-        {/*      onFinishFailed={onFinishFailed}*/}
-        {/*    >*/}
-        {/*      <Form.Item*/}
-        {/*        label="Ethereum Address"*/}
-        {/*        name="ethAddress"*/}
-        {/*        help={addressErrorMsg.msg}*/}
-        {/*        validateStatus={addressErrorMsg.type}*/}
-        {/*      >*/}
-        {/*        <Input placeholder="please input" className="reward-eth-address-input"/>*/}
-        {/*      </Form.Item>*/}
-
-        {/*      <Form.Item>*/}
-        {/*        <Button*/}
-        {/*          disabled={rewardDisabled ? rewardDisabled : (+stakedShow) === 0}*/}
-        {/*          type="primary" htmlType="submit">*/}
-        {/*          Submit*/}
-        {/*        </Button>*/}
-        {/*      </Form.Item>*/}
-        {/*    </Form>*/}
-        {/*  </div>*/}
-        {/*}*/}
         <div className='basic-blank'/>
         <div>From {moment(stakedTime.start).format('YYYY-MM-DD HH:mm')} to {moment(stakedTime.end).format('YYYY-MM-DD HH:mm')}, users can stake LOT. After {moment(stakedTime.end).format('YYYY-MM-DD HH:mm')}, the ELF awards of the prize pool will be divided in proportion according to the number of LOT token.</div>
-        <div>You can collect your bonus after {moment(stakedTime.end).format('YYYY-MM-DD HH:mm')}, and the more details will be announced.</div>
+        <div>You can collect your bonus after {moment(stakedTime.end).add(18, 'hours').format('YYYY-MM-DD HH:mm')}, and the more details will be announced.</div>
       </div>
     </Card>
     <div className='next-card-blank'/>

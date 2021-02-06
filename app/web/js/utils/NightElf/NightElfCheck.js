@@ -22,7 +22,7 @@ export default class NightElfCheck {
             setTimeout(() => {
                 reject({
                     error: 200001,
-                    message: 'timeout'
+                    message: 'timeout, please download and install the NightELF explorer extension'
                 });
             }, 5000);
             resovleTemp = resolve;

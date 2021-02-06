@@ -14,8 +14,8 @@ export const useLotteryStaked = ({
     }
 
     const staked = await lotteryContract.GetStakingAmount.call(address);
-    // if (!staked && !staked.value) {
     if (!staked || !staked.value) {
+      setStaked('0');
       return;
     }
     setStaked(staked.value);

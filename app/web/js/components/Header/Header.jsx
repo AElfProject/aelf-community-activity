@@ -78,7 +78,7 @@ export default class BrowserHeader extends Component {
         url: '/swap',
         key: 'swap',
         title: 'Claim Token',
-        pcOnly: true,
+        // pcOnly: true,
       },
       {
         url: '/daily',

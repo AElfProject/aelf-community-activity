@@ -44,7 +44,10 @@ export const ReferralLinkStakingInfo = ({wethAddress, aelfAddress, web3PluginIns
   }, [totalAmount, staked]);
 
   return <div>
-    <span>Total Staking: {totalAmount ? totalAmount.toFormat(4) : '-'} ELF(ERC20)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <div>
+      <b>The maximum share of the prize amount is 150000 ELF！</b>
+    </div>
+    {/*<span>Total Staking: {totalAmount ? totalAmount.toFormat(4) : '-'} ELF(ERC20)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/}
     <span>Staking of My Referral: {staked || '-'} ELF(ERC20) ({percent}%)</span>
   </div>;
 };
