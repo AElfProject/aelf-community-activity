@@ -64,9 +64,9 @@ export const RewardSharing = ({aelfAddress}) => {
     start: lotterySharing[0].start,
     end: lotterySharing[0].end,
   });
-  const collectNotAvailable = checkTimeAvailable({
-    start: lotterySharing[0].start,
-    end: moment(lotterySharing[0].end).add(18, 'hours'),
+  const collectNotAvailable = stakedTime && stakedTime[0] && checkTimeAvailable({
+    start: stakedTime[0].start,
+    end: moment(stakedTime[0].end).add(18, 'hours'),
   });
   const [collectLoading, setCollectLoading] = useState(false);
 
