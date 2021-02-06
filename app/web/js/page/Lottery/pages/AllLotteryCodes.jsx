@@ -1,4 +1,4 @@
-import { Select, Row, Col, Table } from 'antd';
+import { Select, Row, Col, Table, Checkbox } from 'antd';
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { LOTTERY } from '../../../constant/constant';
 import {useContract} from '../hooks/useContract';
@@ -48,6 +48,7 @@ const getColumns = (defaultString = '-') => {
 };
 
 export const AllLotteryCodes = ({
+  winOnly,
   currentPeriod,
   dataSource, historyLoading
 }) => {
@@ -56,7 +57,9 @@ export const AllLotteryCodes = ({
       pageSize: 20,
       showSizeChanger: false
     }}
-    dataSource={dataSource}
+    dataSource={dataSource.filter(item => {
+      return winOnly ? !!item.rewardName : true;
+    })}
     loading={historyLoading}
     columns={getColumns(currentPeriod ? '' : '-')}
     rowKey='id'
@@ -131,6 +134,7 @@ export const LotteryCodeContainer = (({
   const lotteryContract = useContract('123', LOTTERY.CONTRACT_ADDRESS);
   const [boughtLotteries, setBoughtLotteries] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [winOnly, setWinOnly] = useState(true);
 
   const count = useBoughtLotteryCountInOnePeriod({
     lotteryContract,
@@ -187,6 +191,10 @@ export const LotteryCodeContainer = (({
     <Row justify="space-between" className="lottery-code-subtitle">
       <Col>You had swapped {count} codes in Period {periodSelectedShow}</Col>
       <Col>
+        <Checkbox
+          checked={winOnly}
+          onChange={e => setWinOnly(e.target.checked)}
+        >Winning Lottery Codes in this Period</Checkbox>
         <Select
           defaultValue={periodSelected}
           placeholder={`Period ${periodSelectedShow}`}
@@ -209,6 +217,7 @@ export const LotteryCodeContainer = (({
         currentPeriod={+periodSelected === +currentPeriod}
         dataSource={boughtLotteries}
         historyLoading={loading}
+        winOnly={winOnly}
       />
     </div>
   </>
