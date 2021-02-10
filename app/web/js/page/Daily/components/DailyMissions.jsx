@@ -306,6 +306,7 @@ class DailyMissions extends Component {
             <div>
               <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>
               <a href={WALLET_ANDROID_URL} target='_blank'>Android wallet, </a>
+              <a href="https://play.google.com/store/apps/details?id=com.legendwd.hyperpay.aelf" target='_blank'>Google Play wallet, </a>
                <a href={WALLET_IOS_URL} target='_blank'>iOS wallet (App Store), </a>
                <a href={WALLET_IOS_URL_TEST_FLIGHT} target='_blank'>iOS wallet (Test Flight)</a>
               {/*<a href={walletIOSUrl} target='_blank'>iOS wallet</a>*/}
@@ -326,6 +327,7 @@ class DailyMissions extends Component {
             <div>
               <a href={WALLET_WEB_URL} target='_blank'>Web wallet, </a>
               <a href={WALLET_ANDROID_URL} target='_blank'>Android wallet, </a>
+              <a href="https://play.google.com/store/apps/details?id=com.legendwd.hyperpay.aelf" target='_blank'>Google Play wallet, </a>
               <a href={WALLET_IOS_URL} target='_blank'>iOS wallet (App Store), </a>
               <a href={WALLET_IOS_URL_TEST_FLIGHT} target='_blank'>iOS wallet (Test Flight)</a>
             </div>
